@@ -62,6 +62,11 @@ public interface RetrofitApi {
     @GET("walker/select_walk_price.php")
     Call<WalkPriceDTO> selectWalkPrice(@Query("id") String id);
 
+    //서비스불가날짜 저장 (3개 칼럼 저장 가능)
+    @FormUrlEncoded
+    @POST("walker/insert_walker_data_3column.php")
+    Call<ResultDTO> insertWalkerData3Column(@FieldMap HashMap<String, Object> parameters);
+
 //    @POST("walker/update_walker_tb.php")
 //    Call<ResultDTO> updateWalkerData(@Query("tableName") String tableName,
 //                                     @Query("updateCol") String updateCol, @Query("updateVal") String updateVal,

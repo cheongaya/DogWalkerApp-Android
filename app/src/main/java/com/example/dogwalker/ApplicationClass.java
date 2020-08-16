@@ -12,6 +12,8 @@ import com.example.dogwalker.retrofit2.RetrofitUtil;
 import com.example.dogwalker.retrofit2.response.ResultDTO;
 import com.example.dogwalker.retrofit2.response.ResultStrDTO;
 
+import java.util.HashMap;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,7 +46,7 @@ public class ApplicationClass extends Application {
 
     }
 
-    //DB에 저장된 자기소개 데이터 불러와서 setText() 하는 메소드
+    //DB에 저장된 칼럼 1개 데이터 불러와서 setText() 하는 메소드
     public String loadData1ColumnToDB(String tableName, String selectCol, String primaryCol, String primaryVal, TextView textView){
 //
 //        String tableName = "user_walker";
@@ -63,8 +65,6 @@ public class ApplicationClass extends Application {
 
                 textView.setText(resultDataStr);
                 makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[2] 조회한 데이터 setText() : " + resultDataStr);;
-
-
             }
 
             @Override
@@ -77,6 +77,36 @@ public class ApplicationClass extends Application {
         });
 
         return resultDataStr;
+    }
+
+    //DB에 칼럼3개 데이터 저장하는 메소드
+    public void insertData3ColumnToDB(String tableName, String insertCol1, String insertVal1, String insertCol2, String insertVal2, String insertCol3, String insertVal3){
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("tableName", tableName);
+        parameters.put("insertCol1", insertCol1);
+        parameters.put("insertVal1", insertVal1);
+        parameters.put("insertCol2", insertCol2);
+        parameters.put("insertVal2", insertVal2);
+        parameters.put("insertCol3", insertCol3);
+        parameters.put("insertVal3", insertVal3);
+
+        Call<ResultDTO> call = retrofitApi.insertWalkerData3Column(parameters);
+        call.enqueue(new Callback<ResultDTO>() {
+            @Override
+            public void onResponse(Call<ResultDTO> call, Response<ResultDTO> response) {
+                ResultDTO resultDTO = response.body();
+                String resultServerStr = resultDTO.getResponceResult();
+
+                makeToast("데이터 저장 성공 : "+resultServerStr);
+            }
+
+            @Override
+            public void onFailure(Call<ResultDTO> call, Throwable t) {
+                makeToast("데이터 저장 실패");
+            }
+        });
+
     }
 
     //로그 : 액티비티명 + 함수명 + 원하는 데이터를 한번에 보기위한 로그

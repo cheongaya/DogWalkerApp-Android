@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="activity"
+            type="com.example.dogwalker.walker.WalkerJoinActivity" />
+    </data>
+
+    <LinearLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorMain"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/icon_dogwalker03"
+            android:layout_marginBottom="20dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="70dp"
+            android:layout_marginRight="70dp">
+
+            <EditText
+                android:id="@+id/editText_joinID"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:padding="20dp"
+                android:textColor="@color/colorWhite"
+                android:textColorHint="@color/colorWhite"
+                android:hint="아이디"/>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="중복확인"
+                android:background="@drawable/circular_corner_solid_white"
+                android:textColor="@color/colorMain"
+                android:onClick="@{activity::onDuplicateCheckID}"/>
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/editText_joinPW"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="70dp"
+            android:layout_marginRight="70dp"
+            android:padding="20dp"
+            android:textColor="@color/colorWhite"
+            android:textColorHint="@color/colorWhite"
+            android:inputType="textPassword"
+            android:hint="비밀번호"/>
+
+        <EditText
+            android:id="@+id/editText_joinPW_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="70dp"
+            android:layout_marginRight="70dp"
+            android:padding="20dp"
+            android:textColor="@color/colorWhite"
+            android:textColorHint="@color/colorWhite"
+            android:inputType="textPassword"
+            android:hint="비밀번호 확인"/>
+
+        <EditText
+            android:id="@+id/editText_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="70dp"
+            android:layout_marginRight="70dp"
+            android:padding="20dp"
+            android:textColor="@color/colorWhite"
+            android:textColorHint="@color/colorWhite"
+            android:hint="이름 또는 닉네임"/>
+
+        <LinearLayout
+           android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="70dp"
+            android:layout_marginRight="70dp">
+
+            <EditText
+                android:id="@+id/editText_phoneNumber"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:padding="20dp"
+                android:textColor="@color/colorWhite"
+                android:textColorHint="@color/colorWhite"
+                android:hint="휴대전화"/>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="인증번호받기"
+                android:background="@drawable/circular_corner_solid_white"
+                android:textColor="@color/colorMain"
+                android:onClick="@{activity::onCertificationPhoneNumber}"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="10dp">
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/checkbox_agreement01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="이용약관 동의 (필수)"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="5dp"
+                android:onClick="@{activity::onAgreementView01}"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="50dp">
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/checkbox_agreement02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="개인정보 수집 및 이용 (필수)"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="5dp"
+                android:onClick="@{activity::onAgreementView02}"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button_joinOK"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/circular_corner_solid_white"
+            android:textColor="@color/colorMain"
+            android:layout_marginTop="20dp"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:text="회원가입"
+            android:onClick="@{activity::onJoinOK}"/>
+
+    </LinearLayout>
+</layout>

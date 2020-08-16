@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="activity"
+            type="com.example.dogwalker.walker.WalkerLoginActivity" />
+    </data>
+
+    <LinearLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorMain"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/icon_dogwalker03"
+            android:layout_marginBottom="20dp"/>
+
+        <EditText
+            android:id="@+id/editText_loginID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="70dp"
+            android:layout_marginRight="70dp"
+            android:padding="20dp"
+            android:textColor="@color/colorWhite"
+            android:textColorHint="@color/colorWhite"
+            android:hint="아이디"/>
+
+        <EditText
+            android:id="@+id/editText_loginPW"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="70dp"
+            android:layout_marginRight="70dp"
+            android:padding="20dp"
+            android:textColor="@color/colorWhite"
+            android:textColorHint="@color/colorWhite"
+            android:inputType="textPassword"
+            android:hint="비밀번호"/>
+
+        <Button
+            android:id="@+id/button_loginOK"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/circular_corner_solid_white"
+            android:textColor="@color/colorMain"
+            android:layout_marginTop="20dp"
+            android:text="로그인"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:onClick="@{activity::onLoginOK}"/>
+
+        <Button
+            android:id="@+id/button_joinGO"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/circular_corner_stroke_mint"
+            android:textColor="@color/colorWhite"
+            android:layout_marginTop="10dp"
+            android:text="회원가입 하기"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:onClick="@{activity::onJoinGO}"/>
+
+<!--        <Button-->
+<!--            android:layout_width="250dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@drawable/circular_corner_stroke_mint"-->
+<!--            android:textColor="@color/colorWhite"-->
+<!--            android:layout_marginTop="30dp"-->
+<!--            android:text="카카오톡 계정으로 시작하기"-->
+<!--            android:textStyle="bold"/>-->
+
+<!--        <Button-->
+<!--            android:layout_width="250dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@drawable/circular_corner_stroke_mint"-->
+<!--            android:textColor="@color/colorWhite"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:text="페이스북 계정으로 시작하기"-->
+<!--            android:textStyle="bold"/>-->
+
+<!--        <Button-->
+<!--            android:layout_width="250dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@drawable/circular_corner_stroke_mint"-->
+<!--            android:textColor="@color/colorWhite"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:text="네이버 계정으로 시작하기"-->
+<!--            android:textStyle="bold"/>-->
+
+<!--        <Button-->
+<!--            android:layout_width="250dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@drawable/circular_corner_stroke_mint"-->
+<!--            android:textColor="@color/colorWhite"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:text="구글 계정으로 시작하기"-->
+<!--            android:textStyle="bold"/>-->
+
+    </LinearLayout>
+</layout>

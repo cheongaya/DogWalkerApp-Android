@@ -15,7 +15,7 @@
     <!--반려인 네비-->
     <style name="BottomNavigationViewOwner" parent="@style/TextAppearance.AppCompat.Caption">
         <item name="android:textSize">12sp</item>
-        <item name="android:textColor">@color/colorMain2</item>
+        <item name="android:textColor">@color/colorSub2</item>
     </style>
 
     <style name="BottomNavigationView.Active" parent="@style/TextAppearance.AppCompat.Caption">

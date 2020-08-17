@@ -1,16 +1,13 @@
-package com.example.dogwalker.walker;
+package com.example.dogwalker.owner;
 
-import android.app.AppComponentFactory;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -21,10 +18,15 @@ import com.example.dogwalker.ApplicationClass;
 import com.example.dogwalker.R;
 import com.example.dogwalker.retrofit2.RetrofitApi;
 import com.example.dogwalker.retrofit2.RetrofitUtil;
+import com.example.dogwalker.walker.WalkerChatActivity;
+import com.example.dogwalker.walker.WalkerDogwalkingActivity;
+import com.example.dogwalker.walker.WalkerLoginActivity;
+import com.example.dogwalker.walker.WalkerMypageActivity;
+import com.example.dogwalker.walker.WalkerScheduleActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
-public abstract class WalkerBottomNavigation extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public abstract class OwnerBottomNavigation extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "DeveloperLog";
     String className = getClass().getSimpleName().trim();
@@ -45,7 +47,7 @@ public abstract class WalkerBottomNavigation extends AppCompatActivity implement
 
         applicationClass = (ApplicationClass)getApplicationContext();
 
-        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavWorker);
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavOwner);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         //툴바 셋팅
@@ -59,20 +61,20 @@ public abstract class WalkerBottomNavigation extends AppCompatActivity implement
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.bottomNavWorker01:
-                startActivity(new Intent(this, WalkerDogwalkingActivity.class));
+            case R.id.bottomNavOwner01:
+                startActivity(new Intent(this, OwnerBookingActivity.class));
                 finish();
                 return true;
-            case R.id.bottomNavWorker02:
-                startActivity(new Intent(this, WalkerChatActivity.class));
+            case R.id.bottomNavOwner02:
+                startActivity(new Intent(this, OwnerChatActivity.class));
                 finish();
                 return true;
-            case R.id.bottomNavWorker03:
-                startActivity(new Intent(this, WalkerScheduleActivity.class));
+            case R.id.bottomNavOwner03:
+                startActivity(new Intent(this, OwnerLiveActivity.class));
                 finish();
                 return true;
-            case R.id.bottomNavWorker04:
-                startActivity(new Intent(this, WalkerMypageActivity.class));
+            case R.id.bottomNavOwner04:
+                startActivity(new Intent(this, OwnerMypageActivity.class));
                 finish();
                 return true;
         }
@@ -81,7 +83,7 @@ public abstract class WalkerBottomNavigation extends AppCompatActivity implement
 
     //툴바 셋팅
     public void toolbarSetting(){
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_walker);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_owner);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우기
@@ -114,7 +116,7 @@ public abstract class WalkerBottomNavigation extends AppCompatActivity implement
                     applicationClass.currentWalkerID = "";
                     makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "로그인한 아이디(ApplicationClassID) : " + applicationClass.currentWalkerID);
 
-                    Intent intent = new Intent(context, WalkerLoginActivity.class);
+                    Intent intent = new Intent(context, OwnerLoginActivity.class);
                     startActivity(intent);
                     finish();
                 }

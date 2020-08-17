@@ -13,17 +13,17 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal"
-        android:background="@color/colorMain2"
+        android:background="@color/colorMain"
         android:gravity="center">
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="반려인 모드 전환"
+            android:text="도그워커 모드 전환"
             android:textStyle="bold"
             android:textColor="@color/colorWhite"
             android:textSize="19sp"
-            android:background="@color/colorMain2"/>
+            android:background="@color/colorMain"/>
 
         <ImageView
             android:layout_width="wrap_content"
@@ -47,14 +47,14 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             app:srcCompat="@drawable/ic_baseline_perm_identity_24"
-            android:background="@color/colorMain"
-            android:contentDescription="도그워커 김청아"
+            android:background="@color/colorMain2"
+            android:contentDescription="반려인 김청아"
             android:id="@+id/imageView"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="도그워커 김청아"
+            android:text="반려인 김청아"
             android:textColor="@color/colorBlack"
             android:layout_marginLeft="15dp"
             android:gravity="center_vertical"

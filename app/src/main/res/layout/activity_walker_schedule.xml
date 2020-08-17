@@ -38,14 +38,14 @@ android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="8"
+            android:layout_weight="10"
             android:orientation="vertical">
 
             <com.prolificinteractive.materialcalendarview.MaterialCalendarView
                 android:id="@+id/calendarView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="6"
+                android:layout_weight="7"
                 app:mcv_showOtherDates="all"
                 app:mcv_selectionColor="@color/colorSub" />
             <!--mcv_showOtherDates="defauls" 옵션은 현재 달만 보여준다-->
@@ -62,19 +62,19 @@ android:layout_height="match_parent">
                     android:id="@+id/radioButton_single"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="single" />
+                    android:text="1개 선택" />
 
                 <RadioButton
                     android:id="@+id/radioButton_multiple"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="multiple" />
+                    android:text="다중 선택" />
 
                 <RadioButton
                     android:id="@+id/radioButton_range"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="range" />
+                    android:text="범위 선택" />
 
                 <RadioButton
                     android:id="@+id/radioButton_none"
@@ -90,7 +90,7 @@ android:layout_height="match_parent">
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="#999"
-                android:text="서비스 불가"/>
+                android:text="서비스 불가 날짜 DB에 저장"/>
 
             <Button
                 android:id="@+id/button_selectedDate"
@@ -98,7 +98,7 @@ android:layout_height="match_parent">
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="@color/colorSub"
-                android:text="선택한 날짜"
+                android:text="선택한 날짜 값 받아오기"
                 android:layout_marginBottom="10dp"/>
 
         </LinearLayout>

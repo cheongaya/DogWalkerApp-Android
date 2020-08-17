@@ -1,5 +1,6 @@
 package com.example.dogwalker.retrofit2;
 
+import com.example.dogwalker.retrofit2.response.NonServiceDateDTO;
 import com.example.dogwalker.retrofit2.response.ResultDTO;
 import com.example.dogwalker.retrofit2.response.ResultStrDTO;
 import com.example.dogwalker.retrofit2.response.UserOwnerDTO;
@@ -7,6 +8,7 @@ import com.example.dogwalker.retrofit2.response.WalkPriceDTO;
 import com.example.dogwalker.retrofit2.response.WalkableTypeDTO;
 
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.FieldMap;
@@ -19,16 +21,19 @@ public interface RetrofitApi {
 
     public static String BASE_URL = "http://192.168.179.129/";
 
-    //도그워커 관련 API
 
+    //공통
     //회원가입 (아이디/비밀번호/이름/전화번호)
     @FormUrlEncoded
-    @POST("walker/join_walker.php")
-    Call<ResultDTO> createUserWalker(@FieldMap HashMap<String, Object> parameters);
+    @POST("walker/join_user.php")
+    Call<ResultDTO> joinUser(@FieldMap HashMap<String, Object> parameters);
     //로그인
     @FormUrlEncoded
-    @POST("walker/login_walker.php")
-    Call<ResultDTO> loginUserWalker(@FieldMap HashMap<String, Object> parameters);
+    @POST("walker/login_user.php")
+    Call<ResultDTO> loginUser(@FieldMap HashMap<String, Object> parameters);
+
+    //도그워커 관련 API
+
     //서비스위치 데이터 수정
     @GET("walker/update_location.php")
     Call<ResultDTO> updateWalkerLocation(@Query("id") String id, @Query("location") String location);
@@ -66,6 +71,10 @@ public interface RetrofitApi {
     @FormUrlEncoded
     @POST("walker/insert_walker_data_3column.php")
     Call<ResultDTO> insertWalkerData3Column(@FieldMap HashMap<String, Object> parameters);
+
+    //서비스불가날짜 조회
+    @GET("walker/select_walker_non_service_date.php")
+    Call<List<NonServiceDateDTO>> selectWalkerNonServiceDates(@Query("walker_id") String walker_id);
 
 //    @POST("walker/update_walker_tb.php")
 //    Call<ResultDTO> updateWalkerData(@Query("tableName") String tableName,

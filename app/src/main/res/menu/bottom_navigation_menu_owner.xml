@@ -22,7 +22,7 @@
         app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/bottomNavOwnerNav04"
+        android:id="@+id/bottomNavOwner04"
         android:icon="@drawable/ic_baseline_duo_24"
         android:title="마이페이지"
         app:showAsAction="ifRoom"/>

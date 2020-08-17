@@ -23,7 +23,8 @@ public class NonedayDecorator implements DayViewDecorator {
     public NonedayDecorator() {
 
 //        date = CalendarDay.today();
-        date = CalendarDay.from(2020,8,23);
+        date = CalendarDay.from(2020,7,26); //지정하려는 달에서 month -1 해준다
+        // ex) 2020-8-23 에 점 찍으려면 CalendarDay.from(2020,7,23); 지정해줘야함
 //        date = CalendarDay.from(2020,8,23);
     }
 

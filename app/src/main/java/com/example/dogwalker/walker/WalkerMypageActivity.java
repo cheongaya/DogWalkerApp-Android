@@ -480,7 +480,7 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
         }).setNeutralButton("취소", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                dialog.cancel();
             }
         }).setNegativeButton("카메라", new DialogInterface.OnClickListener() {
             @Override

@@ -38,21 +38,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="3"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="20dp">
 
-                <TextView
+                <Button
+                    android:id="@+id/button_booking_page"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="dff"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="dff"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="dff"/>
+                    android:text="도그워커 예약하기"
+                    android:textColor="@color/colorMain2"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:background="@drawable/circular_corner_stroke_booking"/>
 
 
             </LinearLayout>

@@ -1,5 +1,6 @@
 package com.example.dogwalker.retrofit2;
 
+import com.example.dogwalker.owner.DogDTO;
 import com.example.dogwalker.retrofit2.response.NonServiceDateDTO;
 import com.example.dogwalker.retrofit2.response.ResultDTO;
 import com.example.dogwalker.retrofit2.response.ResultStrDTO;
@@ -10,11 +11,15 @@ import com.example.dogwalker.retrofit2.response.WalkableTypeDTO;
 import java.util.HashMap;
 import java.util.List;
 
+import okhttp3.MultipartBody;
 import retrofit2.Call;
+import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Query;
 
 public interface RetrofitApi {
@@ -25,11 +30,11 @@ public interface RetrofitApi {
     //공통
     //회원가입 (아이디/비밀번호/이름/전화번호)
     @FormUrlEncoded
-    @POST("walker/join_user.php")
+    @POST("common/join_user.php")
     Call<ResultDTO> joinUser(@FieldMap HashMap<String, Object> parameters);
     //로그인
     @FormUrlEncoded
-    @POST("walker/login_user.php")
+    @POST("common/login_user.php")
     Call<ResultDTO> loginUser(@FieldMap HashMap<String, Object> parameters);
 
     //도그워커 관련 API
@@ -81,7 +86,20 @@ public interface RetrofitApi {
 //                                     @Query("updateCol") String updateCol, @Query("updateVal") String updateVal,
 //                                     @Query("primaryCol") String primaryCol, @Query("primaryVal") String primaryVal);
     //반려인 관련 API
+
+    //강아지 정보 저장
     @FormUrlEncoded
-    @POST("/join_owner.php")
-    Call<UserOwnerDTO> createUserOwner(@FieldMap HashMap<String, Object> parameters);
+    @POST("owner/insert_dog_data.php")
+    Call<ResultDTO> insertDogData(@FieldMap HashMap<String, Object> parameters);
+    //강아지 정보 조회
+    @GET("owner/select_dog_data.php")
+    Call<List<DogDTO>> selectDogData(@Query("owner_id") String owner_id);
+    //강아지 정보 삭제
+    @GET("owner/delete_dog_data.php")
+    Call<ResultDTO> deleteDogData(@Query("owner_id") String owner_id, @Query("name") String name);
+    //강아지 이미지 저장
+//    @FormUrlEncoded
+    @Multipart
+    @POST("common/insert_image.php")
+    Call<ResultDTO> insertImage(@Part MultipartBody.Part File);
 }

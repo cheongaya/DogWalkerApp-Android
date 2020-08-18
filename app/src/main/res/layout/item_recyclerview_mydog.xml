@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_marginRight="10dp">
 
     <ImageView
         android:id="@+id/imageView_item_mydog_img"
@@ -19,6 +20,7 @@
         android:textColor="@color/colorWhite"
         android:textSize="18sp"
         android:layout_gravity="center"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:layout_marginTop="3dp"/>
 
 </LinearLayout>

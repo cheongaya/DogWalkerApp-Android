@@ -30,10 +30,10 @@
             android:id="@+id/imageView_mydog_add_img"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:padding="15dp"
             android:background="@drawable/circular_corner_stroke_mydog2"
             android:src="@drawable/ic_baseline_add_photo_alternate_24"
             android:onClick="@{activity::onAddDogImg}"
+            android:scaleType="centerInside"
             android:layout_gravity="center"/>
         <!--이름-->
         <TextView

@@ -1,19 +1,23 @@
 package com.example.dogwalker;
 
 import android.app.Application;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.dogwalker.retrofit.RetroClient;
-import com.example.dogwalker.retrofit.RetrofitAPI;
-import com.example.dogwalker.retrofit2.RetrofitApi;
-import com.example.dogwalker.retrofit2.RetrofitUtil;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.dogwalker.retrofit2.response.ResultDTO;
-import com.example.dogwalker.retrofit2.response.ResultStrDTO;
 
+import java.io.File;
 import java.util.HashMap;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,8 +38,8 @@ public class ApplicationClass extends Application {
     //서버에서 받아온 결과값
     String resultDataStr;
 
-    //Retrofit 관련 변수
-//    public RetroClient retroClient;
+    //이미지 로딩 라이브러리 Glide 관련 객체
+    public static RequestOptions requestOptions;
 
     @Override
     public void onCreate() {
@@ -43,6 +47,13 @@ public class ApplicationClass extends Application {
 
         //Retrofit 객체와 인터페이스를 연결
 //        retroClient = RetroClient.getInstance(this).createBaseApi();
+
+        //Glide 옵션
+        requestOptions = new RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.ic_baseline_add_photo_alternate_24)
+                .error(R.drawable.ic_baseline_edit_black_24)
+                .diskCacheStrategy(DiskCacheStrategy.ALL);
 
     }
 
@@ -107,6 +118,48 @@ public class ApplicationClass extends Application {
             }
         });
 
+    }
+
+    //앨범에서 불러온 이미지 데이터를 서버에 저장하는 메소드
+    public MultipartBody.Part updateAlbumImgToServer(Uri photoUri){
+
+        File tempFile;
+
+        Cursor cursor = null;
+        try {
+            /*
+             *  Uri 스키마를
+             *  content:/// 에서 file:/// 로  변경한다.
+             */
+            String[] proj = { MediaStore.Images.Media.DATA };
+            assert photoUri != null;
+            cursor = getContentResolver().query(photoUri, proj, null, null, null);
+            assert cursor != null;
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            tempFile = new File(cursor.getString(column_index));
+            makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "tempFile : " + tempFile);
+            //storage/emulated/0/Download/https___specials-images.forbesimg.com_dam_imageserve_968210608_960x0.jpg_fit=scale.jpg
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        //파일 생성
+        //img_url은 이미지의 경로
+        File file = new File(String.valueOf(tempFile));
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+//        RequestBody requestFile2 = RequestBody.create(MediaType.parse("text/"), strvar);
+        //Multipart는 HTTP를 통해 File을 SERVER 로 전송하기위해 사용되는 Content-type  이다
+        //multipart/form-data는 파일 업로드가 있는 양식요소에 사용되는 enctype 속성의 값중 하나
+        //폼이 제출될 떄 이 형식이 encType="multipart/form-data" 라는 것을 알려준다
+        MultipartBody.Part body = MultipartBody.Part.createFormData("uploaded_file", file.getName(), requestFile);
+        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "file.getName() : "+file.getName());
+        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "requestFile.contentType() : "+requestFile.contentType());
+        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "uploadFile.body() : "+body.body());
+
+        return body;
     }
 
     //로그 : 액티비티명 + 함수명 + 원하는 데이터를 한번에 보기위한 로그

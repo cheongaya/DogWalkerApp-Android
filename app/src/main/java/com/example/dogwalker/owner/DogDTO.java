@@ -2,6 +2,7 @@ package com.example.dogwalker.owner;
 
 public class DogDTO {
 
+    String profile_img;
     String name;
     int birthday_year;
     int birthday_month;
@@ -12,7 +13,8 @@ public class DogDTO {
     String kind;
     String number;
 
-    public DogDTO(String name, int birthday_year, int birthday_month, int birthday_day, String sex, String size, String weight, String kind, String number) {
+    public DogDTO(String profile_img, String name, int birthday_year, int birthday_month, int birthday_day, String sex, String size, String weight, String kind, String number) {
+        this.profile_img = profile_img;
         this.name = name;
         this.birthday_year = birthday_year;
         this.birthday_month = birthday_month;
@@ -22,6 +24,14 @@ public class DogDTO {
         this.weight = weight;
         this.kind = kind;
         this.number = number;
+    }
+
+    public String getProfile_img() {
+        return profile_img;
+    }
+
+    public void setProfile_img(String profile_img) {
+        this.profile_img = profile_img;
     }
 
     public String getName() {

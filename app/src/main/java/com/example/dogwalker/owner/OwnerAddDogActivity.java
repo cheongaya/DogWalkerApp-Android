@@ -3,11 +3,15 @@ package com.example.dogwalker.owner;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -23,9 +27,13 @@ import android.widget.ArrayAdapter;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.dogwalker.BaseActivity;
 import com.example.dogwalker.R;
 import com.example.dogwalker.databinding.ActivityOwnerAddDogBinding;
+import com.example.dogwalker.retrofit2.RetrofitApi;
 import com.example.dogwalker.retrofit2.response.ResultDTO;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
@@ -40,6 +48,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -47,16 +56,25 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.Url;
 
 public class OwnerAddDogActivity extends BaseActivity {
 
     private static final int PICK_FROM_DOG_IMG_ALBUM = 3001;
     private static final int PICK_FROM_DOG_IMG_CAMERA = 3002;
 
+    // Storage Permissions
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
     private ActivityOwnerAddDogBinding binding;
-    String dogSexStr, dogSizeStr, dogNeuterStr, dogKindStr = "";
+    String dogNameStr, dogSexStr, dogSizeStr, dogNeuterStr, dogKindStr = "";
 
     Intent intent;
+    public static MultipartBody.Part body;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +114,7 @@ public class OwnerAddDogActivity extends BaseActivity {
     //강아지 등록하기 버튼 클릭시 -> 강아지 데이터 정보 DB에 저장
     public void onSaveMyDog(View view){
 
-        String dogNameStr = binding.editTextMydogName.getText().toString();
+        dogNameStr = binding.editTextMydogName.getText().toString();
         int dogBirthdayYear = Integer.parseInt(binding.editTextMydogBirthdayYear.getText().toString());
         int dogBirthdayMonth = Integer.parseInt(binding.editTextMydogBirthdayMonth.getText().toString());
         int dogBirthdayDay = Integer.parseInt(binding.editTextMydogBirthdayDay.getText().toString());
@@ -109,7 +127,7 @@ public class OwnerAddDogActivity extends BaseActivity {
         //데이터 저장
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("owner_id", applicationClass.currentWalkerID);
-        parameters.put("profile_img", "null");
+//        parameters.put("profile_img", "null");
         parameters.put("name", dogNameStr);
         parameters.put("birthday_year", dogBirthdayYear);
         parameters.put("birthday_month", dogBirthdayMonth);
@@ -135,8 +153,9 @@ public class OwnerAddDogActivity extends BaseActivity {
                 makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "강아지정보저장 성공 : " + resultDataStr);
                 //그 전 액티비티로 보내기
                 if(resultDataStr.contentEquals("ok")){
-                    setResult(RESULT_OK, intent);
-                    finish();
+//                    setResult(RESULT_OK, intent);
+//                    finish();
+                    saveDogImg(dogNameStr);
                 }
             }
 
@@ -146,6 +165,31 @@ public class OwnerAddDogActivity extends BaseActivity {
             }
         });
 
+    }
+
+    public void saveDogImg(String dogName){
+        //이미지 데이터 값 가져오기
+        //위 메소드의 return 값은 return body(MultipartBody.Part) 형태로 반환된다
+        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "참조할 강아지 이름 : "+dogName);
+        Call<ResultDTO> callImg = retrofitApi.updateDogImageData(dogName, body);
+        callImg.enqueue(new Callback<ResultDTO>() {
+            @Override
+            public void onResponse(Call<ResultDTO> call, Response<ResultDTO> response) {
+                ResultDTO resultDTO = response.body();
+                String resultDataStr = resultDTO.getResponceResult();
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "앨범이미지 서버 저장 성공");
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", resultDataStr);
+
+                setResult(RESULT_OK, intent);
+                finish();
+
+            }
+            @Override
+            public void onFailure(Call<ResultDTO> call, Throwable t) {
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "앨범이미지 서버 저장 실패");
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", t.toString());
+            }
+        });
     }
 
     //라디오 체크버튼 값 가져오기
@@ -236,76 +280,32 @@ public class OwnerAddDogActivity extends BaseActivity {
 
             case PICK_FROM_DOG_IMG_ALBUM:
 
-//                File tempFile;
-
+                //앨범에서 getData Uri 받아온 후
                 Uri photoUri = data.getData();
                 makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "photoUri : " + photoUri);
-                Cursor cursor = null;
-                try {
-                    /*
-                     *  Uri 스키마를
-                     *  content:/// 에서 file:/// 로  변경한다.
-                     */
-                    String[] proj = { MediaStore.Images.Media.DATA };
-                    assert photoUri != null;
-                    cursor = getContentResolver().query(photoUri, proj, null, null, null);
-                    assert cursor != null;
-                    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                    cursor.moveToFirst();
-                    File tempFile = new File(cursor.getString(column_index));
-                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "tempFile : " + tempFile);
-                } finally {
-                    if (cursor != null) {
-                        cursor.close();
-                    }
-                }
+                //photoUri 값을 경로 변환 -> File 객체 생성해주는 메소드에 보내준다
+                body = applicationClass.updateAlbumImgToServer(photoUri);
 
+                //이미지 셋팅
+                binding.imageViewMydogAddImg.setImageURI(data.getData());
 
-//                Uri img_url  = data.getData();;    //TODO: 레트로핏 이미지 업로드 테스트중
-
-//                //파일 생성
-//                //img_url은 이미지의 경로
-//                File file = new File(img_url);
-//                RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-//                MultipartBody.Part body = MultipartBody.Part.createFormData("uploaded_file", file.getName(), requestFile);
-//
-//                Call<ResultDTO> call = retrofitApi.insertImage(body);
+//                //위 메소드의 return 값은 return body(MultipartBody.Part) 형태로 반환된다
+//                Call<ResultDTO> call = retrofitApi.updateDogImageData(body, applicationClass.currentWalkerID);
 //                call.enqueue(new Callback<ResultDTO>() {
 //                    @Override
 //                    public void onResponse(Call<ResultDTO> call, Response<ResultDTO> response) {
 //                        ResultDTO resultDTO = response.body();
 //                        String resultDataStr = resultDTO.getResponceResult();
 //                        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "앨범이미지 서버 저장 성공");
-//                    }
+//                        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", resultDataStr);
 //
+//                    }
 //                    @Override
 //                    public void onFailure(Call<ResultDTO> call, Throwable t) {
 //                        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "앨범이미지 서버 저장 실패");
+//                        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", t.toString());
 //                    }
 //                });
-
-//                try {
-////                    InputStream inputStream = getContentResolver().openInputStream(data.getData());
-////                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "앨범 data.getData() : " + data.getData());
-////
-////                    Bitmap bitmapImg = BitmapFactory.decodeStream(inputStream);
-////                    inputStream.close();
-////
-////                    binding.imageViewMydogAddImg.setImageBitmap(bitmapImg);
-////                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "앨범 bitmapImg : " + bitmapImg);
-//
-//                    Bitmap bitmapImg = MediaStore.Images.Media.getBitmap( getContentResolver(), data.getData());
-//
-//                    //비트맵 이미지 리사이징
-//                    bitmapImg = resize(bitmapImg);
-//                    //비트맵 인코딩
-//                    BitMapToString(bitmapImg);
-//
-//                } catch (FileNotFoundException e) {
-//                    e.printStackTrace();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
 
                 break;
 
@@ -317,22 +317,6 @@ public class OwnerAddDogActivity extends BaseActivity {
         }
     }
 
-    //비트맵 이미지 리사이징
-    private Bitmap resize(Bitmap bm){
-        Configuration config=getResources().getConfiguration();
-        if(config.smallestScreenWidthDp>=800)
-            bm = Bitmap.createScaledBitmap(bm, 400, 240, true);
-        else if(config.smallestScreenWidthDp>=600)
-            bm = Bitmap.createScaledBitmap(bm, 300, 180, true);
-        else if(config.smallestScreenWidthDp>=400)
-            bm = Bitmap.createScaledBitmap(bm, 200, 120, true);
-        else if(config.smallestScreenWidthDp>=360)
-            bm = Bitmap.createScaledBitmap(bm, 180, 108, true);
-        else
-            bm = Bitmap.createScaledBitmap(bm, 160, 96, true);
-        return bm;
-    }
-
     //앨범에서 이미지 가져오는 메소드
     public void getImageFromAlbum(){
         //인텐트를 통해 앨범 화면으로 이동시켜줌
@@ -341,31 +325,6 @@ public class OwnerAddDogActivity extends BaseActivity {
 //        intent.setType("image/-");
 //        intent.setAction(Intent.ACTION_GET_CONTENT);    //추가 코드
         startActivityForResult(intent, PICK_FROM_DOG_IMG_ALBUM);
-    }
-
-    //bitmap 이미지를 인코딩 하는 코드
-    public void BitMapToString(Bitmap bitmap){
-        //[1] bitmapImage -> byte array 형태로 변환
-        ByteArrayOutputStream byteArrayOutputStream = new  ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,100, byteArrayOutputStream);    //bitmap compress //JPEG
-        //
-//        String image = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
-//        String name = String.valueOf(Calendar.getInstance().getTimeInMillis());
-        //
-        byte [] arr = byteArrayOutputStream.toByteArray();
-        //[2] 변환된 데이터를 -> Bse64 로 String 형태 인코딩 함
-        String image= Base64.encodeToString(arr, Base64.DEFAULT);
-        String temp="";
-        try{
-            //[3] 인코딩된 데이터를 UTF-8 로 다시 인코딩 ([2] 데이터를 보내야하는데 중간에 공백이 있어서 HTTP GET 방식으로 보낼 수 없음)
-            temp="&imagedevice="+ URLEncoder.encode(image,"utf-8");
-        }catch (Exception e){
-            Log.e("exception",e.toString());
-        }
-        //DB에 업로드하는 코드 추가
-        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "앨범 image : " + image);
-        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "앨범 temp : " + temp);
-
     }
 
     //카메라&앨범에 관한 권한 허용을 사용자로부터 받는 메소드

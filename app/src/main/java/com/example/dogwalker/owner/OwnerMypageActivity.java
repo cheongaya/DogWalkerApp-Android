@@ -6,9 +6,12 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -16,14 +19,19 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.dogwalker.R;
 import com.example.dogwalker.retrofit2.response.ResultDTO;
+import com.example.dogwalker.retrofit2.response.UserOwnerDTO;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,14 +39,16 @@ import retrofit2.Response;
 public class OwnerMypageActivity extends OwnerBottomNavigation implements View.OnClickListener {
 
     private static final int OWNER_ADD_DOG = 2001;
+    private static final int PICK_FROM_OWNER_IMG_ALBUM = 2002;
+    private static final int PICK_FROM_OWNER_IMG_CAMERA = 2003;
 
-    ImageView imgOwnerProgile, imgDogDataNull;
+    ImageView imgOwnerProgile, imgMyDogProfile, imgDogDataNull;
     TextView tvOwnerName, tvMyDogName, tvMyDogSex, tvMyDogAge, tvMyDogType, tvMyDogWeight, tvMyDogKine, tvMyDogNumber;
     RecyclerView recyclerViewMyDog;
     FloatingActionButton btnFloatAddMyDog;
     LinearLayout linearDogDataNull;
     ConstraintLayout constraintDogDataIs;
-    ImageButton btnMyDogDataDelete;
+    ImageButton btnMyDogDataDelete, btnOwnerDataEdit;
 
     DogListAdapter dogListAdapter;
     List<DogDTO> dogDTOList;
@@ -49,6 +59,7 @@ public class OwnerMypageActivity extends OwnerBottomNavigation implements View.O
 //        setContentView(R.layout.activity_owner_mypage);
 
         imgOwnerProgile = (ImageView)findViewById(R.id.imageView_profileImg);
+        imgMyDogProfile = (ImageView)findViewById(R.id.imageView_mydog_img);
         imgDogDataNull = (ImageView)findViewById(R.id.imageView_mydog_data_null);
         linearDogDataNull = (LinearLayout)findViewById(R.id.linearLayout_myDog_data_null);
         constraintDogDataIs = (ConstraintLayout)findViewById(R.id.constraintLayout_myDog_info);
@@ -62,16 +73,20 @@ public class OwnerMypageActivity extends OwnerBottomNavigation implements View.O
         tvMyDogNumber = (TextView)findViewById(R.id.textView_mydog_number);
         btnFloatAddMyDog = (FloatingActionButton)findViewById(R.id.button_floating_add_mydog);
         btnMyDogDataDelete = (ImageButton)findViewById(R.id.imageView_mydog_delete);
+        btnOwnerDataEdit = (ImageButton)findViewById(R.id.imageButton_edit_owner_data);
 
         //리사이클러뷰 초기화 셋팅
         recyclerViewInitSetting();
 
+        //DB에서 반려인 데이터 불러오기
+        loadOwnerDataToDB();
         //DB에서 강아지 데이터 불러오기
         loadMyDogDataToDB();
 
         //클릭 리스너 이벤트
         btnFloatAddMyDog.setOnClickListener(this);
         btnMyDogDataDelete.setOnClickListener(this);
+        btnOwnerDataEdit.setOnClickListener(this);
 
         //DB에 저장된 데이터 조회해서 setText() 해주기
 //        applicationClass.loadData1ColumnToDB("user_owner", "name", "id", applicationClass.currentWalkerID, tvOwnerName);
@@ -94,8 +109,38 @@ public class OwnerMypageActivity extends OwnerBottomNavigation implements View.O
         recyclerViewMyDog.setLayoutManager(linearLayoutManager); //?? 주석??
         recyclerViewMyDog.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        dogListAdapter = new DogListAdapter();
+        dogListAdapter = new DogListAdapter(this);
         recyclerViewMyDog.setAdapter(dogListAdapter);
+    }
+
+    //DB에서 반려인 데이터 불러오기
+    public void loadOwnerDataToDB(){
+        Call<List<UserOwnerDTO>> call = retrofitApi.selectOwnerData(applicationClass.currentWalkerID);
+        call.enqueue(new Callback<List<UserOwnerDTO>>() {
+            @Override
+            public void onResponse(Call<List<UserOwnerDTO>> call, Response<List<UserOwnerDTO>> response) {
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "반려인 데이터 조회 성공");
+                List<UserOwnerDTO> userOwnerDTOList = response.body();
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "반려인 이름 : "+userOwnerDTOList.get(0).getName());
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "반려인 이미지 : "+userOwnerDTOList.get(0).getProfile_img());
+                //반려인 이름 셋팅
+                tvOwnerName.setText(userOwnerDTOList.get(0).getName());
+                //반려인 사진 셋팅
+                Glide.with(getApplicationContext())
+                        .load(userOwnerDTOList.get(0).getProfile_img())
+                        .override(300,300)
+                        .apply(applicationClass.requestOptions.fitCenter().centerCrop())
+                        .into(imgOwnerProgile);
+            }
+
+            @Override
+            public void onFailure(Call<List<UserOwnerDTO>> call, Throwable t) {
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "반려인 데이터 조회 실패");
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", t.toString());
+
+            }
+        });
+
     }
 
     //DB에서 강아지 데이터 불러오기
@@ -121,7 +166,7 @@ public class OwnerMypageActivity extends OwnerBottomNavigation implements View.O
 
                     dogListAdapter.setDogDTOArrayList(arrayList);
                     dogListAdapter.notifyDataSetChanged();
-
+                    //강아지 데이터 View 에 셋팅하기
                     myDogDataSetText(0);
 
                 }else{
@@ -163,6 +208,13 @@ public class OwnerMypageActivity extends OwnerBottomNavigation implements View.O
         tvMyDogKine.setText(dogDTOList.get(position).getKind());
         tvMyDogWeight.setText(dogDTOList.get(position).getWeight()+" kg");
         tvMyDogNumber.setText(dogDTOList.get(position).getNumber());
+        //반려견 프로필 이미지 셋팅
+        Glide.with(getApplicationContext())
+                .load(dogDTOList.get(position).getProfile_img())
+                .override(300,300)
+                .apply(applicationClass.requestOptions.fitCenter().circleCrop())
+                .into(imgMyDogProfile);
+
     }
 
     @Override
@@ -179,6 +231,12 @@ public class OwnerMypageActivity extends OwnerBottomNavigation implements View.O
             case R.id.imageView_mydog_delete:
                 //강아지 삭제 여부 묻는 다이얼로그 창 띄우기
                 deleteDogDataDialog();
+                break;
+
+            case R.id.imageButton_edit_owner_data :
+                //강아지 이미지 수정하는 다이얼로그 창 띄우기
+                //사진 권한 요청 후 -> 사진 or 카메라 선택 다이얼로그 창 띄어줌
+                tedPermission();
                 break;
 
             default:
@@ -250,9 +308,109 @@ public class OwnerMypageActivity extends OwnerBottomNavigation implements View.O
                 loadMyDogDataToDB();
                 break;
 
+            case PICK_FROM_OWNER_IMG_CAMERA :
+                break;
+
+            case PICK_FROM_OWNER_IMG_ALBUM :
+
+                //앨범에서 getData Uri 받아온 후
+                Uri photoUri = data.getData();
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "photoUri : " + photoUri);
+                //photoUri 값을 경로 변환 -> File 객체 생성해주는 메소드에 보내준다
+                MultipartBody.Part body = applicationClass.updateAlbumImgToServer(photoUri);
+                //위 메소드의 return 값은 return body(MultipartBody.Part) 형태로 반환된다
+                Call<ResultDTO> call = retrofitApi.updateOwnerImageData(applicationClass.currentWalkerID, body);
+                call.enqueue(new Callback<ResultDTO>() {
+                    @Override
+                    public void onResponse(Call<ResultDTO> call, Response<ResultDTO> response) {
+                        ResultDTO resultDTO = response.body();
+                        String resultDataStr = resultDTO.getResponceResult();
+                        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "앨범이미지 서버 저장 성공");
+                        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", resultDataStr);
+
+                        //이미지 로딩 라이브러리 (반려인 프로필 사진 변경)
+                        Glide.with(getApplicationContext())
+                                .load(resultDataStr)
+                                .override(300,300)
+                                .apply(applicationClass.requestOptions.fitCenter().centerCrop())
+                                .into(imgOwnerProgile);
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResultDTO> call, Throwable t) {
+                        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "앨범이미지 서버 저장 실패");
+                        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", t.toString());
+                    }
+                });
+                break;
+
             default:
                 break;
         }
+    }
+
+    //카메라&앨범에 관한 권한 허용을 사용자로부터 받는 메소드
+    public void tedPermission(){
+        PermissionListener permissionListener = new PermissionListener() {
+            @Override
+            public void onPermissionGranted() {
+                //권한 요청 성공
+                makeToast("권한 요청 성공");
+                //사진 추가 다이얼로그 띄우기
+                addImgAlertDialog();
+            }
+            @Override
+            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+                //권한 요청 실패
+                makeToast("권한 요청 실패");
+            }
+        };
+        TedPermission.with(this)
+                .setPermissionListener(permissionListener)
+                .setRationaleMessage(getResources().getString(R.string.permission_2))
+                .setDeniedMessage(getResources().getString(R.string.permission_1))
+                .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+                .check();
+    }
+
+    //사진 추가할때 카메라 or 앨범 선택 다이얼로그
+    public void addImgAlertDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("프로필 사진")
+                .setMessage("프로필 사진 수정하기");
+
+        builder.setPositiveButton("앨범", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //앨범에서 사진 가져오기
+                getImageFromAlbum();
+            }
+        }).setNeutralButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        }).setNegativeButton("카메라", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //카메라에서 사진 가져오기
+//                getImageFromCamera();
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    //앨범에서 이미지 가져오는 메소드
+    public void getImageFromAlbum(){
+        //인텐트를 통해 앨범 화면으로 이동시켜줌
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+//        intent.setType("image/-");
+//        intent.setAction(Intent.ACTION_GET_CONTENT);    //추가 코드
+        startActivityForResult(intent, PICK_FROM_OWNER_IMG_ALBUM);
     }
 
     @Override

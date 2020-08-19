@@ -10,16 +10,20 @@ import com.example.dogwalker.retrofit2.response.WalkableTypeDTO;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.PartMap;
 import retrofit2.http.Query;
 
 public interface RetrofitApi {
@@ -39,6 +43,10 @@ public interface RetrofitApi {
 
     //도그워커 관련 API
 
+    //도그워커 이미지 저장
+    @Multipart
+    @POST("common/insert_walker_image.php")
+    Call<ResultDTO> updateWalkerImageData(@Query("id") String id, @Part MultipartBody.Part file);
     //서비스위치 데이터 수정
     @GET("walker/update_location.php")
     Call<ResultDTO> updateWalkerLocation(@Query("id") String id, @Query("location") String location);
@@ -88,6 +96,9 @@ public interface RetrofitApi {
     //반려인 관련 API
 
     //강아지 정보 저장
+//    @FormUrlEncoded
+//    @POST("owner/insert_dog_data.php")
+//    Call<ResultDTO> insertDogData(@FieldMap HashMap<String, Object> parameters);
     @FormUrlEncoded
     @POST("owner/insert_dog_data.php")
     Call<ResultDTO> insertDogData(@FieldMap HashMap<String, Object> parameters);
@@ -98,8 +109,20 @@ public interface RetrofitApi {
     @GET("owner/delete_dog_data.php")
     Call<ResultDTO> deleteDogData(@Query("owner_id") String owner_id, @Query("name") String name);
     //강아지 이미지 저장
-//    @FormUrlEncoded
     @Multipart
-    @POST("common/insert_image.php")
-    Call<ResultDTO> insertImage(@Part MultipartBody.Part File);
+    @POST("common/insert_dog_image.php")
+    Call<ResultDTO> updateDogImageData(@Query("id") String id, @Part MultipartBody.Part file);
+    //반려인 정보 조회
+    @GET("owner/select_owner_data.php")
+    Call<List<UserOwnerDTO>> selectOwnerData(@Query("id") String id);
+    //반려인 이미지 저장
+    @Multipart
+    @POST("common/insert_owner_image.php")
+    Call<ResultDTO> updateOwnerImageData(@Query("id") String id, @Part MultipartBody.Part file);
+
+
+//    @Multipart
+//    @POST("common")
+//    Call<ResultDTO> insertImage(@Header("Authorization") String authorization, @Part("file\"; filename=\"pp.png\" ") RequestBody file ,
+//                              @Part("FirstName") RequestBody fname, @Part("Id") RequestBody id);
 }

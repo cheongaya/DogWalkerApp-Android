@@ -26,11 +26,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.dogwalker.GpsTracker;
 import com.example.dogwalker.LocationWebViewActivity;
 import com.example.dogwalker.R;
 import com.example.dogwalker.retrofit2.response.ResultDTO;
 import com.example.dogwalker.retrofit2.response.ResultStrDTO;
+import com.example.dogwalker.retrofit2.response.UserOwnerDTO;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
@@ -41,6 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -80,7 +83,7 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_walker_mypage);
 
-        profileImg = (ImageView)findViewById(R.id.imageView_profileImg);
+        profileImg = (ImageView)findViewById(R.id.imageView_walker_profileImg);
 //        btnLocation = (ImageButton)findViewById(R.id.imageButton_location);
         btnGPS = (ImageButton)findViewById(R.id.imageButton_GPS);
         tvLocation = (TextView)findViewById(R.id.textView_location);
@@ -103,7 +106,8 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
         //DB에 저장된 데이터 조회해서 setText() 해주기
         applicationClass.loadData1ColumnToDB("user_walker", "name", "id", applicationClass.currentWalkerID, tvName);
         applicationClass.loadData1ColumnToDB("user_walker", "location", "id", applicationClass.currentWalkerID, tvLocation);
-//        tvName.setText(getNameToServer);
+        //DB에서 도그워커 데이터 불러오기
+        loadWalkerDataToDB();
     }
 
 //    @Override
@@ -120,7 +124,7 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
 
         switch (v.getId()){
 
-            case R.id.imageView_profileImg :
+            case R.id.imageView_walker_profileImg :
                 //카메라&사진 권한 승인 후 사진 추가 다이얼로그 띄움
                 tedPermission();
                 break;
@@ -149,6 +153,32 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
                 startActivityForResult(intentWalkPrice, WALKER_WALKPRICE);
                 break;
         }
+
+    }
+
+    //DB에서 도그워커 데이터 불러오기
+    public void loadWalkerDataToDB(){
+        Call<ResultDTO> call = retrofitApi.selectWalkerData1Column("user_walker", "profile_img", "id", applicationClass.currentWalkerID);
+        call.enqueue(new Callback<ResultDTO>() {
+            @Override
+            public void onResponse(Call<ResultDTO> call, Response<ResultDTO> response) {
+
+                ResultDTO resultDTO = response.body();
+                String resultDataStr = resultDTO.getResponceResult();
+                //반려인 사진 셋팅
+                Glide.with(getApplicationContext())
+                        .load("http://192.168.179.129/"+resultDataStr)
+                        .override(300,300)
+                        .apply(applicationClass.requestOptions.fitCenter().centerCrop())
+                        .into(profileImg);
+
+            }
+
+            @Override
+            public void onFailure(Call<ResultDTO> call, Throwable t) {
+
+            }
+        });
 
     }
 
@@ -195,6 +225,32 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
         switch(requestCode){
 
             case PICK_FROM_ALBUM :
+
+                //앨범에서 getData Uri 받아온 후
+                Uri photoUri = data.getData();
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "photoUri : " + photoUri);
+                //photoUri 값을 경로 변환 -> File 객체 생성해주는 메소드에 보내준다
+                MultipartBody.Part body = applicationClass.updateAlbumImgToServer(photoUri);
+                //위 메소드의 return 값은 return body(MultipartBody.Part) 형태로 반환된다
+                Call<ResultDTO> call = retrofitApi.updateWalkerImageData(applicationClass.currentWalkerID, body);
+                call.enqueue(new Callback<ResultDTO>() {
+                    @Override
+                    public void onResponse(Call<ResultDTO> call, Response<ResultDTO> response) {
+                        ResultDTO resultDTO = response.body();
+                        String resultDataStr = resultDTO.getResponceResult();
+                        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "앨범이미지 서버 저장 성공");
+                        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", resultDataStr);
+
+                        //이미지 로딩 라이브러리 (반려인 프로필 사진 변경)
+                        profileImg.setImageURI(data.getData());
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResultDTO> call, Throwable t) {
+                        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "앨범이미지 서버 저장 실패");
+                        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", t.toString());
+                    }
+                });
                 break;
 
             case PICK_FROM_CAMERA :

@@ -53,10 +53,11 @@ dependencies {
     //lottie 라이브러리 사용
     def lottieVersion = "3.4.1"
     implementation "com.airbnb.android:lottie:$lottieVersion"
-
     //material-calendar 라이브러리 사용
     implementation 'com.github.prolificinteractive:material-calendarview:1.4.3'
-
     //ted permission 라이브러리 사용 (마시멜로우 버전 이상부터는 카메라/앨범 권한에 대한 허용을 사용자로부터 받아야한다)
     implementation "gun0912.ted:tedpermission:2.1.0"
+    //이미지 로딩 라이브러리
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
 }

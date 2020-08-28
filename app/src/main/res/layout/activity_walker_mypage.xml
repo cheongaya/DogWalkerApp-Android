@@ -54,7 +54,6 @@ android:layout_height="match_parent">
                     android:id="@+id/imageView_walker_profileImg"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@drawable/ic_baseline_add_photo_alternate_24"
                     android:scaleType="centerInside"
                     android:background="@color/colorSub"/>
 
@@ -77,6 +76,7 @@ android:layout_height="match_parent">
                             android:textStyle="bold"
                             android:textSize="18sp"/>
                         <ImageButton
+                            android:id="@+id/imageButton_edit_walker_data"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:scaleType="centerCrop"

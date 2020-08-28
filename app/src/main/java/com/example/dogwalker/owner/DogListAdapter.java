@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.dogwalker.ApplicationClass;
 import com.example.dogwalker.R;
+import com.example.dogwalker.data.DogDTO;
 
 import java.util.ArrayList;
 

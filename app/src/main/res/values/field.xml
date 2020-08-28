@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="spinnerArray">
-        <item> 분야를 선택하세요. </item>
-        <item> 요리/베이킹 </item>
-        <item> 공예/미술 </item>
-        <item> 운동 </item>
-        <item> 음악 </item>
-        <item> 컴퓨터 </item>
-        <item> 사진 </item>
+        <item> 품종을 선택해 주세요</item>
+        <item> 골든 리트리버</item>
+        <item> 말티즈</item>
+        <item> 비글</item>
+        <item> 비숑 프리제</item>
+        <item> 스피츠(재팬니즈 스피츠)</item>
+        <item> 시베리안 허스키</item>
     </string-array>
 </resources>

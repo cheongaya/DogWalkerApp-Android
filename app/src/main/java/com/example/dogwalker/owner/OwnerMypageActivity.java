@@ -16,11 +16,11 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.dogwalker.R;
+import com.example.dogwalker.data.DogDTO;
 import com.example.dogwalker.retrofit2.response.ResultDTO;
 import com.example.dogwalker.retrofit2.response.UserOwnerDTO;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -28,7 +28,6 @@ import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.MultipartBody;
@@ -356,14 +355,14 @@ public class OwnerMypageActivity extends OwnerBottomNavigation implements View.O
             @Override
             public void onPermissionGranted() {
                 //권한 요청 성공
-                makeToast("권한 요청 성공");
+//                makeToast("권한 요청 성공");
                 //사진 추가 다이얼로그 띄우기
                 addImgAlertDialog();
             }
             @Override
             public void onPermissionDenied(ArrayList<String> deniedPermissions) {
                 //권한 요청 실패
-                makeToast("권한 요청 실패");
+//                makeToast("권한 요청 실패");
             }
         };
         TedPermission.with(this)

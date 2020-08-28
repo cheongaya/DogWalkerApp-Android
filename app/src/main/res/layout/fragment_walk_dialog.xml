@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="fragment"
+            type="com.example.dogwalker.owner.fragment.FragmentWalkDialog" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="서비스 이용 시간 선택하기"
+            android:textColor="@color/colorMain2"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginBottom="10dp"/>
+
+        <Button
+            android:id="@+id/button_fragment_dialog_walk_30min"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:text="30분 산책"
+            android:background="@drawable/button_walk_dialog_selected"
+            android:onClick="@{fragment::onClick30minWalkTime}"
+            android:textSize="18sp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"/>
+
+        <Button
+            android:id="@+id/button_fragment_dialog_walk_60min"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:text="60분 산책"
+            android:background="@drawable/button_walk_dialog_selected"
+            android:onClick="@{fragment::onClick60minWalkTime}"
+            android:textSize="18sp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"/>
+
+        <LinearLayout
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="30분 추가"
+                android:textSize="18sp"
+                android:textColor="@color/colorBlack"/>
+            <NumberPicker
+                android:id="@+id/numberPicker_add_30min_walk_time"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="70dp"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorRed"
+            android:text="※ 60분 산책 선택 후 시간 추가 가능"/>
+        <TextView
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorRed"
+            android:text="※ 최대 2시간 예약 가능"/>
+
+        <LinearLayout
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/textView_fragment_dialog_walk_total_time"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="예약 시간 : 00 분"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorBlack"/>
+
+            <Button
+                android:id="@+id/button_booking_walk_next"
+                android:onClick="@{fragment::onClickWalkTimeSelectedNext}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="다음"
+                android:background="@drawable/circular_corner_stroke_walker"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>

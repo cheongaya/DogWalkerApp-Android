@@ -72,6 +72,7 @@ public class OwnerAddDogActivity extends BaseActivity {
 
     private ActivityOwnerAddDogBinding binding;
     String dogNameStr, dogSexStr, dogSizeStr, dogNeuterStr, dogKindStr = "";
+    String dogKind = "";
 
     Intent intent;
     public static MultipartBody.Part body;
@@ -100,7 +101,10 @@ public class OwnerAddDogActivity extends BaseActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(binding.spinnerDogType.getSelectedItemPosition() > 0){
                     //선택된 항목
-                    Log.v("알림",binding.spinnerDogType.getSelectedItem().toString()+ "is selected");
+                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "품종선택 : " + binding.spinnerDogType.getSelectedItem().toString()+ " is selected");
+                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "품종선택 : " + binding.spinnerDogType.getSelectedItemPosition()+ " is selected");
+
+                    dogKind = binding.spinnerDogType.getSelectedItem().toString();
                 }
             }
 
@@ -225,11 +229,11 @@ public class OwnerAddDogActivity extends BaseActivity {
             dogNeuterStr = "before";
         }
         if(checkKindBreed.equals(true)){
-            dogKindStr = "poodle";
+            dogKindStr = dogKind;
         }else if(checkKindMix.equals(true)){
-            dogKindStr = "mix";
+            dogKindStr = "믹스견";
         }else if(checkKindNo.equals(true)){
-            dogKindStr = "no";
+            dogKindStr = "모름";
         }
     }
 

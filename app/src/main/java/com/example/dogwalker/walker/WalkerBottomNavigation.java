@@ -2,6 +2,7 @@ package com.example.dogwalker.walker;
 
 import android.app.AppComponentFactory;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -193,6 +195,35 @@ public abstract class WalkerBottomNavigation extends AppCompatActivity implement
     protected void onDestroy() {
         Log.d(TAG, className + "_onDestroy()");
         super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        //앱 종료 다이얼로그 띄우기
+        appFinishDialog();
+    }
+
+
+    //앱 종료 다이얼로그
+    public void appFinishDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("앱 종료")
+                .setMessage("앱을 종료하시겠습니까?");
+
+        builder.setPositiveButton("네", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        }).setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     //로그 : 액티비티명 + 함수명 + 원하는 데이터를 한번에 보기위한 로그

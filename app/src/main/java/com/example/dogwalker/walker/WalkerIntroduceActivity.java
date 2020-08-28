@@ -65,11 +65,18 @@ public class WalkerIntroduceActivity extends BaseActivity {
             @Override
             public void onResponse(Call<ResultStrDTO> call, Response<ResultStrDTO> response) {
 
-                ResultStrDTO resultDataStr = response.body();
-                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "서버에서 받아온 결과 : " + resultDataStr);
+                ResultStrDTO resultData = response.body();
+                String resultDataString = resultData.toString();
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "서버에서 받아온 결과 : " + resultDataString);
 //                binding.editTextIntroduce.setText(resultDataStr.toString());
-                binding.setResultString(resultDataStr);
-                makeToast("데이터 조회 완료");
+
+                if(resultDataString.contentEquals("null")){
+//                    makeToast("데이터 조회 완료 : null");
+                }else{
+                    binding.editTextIntroduce.setText(resultDataString);
+//                    makeToast("데이터 조회 완료");
+                }
+
 
             }
             @Override

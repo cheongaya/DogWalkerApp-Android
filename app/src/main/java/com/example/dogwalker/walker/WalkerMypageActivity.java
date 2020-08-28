@@ -71,7 +71,7 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
 
     //xml 관련
     ImageView profileImg;
-    ImageButton btnLocation, btnGPS;
+    ImageButton btnUserDataEdit, btnLocation, btnGPS;
     TextView tvLocation, tvName;
     LinearLayout linearLocation, linearIntroduce, linearWalkableType, linearWalkPrice;
     File tempFile;
@@ -85,6 +85,7 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
 
         profileImg = (ImageView)findViewById(R.id.imageView_walker_profileImg);
 //        btnLocation = (ImageButton)findViewById(R.id.imageButton_location);
+        btnUserDataEdit = (ImageButton)findViewById(R.id.imageButton_edit_walker_data);
         btnGPS = (ImageButton)findViewById(R.id.imageButton_GPS);
         tvLocation = (TextView)findViewById(R.id.textView_location);
         tvName = (TextView)findViewById(R.id.textView_name);
@@ -93,7 +94,8 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
         linearWalkableType = (LinearLayout)findViewById(R.id.linearLayout_walkable_type);
         linearWalkPrice = (LinearLayout)findViewById(R.id.linearLayout_walk_price);
 
-        profileImg.setOnClickListener(this);
+//        profileImg.setOnClickListener(this);
+        btnUserDataEdit.setOnClickListener(this);
         btnGPS.setOnClickListener(this);
         linearLocation.setOnClickListener(this);
         linearIntroduce.setOnClickListener(this);
@@ -124,7 +126,7 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
 
         switch (v.getId()){
 
-            case R.id.imageView_walker_profileImg :
+            case R.id.imageButton_edit_walker_data :
                 //카메라&사진 권한 승인 후 사진 추가 다이얼로그 띄움
                 tedPermission();
                 break;
@@ -167,7 +169,7 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
                 String resultDataStr = resultDTO.getResponceResult();
                 //반려인 사진 셋팅
                 Glide.with(getApplicationContext())
-                        .load("http://192.168.179.129/"+resultDataStr)
+                        .load("http://13.125.0.82/"+resultDataStr)
                         .override(300,300)
                         .apply(applicationClass.requestOptions.fitCenter().centerCrop())
                         .into(profileImg);
@@ -270,9 +272,14 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
 
             case WALKER_ADDRESS:  //주소 데이터 검색 팝업창 띄우기
                 String resultAddress = data.getExtras().getString("addressResult");
-                tvLocation.setText(resultAddress);
-                //위치 데이터를 user_walker 테이블에 저장하는 메소드
-                updateLocationDataToDB(resultAddress);
+                if(resultAddress != null){
+                    tvLocation.setText(resultAddress);
+                    //위치 데이터를 user_walker 테이블에 저장하는 메소드
+                    updateLocationDataToDB(resultAddress);
+                }
+//                tvLocation.setText(resultAddress);
+//                //위치 데이터를 user_walker 테이블에 저장하는 메소드
+//                updateLocationDataToDB(resultAddress);
                 break;
 
             case WALKER_INTRODUCE: //자기소개 데이터 등록 팝업창 띄우기
@@ -348,7 +355,7 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
                 makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "서버에서 받아온 결과 : " + resultCodeStr);
 
                 if(resultCodeStr.contentEquals("ok")){
-                    makeToast("위치 데이터 저장 완료");
+//                    makeToast("위치 데이터 저장 완료");
                 }
             }
 
@@ -389,7 +396,7 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
                 makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "서버에서 받아온 결과 : " + resultCodeStr);
 
                 if(resultCodeStr.contentEquals("ok")){
-                    makeToast("위치 데이터 저장 완료");
+//                    makeToast("위치 데이터 저장 완료");
 
                     //이전 액티비티로 보내기
                 }
@@ -435,9 +442,9 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
                 String resultDataStr = resultDTO.getResponceResult();
 
                 if(resultDataStr.contentEquals("ok")){
-                    makeToast("데이터 저장 성공");
+//                    makeToast("데이터 저장 성공");
                 }else{
-                    makeToast("데이터 저장 실패");
+//                    makeToast("데이터 저장 실패");
                 }
             }
 
@@ -475,9 +482,9 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
                 String resultDataStr = resultDTO.getResponceResult();
 
                 if(resultDataStr.contentEquals("ok")){
-                    makeToast("가격 데이터 저장 성공");
+//                    makeToast("가격 데이터 저장 성공");
                 }else{
-                    makeToast("가격 데이터 저장 실패");
+//                    makeToast("가격 데이터 저장 실패");
                 }
             }
 
@@ -499,7 +506,7 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
             @Override
             public void onPermissionGranted() {
                 //권한 요청 성공
-                makeToast("권한 요청 성공");
+//                makeToast("권한 요청 성공");
 
                 //사진 추가 다이얼로그 띄우기
                 addImgAlertDialog();
@@ -508,7 +515,7 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
             @Override
             public void onPermissionDenied(ArrayList<String> deniedPermissions) {
                 //권한 요청 실패
-                makeToast("권한 요청 실패");
+//                makeToast("권한 요청 실패");
             }
         };
 
@@ -547,7 +554,6 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
         });
 
         AlertDialog alertDialog = builder.create();
-
         alertDialog.show();
     }
 

@@ -51,9 +51,8 @@
 
                     <ImageView
                         android:id="@+id/imageView_profileImg"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:src="@drawable/ic_baseline_add_photo_alternate_24"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
                         android:scaleType="centerInside"
                         android:background="@color/colorSub"/>
 
@@ -159,7 +158,8 @@
                         android:id="@+id/constraintLayout_myDog_info"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:padding="30dp">
+                        android:padding="30dp"
+                        android:visibility="gone">
 
                         <TextView
                             android:id="@+id/textView_mydog_name"
@@ -299,7 +299,7 @@
                             android:layout_height="90dp"
                             android:src="@drawable/icon_dogwalker04"
                             android:background="@drawable/circular_corner_stroke_mydog2"
-                            android:scaleType="center"
+                            android:scaleType="centerInside"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintRight_toRightOf="parent"/>
 

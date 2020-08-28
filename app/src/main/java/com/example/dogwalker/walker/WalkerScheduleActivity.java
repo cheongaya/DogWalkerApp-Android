@@ -8,6 +8,8 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +20,7 @@ import com.example.dogwalker.LocationWebViewActivity;
 import com.example.dogwalker.decorators.Decorator;
 import com.example.dogwalker.decorators.EventDecorator;
 import com.example.dogwalker.R;
+import com.example.dogwalker.decorators.NoneDaysCancelDecorator;
 import com.example.dogwalker.decorators.NoneDaysDecorator;
 import com.example.dogwalker.decorators.NonedayDecorator;
 import com.example.dogwalker.decorators.OneDayDecorator;
@@ -34,6 +37,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Executors;
 
@@ -46,7 +50,7 @@ public class WalkerScheduleActivity extends WalkerBottomNavigation implements Ra
     MaterialCalendarView materialCalendarView;
     private final OneDayDecorator oneDayDecorator = new OneDayDecorator();
 
-    Button btnSelectedDate, btnNoneDate;
+    Button btnSelectedDate, btnNoneDate, btnNoneDateCancel;
 
     ArrayList<CalendarDay> nonServiceCalendarDates; //DB에서 받아온 서비스불가날짜 String List 를 CalendarDay List 에 담았다.    //클릭이벤트에서 사용하면됨
 
@@ -61,14 +65,16 @@ public class WalkerScheduleActivity extends WalkerBottomNavigation implements Ra
         calendarViewInitSetting();
 
         ((RadioGroup) findViewById(R.id.radioGroup_selection_type)).setOnCheckedChangeListener(this);
-        btnSelectedDate = (Button)findViewById(R.id.button_selectedDate);
+//        btnSelectedDate = (Button)findViewById(R.id.button_selectedDate);
         btnNoneDate = (Button)findViewById(R.id.button_noneDate);
+        btnNoneDateCancel = (Button)findViewById(R.id.button_noneDate_cancel);
 
         //클릭 리스너 연결
-        btnSelectedDate.setOnClickListener(this);
+//        btnSelectedDate.setOnClickListener(this);
         btnNoneDate.setOnClickListener(this);
-
-        materialCalendarView.addDecorator(new NonedayDecorator());
+        btnNoneDateCancel.setOnClickListener(this);
+        //지정 날짜에 빨간 점 표시
+//        materialCalendarView.addDecorator(new NonedayDecorator());
 
         //클릭 리스너 이벤트
         onClickCalendarView();
@@ -76,39 +82,25 @@ public class WalkerScheduleActivity extends WalkerBottomNavigation implements Ra
         //서비스 불가 날짜 DB 에서 데이터 불러와서 해당 날짜들에 addDecorator 백그라운드 회색 지정해주기
         loadNoneServiceDatesToDB();
 
-//        materialCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
-//            @Override
-//            public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-//                int Year = date.getYear();
-//                int Month = date.getMonth() + 1;
-//                int Day = date.getDay();
-//
-//                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "CalendarDay(date) : " + date);
-//                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "Year : " + Year);
-//                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "Month : " + Month);
-//                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "Day : " + Day);
-//
-//                String shot_Day = Year + "," + Month + "," + Day;
-//                Log.i("shot_Day test", shot_Day + "");
-////                materialCalendarView.clearSelection();
-//                Toast.makeText(getApplicationContext(), shot_Day , Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
 
-            case R.id.button_selectedDate :
-                //선택한 날짜 데이터값 받아오기
-                getSelectedDates();
-                break;
+//            case R.id.button_selectedDate :
+//                //선택한 날짜 데이터값 받아오기
+//                getSelectedDates();
+//                break;
 
             case R.id.button_noneDate :
                 //서비스 불가능한 날짜 셋팅하기
                 saveServiceNoneDatesToDB();
+                break;
+
+            case R.id.button_noneDate_cancel :
+                //서비스 불가능한 날짜 해지하기
+                deleteServiceNoneDatesToDB();
                 break;
         }
     }
@@ -118,7 +110,7 @@ public class WalkerScheduleActivity extends WalkerBottomNavigation implements Ra
 
         List<CalendarDay> calendarDays = materialCalendarView.getSelectedDates();
 
-        makeToast(calendarDays.toString());
+//        makeToast(calendarDays.toString());
         makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "선택한 날짜 : " + calendarDays.toString());
 
         //single : [CalendarDay{2020-7-12}]
@@ -141,8 +133,82 @@ public class WalkerScheduleActivity extends WalkerBottomNavigation implements Ra
             makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "선택한 날짜 date : " + fullDate);
 
             //서비스 불가 날짜 DB에 저장
-            applicationClass.insertData3ColumnToDB("non_service_date", "walker_id", applicationClass.currentWalkerID,
-                    "date", fullDate, "time", "all");
+            HashMap<String, Object> parameters = new HashMap<>();
+            parameters.put("insertVal1", applicationClass.currentWalkerID);
+            parameters.put("insertVal2", fullDate);
+            parameters.put("insertVal3", "all");
+
+            Call<ResultDTO> call = retrofitApi.insertWalkerNonServiceDates(parameters);
+            call.enqueue(new Callback<ResultDTO>() {
+                @Override
+                public void onResponse(Call<ResultDTO> call, Response<ResultDTO> response) {
+                    ResultDTO resultDTO = response.body();
+                    String resultData = resultDTO.getResponceResult();
+                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "데이터저장성공 : " + resultData);
+                    if(resultData.contentEquals("ok")){
+                        //화면 갱신
+                        Intent intent = getIntent();
+                        finish();
+                        startActivity(intent);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResultDTO> call, Throwable t) {
+                    makeLog(new Object() {
+                    }.getClass().getEnclosingMethod().getName() + "()", "데이터저장실패 : " + t.toString());
+                }
+            });
+        }
+
+        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "선택한 날짜 result : " + result);
+
+    }
+
+    //서비스 불가능한 날짜 DB 에서 삭제하기 (다시 서비스 가능한 날짜로 만들기)
+    public void deleteServiceNoneDatesToDB(){
+
+        List<CalendarDay> calendarDays = materialCalendarView.getSelectedDates();
+        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "선택한 날짜 : " + calendarDays.toString());
+
+        String result = "";
+
+        for(int i=0; i < calendarDays.size(); i++){
+
+            CalendarDay calendarDay = calendarDays.get(i);
+
+            int year = calendarDay.getYear();
+            int month = calendarDay.getMonth()+1;   //0부터 시작함으로 +1 해준다
+            int day = calendarDay.getDay();
+            String fullDate = year+"-"+month+"-"+day;
+
+            result += (fullDate+" / ");
+
+            makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "선택한 날짜 date : " + fullDate);
+
+            //서비스 불가 해지 날짜 DB에 저장
+            Call<ResultDTO> call = retrofitApi.deleteWalkerNonServiceDates(applicationClass.currentWalkerID, fullDate);
+            call.enqueue(new Callback<ResultDTO>() {
+                @Override
+                public void onResponse(Call<ResultDTO> call, Response<ResultDTO> response) {
+                    ResultDTO resultDTO = response.body();
+                    String resultData = resultDTO.getResponceResult();
+                    makeLog(new Object() {
+                    }.getClass().getEnclosingMethod().getName() + "()", "데이터삭제성공 : " + resultData);
+                    if(resultData.contentEquals("ok")){
+                        //화면 갱신
+                        Intent intent = getIntent();
+                        finish();
+                        startActivity(intent);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResultDTO> call, Throwable t) {
+                    makeLog(new Object() {
+                    }.getClass().getEnclosingMethod().getName() + "()", "데이터삭제실패 : " + t.toString());
+                }
+            });
 
         }
 
@@ -155,7 +221,7 @@ public class WalkerScheduleActivity extends WalkerBottomNavigation implements Ra
 
         List<CalendarDay> calendarDays = materialCalendarView.getSelectedDates();
 
-        makeToast(calendarDays.toString());
+//        makeToast(calendarDays.toString());
         makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "선택한 날짜 : " + calendarDays.toString());
 
         //single : [CalendarDay{2020-7-12}]
@@ -236,15 +302,19 @@ public class WalkerScheduleActivity extends WalkerBottomNavigation implements Ra
                     int dbYear = nonServiceCalendarDates.get(i).getYear();
                     int dbMonth = nonServiceCalendarDates.get(i).getMonth() + 1;
                     int dbDay = nonServiceCalendarDates.get(i).getDay();
+                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[1]디비 dbYear : " + dbYear);
+                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[1]디비 dbMonth : " + dbMonth);
+                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[1]디비 dbDay : " + dbDay);
                     CalendarDay dbNoneServiceDay = CalendarDay.from(dbYear, dbMonth, dbDay);
                     makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "디비날짜 : " + dbNoneServiceDay);
 
-                    if(dbNoneServiceDay.equals(selectedDay)){
-                        makeToast("선택 불가 날짜");
-                        break;
-                    }else{
-//                        makeToast("선택 가능 날짜 "+date.toString());
-                    }
+//                    if(dbNoneServiceDay.equals(selectedDay)){
+//                        makeToast("선택 불가 날짜");
+//
+//                        break;
+//                    }else{
+////                        makeToast("선택 가능 날짜 "+date.toString());
+//                    }
                 }
 
 //            //임의의 날짜 지정
@@ -274,7 +344,8 @@ public class WalkerScheduleActivity extends WalkerBottomNavigation implements Ra
                 materialCalendarView.setSelectionMode(MaterialCalendarView.SELECTION_MODE_RANGE);
                 break;
             case R.id.radioButton_none:
-                materialCalendarView.setSelectionMode(MaterialCalendarView.SELECTION_MODE_NONE);
+//                materialCalendarView.setSelectionMode(MaterialCalendarView.SELECTION_MODE_NONE);
+                materialCalendarView.clearSelection();
                 break;
         }
 
@@ -351,19 +422,29 @@ public class WalkerScheduleActivity extends WalkerBottomNavigation implements Ra
 
             Calendar calendar = Calendar.getInstance();
             nonServiceCalendarDates = new ArrayList<>();
+            makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[2]디비 nonServiceCalendarDates : " + nonServiceCalendarDates.toString());
 
             /*특정날짜 달력에 점표시해주는곳*/
             /*월은 0이 1월 년,일은 그대로*/
             //string 문자열인 Time_Result 을 받아와서 ,를 기준으로짜르고 string을 int 로 변환
+
             for(int i = 0 ; i < Time_Result.length ; i ++){
-                CalendarDay day = CalendarDay.from(calendar);
+
+//                CalendarDay day = CalendarDay.from(calendar);
                 String[] time = Time_Result[i].split("-");
                 int year = Integer.parseInt(time[0]);
                 int month = Integer.parseInt(time[1]);
                 int dayy = Integer.parseInt(time[2]);
 
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[2]디비 year : " + year);
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[2]디비 month : " + month);
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[2]디비 dayy : " + dayy);
+
+                CalendarDay day = CalendarDay.from(year, month-1, dayy);
+
                 nonServiceCalendarDates.add(day);
-                calendar.set(year,month-1,dayy);
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[2]디비 nonServiceCalendarDates : " + nonServiceCalendarDates.get(i).toString());
+//                calendar.set(year,month,dayy);
             }
 
             return nonServiceCalendarDates;
@@ -380,6 +461,38 @@ public class WalkerScheduleActivity extends WalkerBottomNavigation implements Ra
             materialCalendarView.addDecorator(new NoneDaysDecorator(Color.RED, calendarDays,WalkerScheduleActivity.this));
         }
     }
+
+//    public void threadTest(CalendarDay calendarDays){
+//        Handler handler = new Handler(){
+//            @Override
+//            public void handleMessage(@NonNull Message msg) {
+////                super.handleMessage(msg);
+//
+//                materialCalendarView.addDecorator(new NoneDaysCancelDecorator(Color.RED, calendarDays,WalkerScheduleActivity.this));
+//                makeLog(new Object() {
+//                }.getClass().getEnclosingMethod().getName() + "()", "테스트 : " + 33);
+//            }
+//        };
+//        Runnable task = new Runnable() {
+//            @Override
+//            public void run() {
+//                while (true){
+//                    try {
+//                        Thread.sleep(500);
+//                        makeLog(new Object() {
+//                        }.getClass().getEnclosingMethod().getName() + "()", "테스트 : " + 11);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                    handler.sendEmptyMessage(1);
+//                    makeLog(new Object() {
+//                    }.getClass().getEnclosingMethod().getName() + "()", "테스트 : " + 22);
+//                }
+//            }
+//        };
+//        Thread thread = new Thread(task);
+//        thread.start();
+//    }
 
     @Override
     int getContentViewId() {

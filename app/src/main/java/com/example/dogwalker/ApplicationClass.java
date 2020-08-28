@@ -51,8 +51,8 @@ public class ApplicationClass extends Application {
         //Glide 옵션
         requestOptions = new RequestOptions()
                 .centerCrop()
-                .placeholder(R.drawable.ic_baseline_add_photo_alternate_24)
-                .error(R.drawable.ic_baseline_edit_black_24)
+                .placeholder(R.drawable.ic_baseline_perm_identity_24)
+                .error(R.drawable.ic_baseline_perm_identity_24)
                 .diskCacheStrategy(DiskCacheStrategy.ALL);
 
     }
@@ -109,12 +109,16 @@ public class ApplicationClass extends Application {
                 ResultDTO resultDTO = response.body();
                 String resultServerStr = resultDTO.getResponceResult();
 
-                makeToast("데이터 저장 성공 : "+resultServerStr);
+                makeLog(new Object() {
+                }.getClass().getEnclosingMethod().getName() + "()", "데이터 저장 성공 : " + resultServerStr);
+//                makeToast("데이터 저장 성공 : "+resultServerStr);
             }
 
             @Override
             public void onFailure(Call<ResultDTO> call, Throwable t) {
-                makeToast("데이터 저장 실패");
+//                makeToast("데이터 저장 실패");
+                makeLog(new Object() {
+                }.getClass().getEnclosingMethod().getName() + "()", "데이터 저장 실패 : "+t.toString());
             }
         });
 
@@ -171,5 +175,6 @@ public class ApplicationClass extends Application {
     public void makeToast(String str) {
         Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
     }
-}
 
+
+}

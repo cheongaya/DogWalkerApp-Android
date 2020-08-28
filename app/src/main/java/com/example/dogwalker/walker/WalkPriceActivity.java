@@ -81,11 +81,26 @@ public class WalkPriceActivity extends BaseActivity {
                 makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()",
                         "서버에서 받은 가격 데이터 : " + priceValInt1 + " " + priceValInt2 + " " + priceValInt3 + " " + priceValInt4 + " " + priceValInt5);
 
-                binding.editTextThirtyMinutes.setText(priceValInt1+"");
-                binding.editTextSixtyMinutes.setText(priceValInt2+"");
-                binding.editTextAddLargeSize.setText(priceValInt3+"");
-                binding.editTextAddOneDog.setText(priceValInt4+"");
-                binding.editTextAddHoliday.setText(priceValInt5+"");
+                if(priceValInt1 != 0){
+                    binding.editTextThirtyMinutes.setText(priceValInt1+"");
+                }
+                if(priceValInt2 != 0){
+                    binding.editTextSixtyMinutes.setText(priceValInt2+"");
+                }
+                if(priceValInt3 != 0){
+                    binding.editTextAddLargeSize.setText(priceValInt3+"");
+                }
+                if(priceValInt4 != 0){
+                    binding.editTextAddOneDog.setText(priceValInt4+"");
+                }
+                if(priceValInt5 != 0){
+                    binding.editTextAddHoliday.setText(priceValInt5+"");
+                }
+//                binding.editTextThirtyMinutes.setText(priceValInt1+"");
+//                binding.editTextSixtyMinutes.setText(priceValInt2+"");
+//                binding.editTextAddLargeSize.setText(priceValInt3+"");
+//                binding.editTextAddOneDog.setText(priceValInt4+"");
+//                binding.editTextAddHoliday.setText(priceValInt5+"");
             }
 
             @Override

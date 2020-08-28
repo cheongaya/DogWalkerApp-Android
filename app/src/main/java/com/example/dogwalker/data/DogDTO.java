@@ -1,4 +1,4 @@
-package com.example.dogwalker.owner;
+package com.example.dogwalker.data;
 
 public class DogDTO {
 

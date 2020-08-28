@@ -1,16 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".OwnerWalkerlistActivity"
-    android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView_walkerlist"
+    <data>
+        <variable
+            name="activity"
+            type="com.example.dogwalker.owner.OwnerWalkerlistActivity" />
+    </data>
+
+    <LinearLayout
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="20dp">
 
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp"
+            android:gravity="center">
+
+            <TextView
+                android:text="도그워커 예약하기"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorBlack"
+                android:textStyle="bold"
+                android:layout_marginLeft="35dp"
+                android:gravity="center"
+                android:textSize="18sp"/>
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="30dp"
+                android:onClick="@{activity::onClickMapWalkerSearch}"
+                android:src="@drawable/icon_location"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <EditText
+                android:id="@+id/editText_walker_keyword_search"
+                android:layout_width="0dp"
+                android:layout_weight="4"
+                android:layout_height="50dp"
+                android:hint="도그워커 이름 등.. 키워드 입력"
+                android:paddingLeft="20dp"
+                android:background="@drawable/circular_corner_stroke_search_edittext"/>
+            <Button
+                android:id="@+id/button_walker_keyword_search"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="50dp"
+                android:background="@drawable/circular_corner_stroke_search_button"
+                android:textSize="18sp"
+                android:onClick="@{activity::onClickKeywordWalkerSearch}"
+                android:textColor="@color/colorWhite"
+                android:text="검색"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorMain2"
+                android:background="@drawable/circular_corner_stroke_filter_off"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:onClick="@{activity::onClickFilteringLocation}"
+                android:text="지역 선택"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorMain2"
+                android:background="@drawable/circular_corner_stroke_filter_off"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:onClick="@{activity::onClickFilteringDate}"
+                android:layout_marginLeft="10dp"
+                android:text="날짜 선택"/>
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_walkerlist"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:id="@+id/textView_search_walkerlist_null"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="검색된 내용이 없습니다"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:textColor="@color/colorBlack"
+            android:textSize="21sp"
+            android:visibility="gone"/>
+    </LinearLayout>
+</layout>

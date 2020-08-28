@@ -1,6 +1,7 @@
 package com.example.dogwalker.retrofit2;
 
-import com.example.dogwalker.owner.DogDTO;
+import com.example.dogwalker.data.DogDTO;
+import com.example.dogwalker.data.WalkerlistDTO;
 import com.example.dogwalker.retrofit2.response.NonServiceDateDTO;
 import com.example.dogwalker.retrofit2.response.ResultDTO;
 import com.example.dogwalker.retrofit2.response.ResultStrDTO;
@@ -10,26 +11,21 @@ import com.example.dogwalker.retrofit2.response.WalkableTypeDTO;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Call;
-import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
-import retrofit2.http.PartMap;
 import retrofit2.http.Query;
 
 public interface RetrofitApi {
 
-    public static String BASE_URL = "http://192.168.179.129/";
-
+//    public static String BASE_URL = "http://192.168.179.129/";
+    public static String BASE_URL = "http://13.125.0.82/";
 
     //공통
     //회원가입 (아이디/비밀번호/이름/전화번호)
@@ -40,6 +36,9 @@ public interface RetrofitApi {
     @FormUrlEncoded
     @POST("common/login_user.php")
     Call<ResultDTO> loginUser(@FieldMap HashMap<String, Object> parameters);
+    //회원가입 아이디 중복체크
+    @GET("common/join_duplicate_id_check.php")
+    Call<ResultStrDTO> duplicateIdCheck(@Query("tableName") String tableName, @Query("editId") String editId);
 
     //도그워커 관련 API
 
@@ -79,15 +78,20 @@ public interface RetrofitApi {
     //가격표 데이터 조회
     @GET("walker/select_walk_price.php")
     Call<WalkPriceDTO> selectWalkPrice(@Query("id") String id);
-
     //서비스불가날짜 저장 (3개 칼럼 저장 가능)
     @FormUrlEncoded
     @POST("walker/insert_walker_data_3column.php")
     Call<ResultDTO> insertWalkerData3Column(@FieldMap HashMap<String, Object> parameters);
-
+    //서비스불가날짜 저장
+    @FormUrlEncoded
+    @POST("walker/insert_walker_non_service_date.php")
+    Call<ResultDTO> insertWalkerNonServiceDates(@FieldMap HashMap<String, Object> parameters);
     //서비스불가날짜 조회
     @GET("walker/select_walker_non_service_date.php")
     Call<List<NonServiceDateDTO>> selectWalkerNonServiceDates(@Query("walker_id") String walker_id);
+    //서비스불가날짜 해제 (삭제)
+    @GET("walker/delete_walker_non_service_data.php")
+    Call<ResultDTO> deleteWalkerNonServiceDates(@Query("walker_id") String walker_id, @Query("date") String date);
 
 //    @POST("walker/update_walker_tb.php")
 //    Call<ResultDTO> updateWalkerData(@Query("tableName") String tableName,
@@ -119,6 +123,9 @@ public interface RetrofitApi {
     @Multipart
     @POST("common/insert_owner_image.php")
     Call<ResultDTO> updateOwnerImageData(@Query("id") String id, @Part MultipartBody.Part file);
+    //도그워커 정보 조회
+    @GET("walker/select_walkerlist_data.php")
+    Call<List<WalkerlistDTO>> selectWalkerlistData(@Query("tableName") String tableName);
 
 
 //    @Multipart

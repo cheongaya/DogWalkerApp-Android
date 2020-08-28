@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="activity"
+            type="com.example.dogwalker.owner.dialog.DialogTimeActivity" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="예약 시간 선택하기"
+            android:textColor="@color/colorMain2"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginBottom="10dp"/>
+
+        <TextView
+            android:id="@+id/textView_dialog_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="8월 25일"
+            android:textSize="18sp"
+            android:textColor="@color/colorBlack"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"/>
+
+        <GridLayout
+            android:layout_width="360dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:columnCount="8"
+            android:rowCount="4">
+            <Button
+                android:id="@+id/button_fragment_dialog_time_7_00"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_left"
+                android:gravity="center_vertical|right"
+                android:text="7 "/>
+            <Button
+                android:id="@+id/button_fragment_dialog_time_7_30"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_right"
+                android:gravity="center_vertical|left"
+                android:text="AM"/>
+            <Button
+                android:id="@+id/button_fragment_dialog_time_8_00"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_left"
+                android:gravity="center_vertical|right"
+                android:text="8 "/>
+            <Button
+                android:id="@+id/button_fragment_dialog_time_8_30"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_right"
+                android:gravity="center_vertical|left"
+                android:text="AM"/>
+
+            <Button
+                android:id="@+id/button_fragment_dialog_time_9_00"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_left"
+                android:gravity="center_vertical|right"
+                android:text="9 "/>
+            <Button
+                android:id="@+id/button_fragment_dialog_time_9_30"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_right"
+                android:gravity="center_vertical|left"
+                android:text="AM"/>
+
+            <Button
+                android:id="@+id/button_fragment_dialog_time_10_00"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_left"
+                android:gravity="center_vertical|right"
+                android:text="10 "/>
+            <Button
+                android:id="@+id/button_fragment_dialog_time_10_30"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_right"
+                android:gravity="center_vertical|left"
+                android:text="AM"/>
+            <Button
+                android:id="@+id/button_fragment_dialog_time_11_00"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_left"
+                android:gravity="center_vertical|right"
+                android:text="11 "/>
+            <Button
+                android:id="@+id/button_fragment_dialog_time_11_30"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_right"
+                android:gravity="center_vertical|left"
+                android:text="AM"/>
+            <Button
+                android:id="@+id/button_fragment_dialog_time_12_00"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_left"
+                android:gravity="center_vertical|right"
+                android:text="12 "/>
+            <Button
+                android:id="@+id/button_fragment_dialog_time_12_30"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_right"
+                android:gravity="center_vertical|left"
+                android:text="AM"/>
+            <Button
+                android:id="@+id/button_fragment_dialog_time_13_00"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_left"
+                android:gravity="center_vertical|right"
+                android:text="1 "/>
+            <Button
+                android:id="@+id/button_fragment_dialog_time_13_30"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_right"
+                android:gravity="center_vertical|left"
+                android:text="PM"/>
+
+            <Button
+                android:id="@+id/button_fragment_dialog_time_14_00"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_left"
+                android:gravity="center_vertical|right"
+                android:text="2 "/>
+            <Button
+                android:id="@+id/button_fragment_dialog_time_14_30"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_right"
+                android:gravity="center_vertical|left"
+                android:text="PM"/>
+
+            <Button
+                android:id="@+id/button_fragment_dialog_time_15_00"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_left"
+                android:gravity="center_vertical|right"
+                android:text="3 "/>
+            <Button
+                android:id="@+id/button_fragment_dialog_time_15_30"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_right"
+                android:gravity="center_vertical|left"
+                android:text="PM"/>
+
+            <Button
+                android:id="@+id/button_fragment_dialog_time_16_00"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_left"
+                android:gravity="center_vertical|right"
+                android:text="4 "/>
+            <Button
+                android:id="@+id/button_fragment_dialog_time_16_30"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_right"
+                android:gravity="center_vertical|left"
+                android:text="PM"/>
+
+            <Button
+                android:id="@+id/button_fragment_dialog_time_17_00"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_left"
+                android:gravity="center_vertical|right"
+                android:text="5 "/>
+            <Button
+                android:id="@+id/button_fragment_dialog_time_17_30"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_right"
+                android:gravity="center_vertical|left"
+                android:text="PM"/>
+
+            <Button
+                android:id="@+id/button_fragment_dialog_time_18_00"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_left"
+                android:gravity="center_vertical|right"
+                android:text="6 "/>
+            <Button
+                android:id="@+id/button_fragment_dialog_time_18_30"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_right"
+                android:gravity="center_vertical|left"
+                android:text="PM"/>
+
+            <Button
+                android:id="@+id/button_fragment_dialog_time_19_00"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_left"
+                android:gravity="center_vertical|right"
+                android:text="7 "/>
+            <Button
+                android:id="@+id/button_fragment_dialog_time_19_30"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_right"
+                android:gravity="center_vertical|left"
+                android:text="PM"/>
+
+            <Button
+                android:id="@+id/button_fragment_dialog_time_20_00"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_left"
+                android:gravity="center_vertical|right"
+                android:text="8 "/>
+            <Button
+                android:id="@+id/button_fragment_dialog_time_20_30"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_right"
+                android:gravity="center_vertical|left"
+                android:text="PM"/>
+
+            <Button
+                android:id="@+id/button_fragment_dialog_time_21_00"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_left"
+                android:gravity="center_vertical|right"
+                android:text="9 "/>
+            <Button
+                android:id="@+id/button_fragment_dialog_time_21_30"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_right"
+                android:gravity="center_vertical|left"
+                android:text="PM"/>
+
+            <Button
+                android:id="@+id/button_fragment_dialog_time_22_00"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_left"
+                android:gravity="center_vertical|right"
+                android:text="10 "/>
+            <Button
+                android:id="@+id/button_fragment_dialog_time_22_30"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_time_dialog_selected_right"
+                android:gravity="center_vertical|left"
+                android:text="PM"/>
+
+        </GridLayout>
+
+        <Button
+            android:id="@+id/button_booking_time_confirm"
+            android:layout_gravity="right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="확인"
+            android:background="@drawable/circular_corner_stroke_walker"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:onClick="@{activity::onClickBookingTimeConfirm}"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="15dp"/>
+
+    </LinearLayout>
+</layout>

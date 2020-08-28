@@ -26,6 +26,7 @@ import com.example.dogwalker.decorators.SaturdayDecorator;
 import com.example.dogwalker.decorators.SundayDecorator;
 import com.example.dogwalker.owner.dialog.DialogTimeActivity;
 import com.example.dogwalker.retrofit2.response.NonServiceDateDTO;
+import com.example.dogwalker.retrofit2.response.ResultDTO;
 import com.example.dogwalker.walker.WalkerScheduleActivity;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
@@ -35,6 +36,7 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Executors;
 
@@ -42,16 +44,17 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FragmentWalkerDetailSchedule extends Fragment implements View.OnClickListener{
+public class FragmentWalkerDetailSchedule extends FragmentBase implements View.OnClickListener{
 
     private static final int BOOKING_TIME_SELECTED = 5001;
-
-    private static final String TAG = "DeveloperLog";
-    String className = getClass().getSimpleName().trim();
 
     String walkerName;  //bundle 을 통해 전달받은 도그워커 이름 데이터
     String defaultWalkTime; //bundle 을 통해 전달받은 선택한 기본 산책 시간 데이터
     int add30minTimeCount;  //bundle 을 통해 전달받은 선택한 추가 산책 시간 데이터
+
+    String selectedDate; //선택한 예약 날짜
+    int selectedTimeCalendarHour, selectedTimeCalendarMin, totalWalkTime;   //선택한 예약 시, 분, 예약한 총 서비스시간
+
 
     MaterialCalendarView calendarViewBooking;
     Button btnBooking;
@@ -79,10 +82,12 @@ public class FragmentWalkerDetailSchedule extends Fragment implements View.OnCli
 
         //id 연결
         calendarViewBooking = (MaterialCalendarView) v.findViewById(R.id.calendarView_booking);
-        btnBooking = (Button) v.findViewById(R.id.button_booking);
+        btnBooking = (Button) v.findViewById(R.id.button_booking_ok);
         tvBookingDate = (TextView)v.findViewById(R.id.textView_booking_date);
         tvBookingTime = (TextView)v.findViewById(R.id.textView_booking_time);
         tvBookingWalkTime = (TextView)v.findViewById(R.id.textView_booking_walk_time);
+        //클릭리스너 연결
+        btnBooking.setOnClickListener(this);
 
         //캘린더 셋팅
         calendarViewInitSetting();
@@ -171,6 +176,42 @@ public class FragmentWalkerDetailSchedule extends Fragment implements View.OnCli
     @Override
     public void onClick(View v) {
 
+        switch (v.getId()) {
+
+            case R.id.button_booking_ok:
+                //확인버튼 누르면 예약 정보가 DB에 저장된다
+                saveBookingServiceDataToDB();
+                break;
+        }
+
+    }
+
+    //확인버튼을 누르면 예약 정보가 DB에 저장된다
+    public void saveBookingServiceDataToDB(){
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("walker_name", walkerName);
+        parameters.put("owner_name", applicationClass.currentWalkerID);
+        parameters.put("owner_dog_name", "펫이름");
+        parameters.put("walk_total_time", totalWalkTime);
+        parameters.put("walk_date", selectedDate);
+        parameters.put("walk_time", selectedTimeCalendarHour+":"+selectedTimeCalendarMin);
+
+        Call<ResultDTO> call = retrofitApi.insertBookingServiceData(parameters);
+        call.enqueue(new Callback<ResultDTO>() {
+            @Override
+            public void onResponse(Call<ResultDTO> call, Response<ResultDTO> response) {
+                ResultDTO resultDTO = response.body();
+                String resultData = resultDTO.getResponceResult();
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "예약정보 저장 성공 : " + resultData);
+            }
+
+            @Override
+            public void onFailure(Call<ResultDTO> call, Throwable t) {
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "예약정보 저장 실패 : " + t.toString());
+
+            }
+        });
     }
 
     //캘린더 클릭 이벤트 메소드
@@ -257,14 +298,14 @@ public class FragmentWalkerDetailSchedule extends Fragment implements View.OnCli
         if(requestCode == BOOKING_TIME_SELECTED){
             makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "호출횟수 : " + 1);
 
-            String selectedDate = data.getStringExtra("selectedDate");
-            int selectedTimeCalendarHour = data.getIntExtra("selectedTimeCalendarHour", 0);
-            int selectedTimeCalendarMin = data.getIntExtra("selectedTimeCalendarMin", 0);
+            selectedDate = data.getStringExtra("selectedDate");
+            selectedTimeCalendarHour = data.getIntExtra("selectedTimeCalendarHour", 0);
+            selectedTimeCalendarMin = data.getIntExtra("selectedTimeCalendarMin", 0);
             int selectedTimeCount = data.getIntExtra("selectedTimeCount", 0);
 
             tvBookingDate.setText(selectedDate);
             tvBookingTime.setText(selectedTimeCalendarHour+"시 "+selectedTimeCalendarMin+"분");
-            int totalWalkTime = selectedTimeCount*30;
+            totalWalkTime = selectedTimeCount*30;
             tvBookingWalkTime.setText("산책시간 "+totalWalkTime+"분 예약");
         }
     }
@@ -329,16 +370,6 @@ public class FragmentWalkerDetailSchedule extends Fragment implements View.OnCli
 
             calendarViewBooking.addDecorator(new NoneDaysDecoratorFragment(Color.RED, calendarDays, FragmentWalkerDetailSchedule.this));
         }
-    }
-
-    //로그 : 액티비티명 + 함수명 + 원하는 데이터를 한번에 보기위한 로그
-    public void makeLog(String methodData, String strData) {
-        Log.d(TAG, className + "_" + methodData + "_" + strData);
-    }
-
-    //토스트메세지 : 귀찮음을 없애기 위해 토스트를 띄우는 함수를 만듦
-    public void makeToast(String str) {
-        Toast.makeText(getContext(), str, Toast.LENGTH_SHORT).show();
     }
 
 

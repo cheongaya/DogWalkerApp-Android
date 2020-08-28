@@ -2,6 +2,7 @@ package com.example.dogwalker.retrofit2;
 
 import com.example.dogwalker.data.DogDTO;
 import com.example.dogwalker.data.WalkerlistDTO;
+import com.example.dogwalker.retrofit2.response.BookingServiceDTO;
 import com.example.dogwalker.retrofit2.response.NonServiceDateDTO;
 import com.example.dogwalker.retrofit2.response.ResultDTO;
 import com.example.dogwalker.retrofit2.response.ResultStrDTO;
@@ -126,6 +127,15 @@ public interface RetrofitApi {
     //도그워커 정보 조회
     @GET("walker/select_walkerlist_data.php")
     Call<List<WalkerlistDTO>> selectWalkerlistData(@Query("tableName") String tableName);
+
+    //예약 정보 저장
+    @FormUrlEncoded
+    @POST("owner/insert_booking_service_data.php")
+    Call<ResultDTO> insertBookingServiceData(@FieldMap HashMap<String, Object> parameters);
+
+    //예약 정보 조회
+    @GET("walker/select_booking_service_data.php")
+    Call<List<BookingServiceDTO>> selectBookingServiceData(@Query("walker_id") String walker_id);
 
 
 //    @Multipart

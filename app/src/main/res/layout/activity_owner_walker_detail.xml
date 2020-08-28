@@ -31,6 +31,20 @@
             android:text="프로필"/>
 
         <Button
+            android:id="@+id/button_fragment_review"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="리뷰"/>
+
+        <Button
+            android:id="@+id/button_fragment_price"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="가격표"/>
+
+        <Button
             android:id="@+id/button_fragment_schedule"
             android:layout_width="0dp"
             android:layout_weight="1"

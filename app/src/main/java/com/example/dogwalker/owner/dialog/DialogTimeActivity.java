@@ -86,7 +86,7 @@ public class DialogTimeActivity extends BaseActivity implements View.OnClickList
     public void onClickBookingTimeConfirm(View view){
         makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "클릭횟수 : " + 0);
 
-        intent.putExtra("selectedDate", Year+"년 "+ Month+"월 "+Day+"일");
+        intent.putExtra("selectedDate", Year+"-"+ Month+"-"+Day);
         makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "initCal.get(Calendar.HOUR_OF_DAY) : " + initCal.get(Calendar.HOUR_OF_DAY));
         makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "initCal.get(Calendar.MINUTE) : " + initCal.get(Calendar.MINUTE));
         intent.putExtra("selectedTimeCalendarHour", initCal.get(Calendar.HOUR_OF_DAY));

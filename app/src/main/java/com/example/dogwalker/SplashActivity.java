@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.example.dogwalker.owner.OwnerBookingActivity;
 import com.example.dogwalker.owner.OwnerLoginActivity;
 import com.example.dogwalker.owner.OwnerMypageActivity;
 import com.example.dogwalker.walker.WalkerDogwalkingActivity;
@@ -52,7 +53,7 @@ public class SplashActivity extends BaseActivity {
                 //WALKER 자동로그인
                 if(autoLoginIDStr != "" && autoLoginPWStr != "" && autoLoginCheckBol == true && autoLoginTypeStr.contentEquals("walker")){
                     //자동로그인 O -> 홈 화면으로 전환
-                    Intent intent = new Intent(SplashActivity.this, WalkerScheduleActivity.class);
+                    Intent intent = new Intent(SplashActivity.this, WalkerDogwalkingActivity.class);
                     startActivity(intent);
                     finish();
 
@@ -61,7 +62,7 @@ public class SplashActivity extends BaseActivity {
                 //OWNER 자동로그인
                 }else if(autoLoginIDStr != "" && autoLoginPWStr != "" && autoLoginCheckBol == true && autoLoginTypeStr.contentEquals("owner")){
                     //자동로그인 O -> 홈 화면으로 전환
-                    Intent intent = new Intent(SplashActivity.this, OwnerMypageActivity.class);
+                    Intent intent = new Intent(SplashActivity.this, OwnerBookingActivity.class);
                     startActivity(intent);
                     finish();
 

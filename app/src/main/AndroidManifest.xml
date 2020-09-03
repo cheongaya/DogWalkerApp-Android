@@ -21,7 +21,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning,UnusedAttribute">
-        <activity android:name=".owner.dialog.DialogTimeActivity"
+        <activity android:name=".walker.WalkerStopWatchActivity"></activity>
+        <activity
+            android:name=".owner.dialog.DialogTimeActivity"
             android:theme="@style/MyTheme.noTitle.Dialog" />
         <activity android:name=".owner.OwnerWalkerDetailActivity" />
         <activity android:name=".owner.OwnerWalkerlistActivity" />

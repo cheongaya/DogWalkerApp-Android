@@ -2,6 +2,7 @@ package com.example.dogwalker.walker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.dogwalker.R;
@@ -12,6 +13,9 @@ public class WalkerChatActivity extends WalkerBottomNavigation {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_walker_chat);
+
+        Intent intent = new Intent(this, WalkerStopWatchActivity.class);
+        startActivity(intent);
     }
 
     @Override

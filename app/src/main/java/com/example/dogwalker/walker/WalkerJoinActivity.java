@@ -219,6 +219,7 @@ public class WalkerJoinActivity extends BaseActivity implements Validator.Valida
             @Override
             public void onFailure(Call<ResultDTO> call, Throwable t) {
                 makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "통신실패 : " + "onFailure");
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", t.toString());
                 makeToast("회원가입 통신 실패");
             }
         });

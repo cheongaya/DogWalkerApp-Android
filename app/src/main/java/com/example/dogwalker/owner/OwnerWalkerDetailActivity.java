@@ -31,7 +31,7 @@ public class OwnerWalkerDetailActivity extends BaseActivity implements View.OnCl
     TextView tvWalkerName;
 
     Intent intent;
-    String walkerName, defaultWalkTime;
+    String walkerName, walkDogName, defaultWalkTime;
     int add30minTimeCount;
 
     @Override
@@ -41,15 +41,17 @@ public class OwnerWalkerDetailActivity extends BaseActivity implements View.OnCl
 
         intent = getIntent();
 
-        //도그워커 이름 데이터
-        walkerName = intent.getStringExtra("walkerName");
-        defaultWalkTime = intent.getStringExtra("defaultWalkTime");
-        add30minTimeCount = intent.getIntExtra("add30minTimeCount", 0);
+        //intent 로 받아온 데이터
+        walkerName = intent.getStringExtra("walkerName");   //도그워커 이름 데이터
+        walkDogName = intent.getStringExtra("walkDogName"); //산책시킬 강아지 이름 데이터
+        defaultWalkTime = intent.getStringExtra("defaultWalkTime"); //기본 산책시간 데이터
+        add30minTimeCount = intent.getIntExtra("add30minTimeCount", 0); //추가한 산책시간 데이터
 
         fragmentManager = getSupportFragmentManager();
         //원하는 데이터를 Bundle 을 통해 전달함
         bundle = new Bundle();
         bundle.putString("walkerName", walkerName);
+        bundle.putString("walkDogName", walkDogName);
         bundle.putString("defaultWalkTime", defaultWalkTime);
         bundle.putInt("add30minTimeCount", add30minTimeCount);
 

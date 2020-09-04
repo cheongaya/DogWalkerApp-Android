@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- (gps) current location -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
 
     <application
         android:name=".ApplicationClass"
@@ -21,7 +22,25 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning,UnusedAttribute">
-        <activity android:name=".walker.WalkerStopWatchActivity"></activity>
+        <!-- 네이버 지도 API -->
+        <meta-data
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="ue8otq3nfl" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyB7ziS99FLNbMS8WIS78D3hXl87NsU9qgY" />
+
+        <activity android:name=".GoogleMapActivity"></activity>
+        <activity android:name=".NaverMapActivity" />
+        <activity
+            android:name=".owner.dialog.DialogSelectMydogActivity"
+            android:theme="@style/MyTheme.noTitle.Dialog" />
+        <!-- 카카오 지도 API -->
+
+        <activity android:name=".walker.WalkerStopWatchActivity" />
         <activity
             android:name=".owner.dialog.DialogTimeActivity"
             android:theme="@style/MyTheme.noTitle.Dialog" />

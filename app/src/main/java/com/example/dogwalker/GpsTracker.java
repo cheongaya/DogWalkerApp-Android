@@ -11,6 +11,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -21,9 +22,12 @@ public class GpsTracker extends Service implements LocationListener {
     Location location;
     double latitude;
     double longitude;
+    //이동 거리 계산 관련 변수
+    Location lastKnownLocation;
+    double distance=0;
 
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 5; //10m
+    private static final long MIN_TIME_BW_UPDATES = 1000;  //1분 (1000 * 60 * 1)
     protected LocationManager locationManager;
 
     //생성자 -> GpsTracker 객체가 생성되면 getLocation() 메소드가 실행된다
@@ -126,20 +130,39 @@ public class GpsTracker extends Service implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
 
+        //앱 백그라운드 시에도 위치 정보 받아온다
+        Log.d("DeveloperLog", "onLocationChanged() :"+location.getLongitude() + " / " +location.getLatitude());
+
+        // Get the last location.
+        if(lastKnownLocation==null) {
+            lastKnownLocation = location;
+            Log.d("DeveloperLog","Distance: null");
+        }
+        else {
+            distance=lastKnownLocation.distanceTo(location);
+            Log.d("DeveloperLog","Distance:"+distance);
+            lastKnownLocation=location;
+
+            Toast.makeText(this, distance+"", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
+        Log.d("DeveloperLog", "onStatusChanged()");
 
     }
 
     @Override
     public void onProviderEnabled(String provider) {
+        Log.d("DeveloperLog", "onProviderEnabled()");
 
     }
 
     @Override
     public void onProviderDisabled(String provider) {
+        Log.d("DeveloperLog", "onProviderDisabled()");
 
     }
 }

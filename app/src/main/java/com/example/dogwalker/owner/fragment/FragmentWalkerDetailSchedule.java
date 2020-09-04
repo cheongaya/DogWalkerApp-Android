@@ -49,6 +49,7 @@ public class FragmentWalkerDetailSchedule extends FragmentBase implements View.O
     private static final int BOOKING_TIME_SELECTED = 5001;
 
     String walkerName;  //bundle 을 통해 전달받은 도그워커 이름 데이터
+    String walkDogName; //bundle 을 통해 전달받은 산책시킬 강아지 이름 데이터
     String defaultWalkTime; //bundle 을 통해 전달받은 선택한 기본 산책 시간 데이터
     int add30minTimeCount;  //bundle 을 통해 전달받은 선택한 추가 산책 시간 데이터
 
@@ -72,6 +73,7 @@ public class FragmentWalkerDetailSchedule extends FragmentBase implements View.O
         if(getArguments() != null){
             //bundle 을 통해 전달받은 데이터
             walkerName = getArguments().getString("walkerName");
+            walkDogName = getArguments().getString("walkDogName");
             defaultWalkTime = getArguments().getString("defaultWalkTime");
             add30minTimeCount = getArguments().getInt("add30minTimeCount");
 //            makeToast(walkerName);
@@ -190,12 +192,17 @@ public class FragmentWalkerDetailSchedule extends FragmentBase implements View.O
     public void saveBookingServiceDataToDB(){
 
         HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("walker_name", walkerName);
-        parameters.put("owner_name", applicationClass.currentWalkerID);
-        parameters.put("owner_dog_name", "펫이름");
+        parameters.put("walker_id", walkerName);
+        parameters.put("owner_id", applicationClass.currentWalkerID);
+        parameters.put("owner_dog_name", walkDogName);
         parameters.put("walk_total_time", totalWalkTime);
         parameters.put("walk_date", selectedDate);
-        parameters.put("walk_time", selectedTimeCalendarHour+":"+selectedTimeCalendarMin);
+        if(selectedTimeCalendarMin == 0){
+            String selectedTimeCalendarMinStr = "00";
+            parameters.put("walk_time", selectedTimeCalendarHour+":"+selectedTimeCalendarMinStr);
+        }else{
+            parameters.put("walk_time", selectedTimeCalendarHour+":"+selectedTimeCalendarMin);
+        }
 
         Call<ResultDTO> call = retrofitApi.insertBookingServiceData(parameters);
         call.enqueue(new Callback<ResultDTO>() {
@@ -204,6 +211,7 @@ public class FragmentWalkerDetailSchedule extends FragmentBase implements View.O
                 ResultDTO resultDTO = response.body();
                 String resultData = resultDTO.getResponceResult();
                 makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "예약정보 저장 성공 : " + resultData);
+                makeToast("예약이 완료되었습니다");
             }
 
             @Override

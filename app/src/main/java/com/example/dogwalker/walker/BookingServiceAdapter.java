@@ -1,6 +1,7 @@
 package com.example.dogwalker.walker;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,6 +93,15 @@ public class BookingServiceAdapter extends RecyclerView.Adapter<BookingServiceAd
                             listenter.onItemClick(v,position);
                         }
                     }
+                }
+            });
+
+            //버튼 클릭시 이벤트
+            btnWalkStart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, WalkerStopWatchActivity.class);
+                    context.startActivity(intent);
                 }
             });
         }

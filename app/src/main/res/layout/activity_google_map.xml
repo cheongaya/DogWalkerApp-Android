@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="activity"
+            type="com.example.dogwalker.GoogleMapActivity" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite">
+
+        <LinearLayout
+            android:id="@+id/layout_box04"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            android:gravity="center"
+            android:paddingTop="10dp">
+
+            <Chronometer
+                android:id="@+id/chronometer_stop_watch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="24dp"
+                android:textStyle="bold"
+                android:textColor="@color/colorBlack"
+                android:text="%s"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="산책시간"
+                android:textColor="#999"
+                android:textSize="12sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/border_top">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="@drawable/border_right"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp">
+
+                    <TextView
+                        android:id="@+id/textView_walk_distance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0.0"
+                        android:textSize="21sp"
+                        android:textColor="@color/colorBlack"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="산책거리(KM)"
+                        android:textColor="#999"
+                        android:textSize="12sp"
+                        android:layout_marginTop="5dp"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:background="@drawable/border_right">
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_baseline_remove_24_color_black"
+                        android:onClick="@{activity::onClickPlusPoo"
+                        android:background="@color/colorWhite"
+                        android:padding="5dp"/>
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/icon_poo"/>
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="@{activity::onClickMinusPoo"
+                        android:src="@drawable/ic_baseline_add_24_color_black"
+                        android:background="@color/colorWhite"
+                        android:padding="5dp"/>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_baseline_close_24"
+            android:background="@color/colorWhite"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:scaleType="fitCenter"
+            android:onClick="@{activity::onClickClose}"
+            android:layout_margin="10dp"/>
+
+        <fragment
+            android:id="@+id/googleMap"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            app:layout_constraintTop_toBottomOf="@+id/layout_box04"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/onClickBtnFloatCamera"
+            android:onClick="@{activity::onClickBtnFloatCamera}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_camera_enhance_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/onClickBtnFloatStart"
+            android:layout_marginBottom="35dp"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/onClickBtnFloatStart"
+            android:onClick="@{activity::onClickBtnFloatStart}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_start_arrow_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/onClickBtnFloatCamera"
+            app:layout_constraintRight_toLeftOf="@+id/onClickBtnFloatPause"
+            android:layout_marginBottom="35dp"
+            android:backgroundTint="@color/colorMain"
+            app:borderWidth="0dp"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/onClickBtnFloatPause"
+            android:onClick="@{activity::onClickBtnFloatPause}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_pause_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/onClickBtnFloatStart"
+            app:layout_constraintRight_toLeftOf="@+id/onClickBtnFloatDone"
+            android:layout_marginBottom="35dp"
+            android:backgroundTint="@color/colorMain"
+            app:borderWidth="0dp"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/onClickBtnFloatDone"
+            android:onClick="@{activity::onClickBtnFloatDone}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_done_outline_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/onClickBtnFloatPause"
+            app:layout_constraintRight_toLeftOf="@+id/onClickBtnFloatList"
+            android:layout_marginBottom="35dp"
+            android:backgroundTint="@color/colorMain"
+            app:borderWidth="0dp"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/onClickBtnFloatList"
+            android:onClick="@{activity::onClickBtnFloatList}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_dehaze_24_color_white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/onClickBtnFloatDone"
+            android:layout_marginBottom="35dp"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/onClickBtnFloatVideo"
+            android:onClick="@{activity::onClickBtnFloatVideo}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_videocam_24"
+            app:layout_constraintBottom_toTopOf="@id/onClickBtnFloatChat"
+            app:layout_constraintEnd_toEndOf="@id/onClickBtnFloatChat"
+            android:backgroundTint="@color/colorBlack"
+            app:borderWidth="0dp"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/onClickBtnFloatChat"
+            android:onClick="@{activity::onClickBtnFloatChat}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_chat_24"
+            app:layout_constraintBottom_toTopOf="@id/onClickBtnFloatList"
+            app:layout_constraintEnd_toEndOf="@id/onClickBtnFloatList"
+            android:backgroundTint="@color/colorBlack"
+            app:borderWidth="0dp"
+            android:layout_marginBottom="5dp"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -17,6 +17,7 @@ allprojects {
         google()
         jcenter()
         maven { url 'https://jitpack.io' }  //material calendar view 관련
+        maven { url 'https://navercorp.bintray.com/maps'}  // 네이버 지도 저장소
     }
 }
 

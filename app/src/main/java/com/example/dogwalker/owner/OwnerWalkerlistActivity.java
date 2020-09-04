@@ -51,6 +51,7 @@ public class OwnerWalkerlistActivity extends BaseActivity {
 
         //FragmentWalkDialog 에서 받아온 산책시간 선택 데이터
         Intent intent = getIntent();
+        String walkDogName = intent.getStringExtra("seletedDog");
         String defaultWalkTime = intent.getStringExtra("defaultWalkTime");
         int add30minTimeCount = intent.getIntExtra("add30minTimeCount", 0);
 
@@ -63,6 +64,7 @@ public class OwnerWalkerlistActivity extends BaseActivity {
                 Intent intentWalkerDetail = new Intent(OwnerWalkerlistActivity.this, OwnerWalkerDetailActivity.class);
                 String walkerName = walkerlistAdapter.getWalkerlistDTOArrayList().get(position).getName();
                 intentWalkerDetail.putExtra("walkerName", walkerName);                  //도그워커 이름
+                intentWalkerDetail.putExtra("walkDogName", walkDogName);                //산책시킬 강아지 이름
                 intentWalkerDetail.putExtra("defaultWalkTime", defaultWalkTime);        //산책 기본 시간
                 intentWalkerDetail.putExtra("add30minTimeCount", add30minTimeCount);    //산책 추가 시간
                 startActivity(intentWalkerDetail);

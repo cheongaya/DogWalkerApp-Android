@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -41,6 +42,15 @@ public class WalkerDogwalkingActivity extends WalkerBottomNavigation {
 
         //DB에서 예약 리스트 데이터 불러오기
         loadBookingServiceDataToDB();
+
+        //아이템 클릭시
+        bookingServiceAdapter.setOnItemClickListener(new BookingServiceAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+//                Intent intent = new Intent(WalkerDogwalkingActivity.this, WalkerStopWatchActivity.class);
+//                startActivity(intent);
+            }
+        });
     }
 
     //리사이클러뷰 초기화 셋팅

@@ -1,10 +1,9 @@
 package com.example.dogwalker.walker;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.dogwalker.GoogleMapActivity;
 import com.example.dogwalker.R;
 
 public class WalkerChatActivity extends WalkerBottomNavigation {
@@ -14,7 +13,7 @@ public class WalkerChatActivity extends WalkerBottomNavigation {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_walker_chat);
 
-        Intent intent = new Intent(this, WalkerStopWatchActivity.class);
+        Intent intent = new Intent(this, GoogleMapActivity.class);
         startActivity(intent);
     }
 

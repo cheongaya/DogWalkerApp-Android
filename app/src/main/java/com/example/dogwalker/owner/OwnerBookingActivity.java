@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.dogwalker.R;
+import com.example.dogwalker.owner.dialog.DialogSelectMydogActivity;
 import com.example.dogwalker.owner.fragment.FragmentTimeDialog;
 import com.example.dogwalker.owner.fragment.FragmentWalkDialog;
 
@@ -25,14 +26,9 @@ public class OwnerBookingActivity extends OwnerBottomNavigation {
             @Override
             public void onClick(View v) {
 
-                //프래그먼트 다이얼로그 띄우기
-//                Bundle bundle = new Bundle();
-//                bundle.putInt("selectedYear", Year);
-//                bundle.putInt("selectedMonth", Month);
-//                bundle.putInt("selectedDay", Day);
-                FragmentWalkDialog fragmentWalkDialog = new FragmentWalkDialog();
-//                fragmentWalkDialog.setArguments(bundle);
-                fragmentWalkDialog.show(getSupportFragmentManager(), "fragmentWalkDialog");
+                //강아지 선택 다이얼로그 띄우기
+                Intent intent = new Intent(OwnerBookingActivity.this, DialogSelectMydogActivity.class);
+                startActivity(intent);
             }
         });
     }

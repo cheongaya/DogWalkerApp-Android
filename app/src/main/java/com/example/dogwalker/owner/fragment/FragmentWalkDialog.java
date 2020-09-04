@@ -26,6 +26,9 @@ public class FragmentWalkDialog extends DialogFragment {
 
     FragmentWalkDialogBinding walkDialogBinding;
     int Add30minTimeCount = 0;
+    int selectedWalkingTime = 0;
+
+    String seletedDog;
 
     @Nullable
     @Override
@@ -35,6 +38,10 @@ public class FragmentWalkDialog extends DialogFragment {
         walkDialogBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_walk_dialog, container, false);
         walkDialogBinding.setFragment(this);
         View view = walkDialogBinding.getRoot();
+
+        //받아온 산책 시킬 강아지 이름 data
+        Bundle bundle = getArguments();
+        seletedDog = bundle.getString("selectedDog");       //산책시킬 강아지 이름
 
         //numberpicker 설정
         walkDialogBinding.numberPickerAdd30minWalkTime.setEnabled(false);   //처음에 false / false 넘버피커 사용 불가
@@ -49,6 +56,20 @@ public class FragmentWalkDialog extends DialogFragment {
 //                makeToast(newVal+"");
                 makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "넘버피커 newVal : " + newVal);
                 Add30minTimeCount = newVal;
+
+                int afterAddTime = selectedWalkingTime;
+
+                //예약 시간 표시해주기
+                if(newVal == 1){
+                    afterAddTime += 30;
+                    walkDialogBinding.textViewFragmentDialogWalkTotalTime.setText(afterAddTime+"");
+                }else if(newVal == 2){
+                    afterAddTime += 60;
+                    walkDialogBinding.textViewFragmentDialogWalkTotalTime.setText(afterAddTime+"");
+                }else{
+                    //0일때
+                    walkDialogBinding.textViewFragmentDialogWalkTotalTime.setText(afterAddTime+"");
+                }
             }
         });
 
@@ -67,6 +88,10 @@ public class FragmentWalkDialog extends DialogFragment {
         makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "30분 산책 선택시 시간 추가 불가 : ");
         makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "30분 선택 : "+ view.isSelected() + " / 60분 선택 : "+ walkDialogBinding.buttonFragmentDialogWalk60min.isSelected());
 
+        //30분 표시하기
+        selectedWalkingTime = 30;
+        walkDialogBinding.textViewFragmentDialogWalkTotalTime.setText(selectedWalkingTime+"");
+
     }
 
     //기본 60분 산책 클릭시
@@ -80,6 +105,23 @@ public class FragmentWalkDialog extends DialogFragment {
         walkDialogBinding.numberPickerAdd30minWalkTime.setEnabled(true);
         makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "30분 산책 선택시 시간 추가 가능 : ");
         makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "30분 선택 : "+ walkDialogBinding.buttonFragmentDialogWalk30min.isSelected() + " / 60분 선택 : "+ view.isSelected());
+
+        //60분 표시하기
+        selectedWalkingTime = 60;
+
+        int afterAddTime = selectedWalkingTime;
+
+        //예약 시간 표시해주기
+        if(Add30minTimeCount == 1){
+            afterAddTime += 30;
+            walkDialogBinding.textViewFragmentDialogWalkTotalTime.setText(afterAddTime+"");
+        }else if(Add30minTimeCount == 2){
+            afterAddTime += 60;
+            walkDialogBinding.textViewFragmentDialogWalkTotalTime.setText(afterAddTime+"");
+        }else{
+            //0일때
+            walkDialogBinding.textViewFragmentDialogWalkTotalTime.setText(selectedWalkingTime+"");
+        }
     }
 
     //다음 버튼 클릭시 도그워커 리스트 출력 화면으로 전환
@@ -96,11 +138,13 @@ public class FragmentWalkDialog extends DialogFragment {
                 if(walkDialogBinding.buttonFragmentDialogWalk30min.isSelected() == true){
                     //기본 선택시간 30분 선택시
                     intentBookingPage.putExtra("defaultWalkTime", "30");    //기본 선택시간
-                    intentBookingPage.putExtra("add30minTimeCount", 0); //추가한 산책시간
+                    intentBookingPage.putExtra("add30minTimeCount", 0);     //추가한 산책시간
+                    intentBookingPage.putExtra("seletedDog", seletedDog);       //산책시킬 강아지 이름
                 }else{
                     //기본 선택시간 60분 선택시
-                    intentBookingPage.putExtra("defaultWalkTime", "60");    //기본 선택시간
-                    intentBookingPage.putExtra("add30minTimeCount", Add30minTimeCount); //추가한 산책시간
+                    intentBookingPage.putExtra("defaultWalkTime", "60");            //기본 선택시간
+                    intentBookingPage.putExtra("add30minTimeCount", Add30minTimeCount);  //추가한 산책시간
+                    intentBookingPage.putExtra("seletedDog", seletedDog);                //산책시킬 강아지 이름
                 }
 
                 startActivity(intentBookingPage);

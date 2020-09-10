@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
+<layout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
@@ -9,209 +9,163 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorWhite">
 
+        <fragment
+            android:id="@+id/map"
+            android:name="com.naver.maps.map.MapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
+
         <LinearLayout
-            android:id="@+id/layout_box04"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             app:layout_constraintTop_toTopOf="parent"
-            android:gravity="center"
-            android:paddingTop="10dp">
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+            <ImageButton
+                android:id="@+id/btn_naver_map_close"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_baseline_close_24"
+                android:background="@color/colorTransparent"
+                android:scaleType="fitCenter"
+                android:onClick="@{activity::onClickClose}"
+                android:layout_margin="10dp"/>
 
-            <Chronometer
-                android:id="@+id/chronometer_stop_watch"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="24dp"
-                android:textStyle="bold"
-                android:textColor="@color/colorBlack"
-                android:text="%s"/>
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp">
+                <EditText
+                    android:id="@+id/editText_walker_keyword_search"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:layout_height="40dp"
+                    android:hint="주소, 지역명 입력"
+                    android:paddingLeft="20dp"
+                    android:background="@drawable/circular_corner_stroke_search_edittext2"/>
+                <Button
+                    android:id="@+id/button_walker_keyword_search"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="40dp"
+                    android:background="@drawable/circular_corner_stroke_search_button"
+                    android:textSize="18sp"
+                    android:onClick="@{activity::onClickKeywordWalkerSearch}"
+                    android:textColor="@color/colorWhite"
+                    android:text="검색"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/filter_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:background="@color/colorWhite"
+            android:orientation="vertical"
+            android:padding="5dp">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="산책시간"
-                android:textColor="#999"
-                android:textSize="12sp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"/>
+                android:text="만족도에 따른 색상구분"
+                android:textColor="@color/colorBlack"
+                android:textStyle="bold"
+                android:layout_marginBottom="5dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@drawable/border_top">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:background="@drawable/border_right"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp">
-
-                    <TextView
-                        android:id="@+id/textView_walk_distance"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0.0"
-                        android:textSize="21sp"
-                        android:textColor="@color/colorBlack"
-                        android:textStyle="bold"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="산책거리(KM)"
-                        android:textColor="#999"
-                        android:textSize="12sp"
-                        android:layout_marginTop="5dp"/>
-
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:background="@drawable/border_right">
-
-                    <ImageButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_baseline_remove_24_color_black"
-                        android:onClick="@{activity::onClickPlusPoo"
-                        android:background="@color/colorWhite"
-                        android:padding="5dp"/>
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/icon_poo"/>
-                    <ImageButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:onClick="@{activity::onClickMinusPoo"
-                        android:src="@drawable/ic_baseline_add_24_color_black"
-                        android:background="@color/colorWhite"
-                        android:padding="5dp"/>
-
-                </LinearLayout>
-
-
+                    android:src="@drawable/ic_baseline_location_on_24_level_5"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="81~100점"
+                    android:textColor="@color/colorBlack"
+                    android:layout_marginLeft="5dp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_location_on_24_level_4"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="61~80점"
+                    android:textColor="@color/colorBlack"
+                    android:layout_marginLeft="5dp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_location_on_24_level_3"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="41~60점"
+                    android:textColor="@color/colorBlack"
+                    android:layout_marginLeft="5dp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_location_on_24_level_2"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="21~40점"
+                    android:textColor="@color/colorBlack"
+                    android:layout_marginLeft="5dp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_location_on_24_level_1"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0~20점"
+                    android:textColor="@color/colorBlack"
+                    android:layout_marginLeft="5dp"/>
             </LinearLayout>
 
-
         </LinearLayout>
-
-        <ImageButton
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_baseline_close_24"
-            android:background="@color/colorWhite"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:scaleType="fitCenter"
-            android:onClick="@{activity::onClickClose}"
-            android:layout_margin="10dp"/>
-
-
-        <fragment
-            android:id="@+id/map"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:name="com.naver.maps.map.MapFragment"
-            app:layout_constraintTop_toBottomOf="@+id/layout_box04"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/onClickBtnFloatCamera"
-            android:onClick="@{activity::onClickBtnFloatCamera}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_camera_enhance_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/onClickBtnFloatStart"
-            android:layout_marginBottom="90dp"/>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/onClickBtnFloatStart"
-            android:onClick="@{activity::onClickBtnFloatStart}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_start_arrow_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/onClickBtnFloatCamera"
-            app:layout_constraintRight_toLeftOf="@+id/onClickBtnFloatPause"
-            android:layout_marginBottom="90dp"
-            android:backgroundTint="@color/colorMain"
-            app:borderWidth="0dp"/>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/onClickBtnFloatPause"
-            android:onClick="@{activity::onClickBtnFloatPause}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_pause_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/onClickBtnFloatStart"
-            app:layout_constraintRight_toLeftOf="@+id/onClickBtnFloatDone"
-            android:layout_marginBottom="50dp"
-            android:backgroundTint="@color/colorMain"
-            app:borderWidth="0dp"/>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/onClickBtnFloatDone"
-            android:onClick="@{activity::onClickBtnFloatDone}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_done_outline_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/onClickBtnFloatPause"
-            app:layout_constraintRight_toLeftOf="@+id/onClickBtnFloatList"
-            android:layout_marginBottom="50dp"
-            android:backgroundTint="@color/colorMain"
-            app:borderWidth="0dp"/>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/onClickBtnFloatList"
-            android:onClick="@{activity::onClickBtnFloatList}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_dehaze_24_color_white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/onClickBtnFloatDone"
-            android:layout_marginBottom="50dp"/>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/onClickBtnFloatVideo"
-            android:onClick="@{activity::onClickBtnFloatVideo}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_videocam_24"
-            app:layout_constraintBottom_toTopOf="@id/onClickBtnFloatChat"
-            app:layout_constraintEnd_toEndOf="@id/onClickBtnFloatChat"
-            android:backgroundTint="@color/colorBlack"
-            app:borderWidth="0dp"/>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/onClickBtnFloatChat"
-            android:onClick="@{activity::onClickBtnFloatChat}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_chat_24"
-            app:layout_constraintBottom_toTopOf="@id/onClickBtnFloatList"
-            app:layout_constraintEnd_toEndOf="@id/onClickBtnFloatList"
-            android:backgroundTint="@color/colorBlack"
-            app:borderWidth="0dp"
-            android:layout_marginBottom="5dp"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

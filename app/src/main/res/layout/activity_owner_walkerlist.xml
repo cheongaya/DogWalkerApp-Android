@@ -14,13 +14,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="20dp"
+        android:background="@color/colorWhite">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             android:gravity="center">
 
             <TextView
@@ -30,15 +31,29 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorBlack"
                 android:textStyle="bold"
-                android:layout_marginLeft="35dp"
+                android:layout_marginLeft="45dp"
                 android:gravity="center"
                 android:textSize="18sp"/>
 
-            <ImageView
-                android:layout_width="35dp"
-                android:layout_height="30dp"
-                android:onClick="@{activity::onClickMapWalkerSearch}"
-                android:src="@drawable/icon_location"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:onClick="@{activity::onClickMapWalkerSearch}"
+                    android:src="@drawable/icon_location"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="지도에서 찾기"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="11dp"/>
+            </LinearLayout>
 
         </LinearLayout>
 

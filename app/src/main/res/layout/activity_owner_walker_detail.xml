@@ -8,15 +8,30 @@
     tools:context=".owner.OwnerWalkerDetailActivity"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textView_walker_detail_walkerName"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="10dp"
-        android:textSize="16sp"
-        android:textColor="@color/colorBlack"
-        android:text="워커 이름" />
+        android:orientation="horizontal"
+        android:padding="15dp">
+
+        <TextView
+            android:id="@+id/textView_walker_detail_walkerName"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorMain"
+            android:paddingLeft="30dp"
+            android:text="워커 이름" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_star_border_green_24"/>
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

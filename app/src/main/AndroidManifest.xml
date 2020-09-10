@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- (gps) current location -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
     <application
         android:name=".ApplicationClass"
@@ -22,7 +22,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning,UnusedAttribute">
-        <!-- 네이버 지도 API -->
+        <activity android:name=".owner.PaymentDoneActivity"></activity>
+        <activity android:name=".owner.dialog.DialogPaymentActivity" /> <!-- 네이버 지도 API -->
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="ue8otq3nfl" />
@@ -33,13 +34,10 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyB7ziS99FLNbMS8WIS78D3hXl87NsU9qgY" />
 
-        <activity android:name=".GoogleMapActivity"></activity>
-        <activity android:name=".NaverMapActivity" />
-        <activity
-            android:name=".owner.dialog.DialogSelectMydogActivity"
-            android:theme="@style/MyTheme.noTitle.Dialog" />
-        <!-- 카카오 지도 API -->
-
+        <activity android:name=".GoogleMapActivity" />
+        <activity android:name=".NaverMapActivity" /> <!-- <activity -->
+        <!-- android:name=".owner.dialog.DialogSelectMydogActivity" -->
+        <!-- android:theme="@style/MyTheme.noTitle.Dialog" /> &lt;!&ndash; 카카오 지도 API &ndash;&gt; -->
         <activity android:name=".walker.WalkerStopWatchActivity" />
         <activity
             android:name=".owner.dialog.DialogTimeActivity"
@@ -63,7 +61,7 @@
             android:name=".walker.WalkerIntroduceActivity"
             android:theme="@style/MyTheme.noTitle.Dialog" />
         <activity
-            android:name=".LocationWebViewActivity"
+            android:name=".owner.LocationWebViewActivity"
             android:theme="@style/MyTheme.noTitle.Dialog" />
         <activity android:name=".BaseActivity" />
         <activity

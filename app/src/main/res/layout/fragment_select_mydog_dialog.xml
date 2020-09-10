@@ -4,8 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
-            name="activity"
-            type="com.example.dogwalker.owner.dialog.DialogSelectMydogActivity" />
+            name="fragment"
+            type="com.example.dogwalker.owner.fragment.FragmentSelectMyDogDialog" />
     </data>
 
     <LinearLayout
@@ -28,21 +28,48 @@
             android:id="@+id/recyclerView_fragment_mydog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"/>
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp" />
 
-        <TextView
-            android:id="@+id/textView_dialog_selected_mydog"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:gravity="center"
+            android:orientation="horizontal"
             android:layout_marginBottom="10dp"
-            android:textStyle="bold"
-            android:textColor="@color/colorBlack"/>
+            android:layout_marginTop="30dp"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="[ "
+                android:textColor="@color/colorMain2"
+                android:textStyle="bold"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/textView_dialog_selected_mydog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:hint="반려견 이름"
+                android:textColor="@color/colorBlack"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" ] 선택"
+                android:textColor="@color/colorMain2"
+                android:textStyle="bold"
+                android:textSize="18sp"/>
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/button_booking_walk_next"
-            android:onClick="@{activity::onClickDogSelectedNext}"
+            android:onClick="@{fragment::onClickDogSelectedNext}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="다음"

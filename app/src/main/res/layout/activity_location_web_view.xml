@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="400dp"
     android:layout_height="500dp"
-    tools:context=".LocationWebViewActivity"
+    tools:context=".owner.LocationWebViewActivity"
     android:orientation="vertical"
     android:layout_gravity="center"
     android:padding="5dp">

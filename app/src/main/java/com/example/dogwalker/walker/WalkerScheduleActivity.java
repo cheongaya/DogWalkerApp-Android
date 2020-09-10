@@ -1,28 +1,17 @@
 package com.example.dogwalker.walker;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
-import com.example.dogwalker.LocationWebViewActivity;
-import com.example.dogwalker.decorators.Decorator;
-import com.example.dogwalker.decorators.EventDecorator;
 import com.example.dogwalker.R;
-import com.example.dogwalker.decorators.NoneDaysCancelDecorator;
 import com.example.dogwalker.decorators.NoneDaysDecorator;
-import com.example.dogwalker.decorators.NonedayDecorator;
 import com.example.dogwalker.decorators.OneDayDecorator;
 import com.example.dogwalker.decorators.SaturdayDecorator;
 import com.example.dogwalker.decorators.SundayDecorator;
@@ -33,7 +22,6 @@ import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;

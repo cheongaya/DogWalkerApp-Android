@@ -14,7 +14,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/ic_baseline_perm_identity_24"
-        android:scaleType="center"
+        android:scaleType="centerInside"
         android:background="@drawable/circular_corner_stroke_mydog2"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
@@ -36,10 +36,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="20km"
+        android:textColor="@color/colorBlack"
         app:layout_constraintTop_toBottomOf="@id/textView_item_walker_name"
         app:layout_constraintLeft_toRightOf="@id/imageView_item_walker_img"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"/>
+        android:layout_marginTop="10dp"/>
 
     <TextView
         android:id="@+id/textView_item_walker_introduce"
@@ -48,7 +49,8 @@
         android:text="자기소개를 합니다"
         app:layout_constraintTop_toBottomOf="@id/textView_item_walker_location"
         app:layout_constraintLeft_toRightOf="@id/imageView_item_walker_img"
-        android:layout_marginLeft="10dp"/>
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"/>
 
     <TextView
         android:id="@+id/textView_item_walker_review"
@@ -57,7 +59,8 @@
         android:text="리뷰 11개"
         app:layout_constraintTop_toBottomOf="@id/textView_item_walker_introduce"
         app:layout_constraintLeft_toRightOf="@id/imageView_item_walker_img"
-        android:layout_marginLeft="10dp"/>
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"/>
 
     <TextView
         android:id="@+id/textView_item_walker_price_thirty_minutes"

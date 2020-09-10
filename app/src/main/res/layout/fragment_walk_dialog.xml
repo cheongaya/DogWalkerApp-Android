@@ -94,7 +94,16 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_gravity="center_vertical">
+                android:layout_gravity="center_vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="[ "
+                    android:textColor="@color/colorMain2"
+                    android:textStyle="bold"
+                    android:textSize="18sp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -121,7 +130,36 @@
                     android:textStyle="bold"
                     android:textColor="@color/colorBlack"/>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" ]"
+                    android:textColor="@color/colorMain2"
+                    android:textStyle="bold"
+                    android:textSize="18sp"/>
+
             </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/button_booking_walk_prev"
+                android:onClick="@{fragment::onClickWalkTimeSelectedPrev}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="이전"
+                android:background="@drawable/circular_corner_stroke_walker"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginRight="10dp"/>
 
             <Button
                 android:id="@+id/button_booking_walk_next"

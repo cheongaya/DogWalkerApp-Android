@@ -9,6 +9,7 @@ import com.example.dogwalker.retrofit2.response.ResultStrDTO;
 import com.example.dogwalker.retrofit2.response.UserOwnerDTO;
 import com.example.dogwalker.retrofit2.response.WalkPriceDTO;
 import com.example.dogwalker.retrofit2.response.WalkableTypeDTO;
+import com.example.dogwalker.retrofit2.response.WalkerLocationDTO;
 
 import java.util.HashMap;
 import java.util.List;
@@ -47,9 +48,9 @@ public interface RetrofitApi {
     @Multipart
     @POST("common/insert_walker_image.php")
     Call<ResultDTO> updateWalkerImageData(@Query("id") String id, @Part MultipartBody.Part file);
-    //서비스위치 데이터 수정
+    //서비스위치 데이터 수정 (도그워커 아이디 / 주소 / 위도 / 경도)
     @GET("walker/update_location.php")
-    Call<ResultDTO> updateWalkerLocation(@Query("id") String id, @Query("location") String location);
+    Call<ResultDTO> updateWalkerLocation(@Query("id") String id, @Query("location") String location, @Query("latitude") String latitude, @Query("longitude") String longitude);
 //    //서비스 위치 데이터 조회
 //    @GET("walker/select_location.php")
 //    Call<ResultStrDTO> selectWalkerLocation(@Query("id") String id);
@@ -93,6 +94,9 @@ public interface RetrofitApi {
     //서비스불가날짜 해제 (삭제)
     @GET("walker/delete_walker_non_service_data.php")
     Call<ResultDTO> deleteWalkerNonServiceDates(@Query("walker_id") String walker_id, @Query("date") String date);
+    //도그워커 위치 데이터 조회
+    @GET("owner/select_walker_location_data.php")
+    Call<List<WalkerLocationDTO>> selectWalkerLocation(@Query("owner_location") String owner_location);
 
 //    @POST("walker/update_walker_tb.php")
 //    Call<ResultDTO> updateWalkerData(@Query("tableName") String tableName,
@@ -128,14 +132,19 @@ public interface RetrofitApi {
     @GET("walker/select_walkerlist_data.php")
     Call<List<WalkerlistDTO>> selectWalkerlistData(@Query("tableName") String tableName);
 
+    //반려인이 -> 도그워커 정보(프로필에서 도그워커 한명의 상세정보) 조회
+    @GET("owner/select_walker_profile_data.php")
+    Call<List<WalkerlistDTO>> selectWalkerProfileData(@Query("walker_id") String walker_id);
     //예약 정보 저장
     @FormUrlEncoded
     @POST("owner/insert_booking_service_data.php")
     Call<ResultDTO> insertBookingServiceData(@FieldMap HashMap<String, Object> parameters);
-
-    //예약 정보 조회
+    //예약 정보 조회 (도그워커)
     @GET("walker/select_booking_service_data.php")
-    Call<List<BookingServiceDTO>> selectBookingServiceData(@Query("walker_id") String walker_id);
+    Call<List<BookingServiceDTO>> selectWalkerBookingServiceData(@Query("walker_id") String walker_id);
+    //예약 정보 조회 (반려인)
+    @GET("owner/select_booking_service_data.php")
+    Call<List<BookingServiceDTO>> selectOwnerBookingServiceData(@Query("owner_id") String owner_id);
 
 
 //    @Multipart

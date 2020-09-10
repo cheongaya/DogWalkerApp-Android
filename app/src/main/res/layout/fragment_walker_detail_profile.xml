@@ -11,38 +11,66 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite">
+
 
         <ImageView
+            android:id="@+id/imageView_walker_profile_Img"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="300dp"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_baseline_perm_identity_24"
             android:background="#666"/>
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="도그워커 위치"
-            android:gravity="center"
-            android:textSize="15sp"
-            android:layout_margin="10dp"/>
+            android:orientation="horizontal"
+            android:background="@drawable/border_bottom"
+            android:paddingTop="15dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="15dp"
+            android:layout_marginBottom="15dp">
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:layout_height="30dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_baseline_location_on_24"
+                android:background="@color/colorWhite"
+                android:layout_marginRight="5dp"/>
+            <TextView
+                android:id="@+id/textView_walker_profile_location"
+                android:layout_width="0dp"
+                android:layout_weight="5.5"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textSize="16sp"
+                android:text="워커 위치"
+                android:textColor="@color/colorBlack"/>
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="자기소개"
-            android:textSize="18sp"
+            android:textSize="21sp"
             android:textColor="@color/colorBlack"
             android:textStyle="bold"
-            android:layout_margin="10dp"/>
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"/>
 
         <TextView
+            android:id="@+id/textView_walker_profile_introduce"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="자기소개 text"
-            android:layout_margin="10dp"
-            android:textSize="15sp"/>
+            android:layout_margin="30dp"
+            android:textSize="16sp"/>
 
     </LinearLayout>
 </layout>

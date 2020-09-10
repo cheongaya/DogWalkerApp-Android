@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -17,11 +18,17 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Chronometer;
+import android.widget.MultiAutoCompleteTextView;
 
+import com.example.dogwalker.data.WalkerlistDTO;
 import com.example.dogwalker.databinding.ActivityNaverMapBinding;
+import com.example.dogwalker.owner.OwnerWalkerDetailActivity;
+import com.example.dogwalker.owner.OwnerWalkerlistActivity;
+import com.example.dogwalker.retrofit2.response.WalkerLocationDTO;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.LocationTrackingMode;
@@ -30,22 +37,30 @@ import com.naver.maps.map.MapView;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.UiSettings;
+import com.naver.maps.map.overlay.InfoWindow;
 import com.naver.maps.map.overlay.LocationOverlay;
+import com.naver.maps.map.overlay.Marker;
+import com.naver.maps.map.overlay.Overlay;
+import com.naver.maps.map.overlay.OverlayImage;
 import com.naver.maps.map.util.FusedLocationSource;
+import com.naver.maps.map.util.MarkerIcons;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class NaverMapActivity extends BaseActivity implements OnMapReadyCallback, LocationListener {
 
     ActivityNaverMapBinding binding;
-
     FusedLocationSource locationSource;
+    InfoWindow infoWindow;  //마커 정보창 객체
 
-    private Animation fab_open, fab_close;
-    private Boolean isFabOpen = false;
-
-    //스탑워치 관련 변수
-    private long timeWhenStopped = 0;
-    private boolean stopClicked;
-    String timeWatch;
+    //Intent 객체에서 받아온 데이터
+    String walkDogName;
+    String defaultWalkTime;
+    int add30minTimeCount;
 
     //지도 관련 변수
     private static final int PERMISSION_REQUEST_CODE = 100;
@@ -56,10 +71,6 @@ public class NaverMapActivity extends BaseActivity implements OnMapReadyCallback
     private NaverMap map;
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 5; //10m
     private static final long MIN_TIME_BW_UPDATES = 1000;  //1분 (1000 * 60 * 1)
-
-    //이동 거리 계산 관련 변수
-    Location lastKnownLocation;
-    float distance = 0;
 
     @Nullable
     private LocationManager locationManager;
@@ -72,15 +83,11 @@ public class NaverMapActivity extends BaseActivity implements OnMapReadyCallback
         binding = DataBindingUtil.setContentView(this, R.layout.activity_naver_map);
         binding.setActivity(this);
 
-        //플로팅 버튼 열고 / 닫는 애니메이션 연결
-        fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.floating_btn_open);
-        fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.floating_btn_close);
-
-        binding.onClickBtnFloatVideo.startAnimation(fab_close);
-        binding.onClickBtnFloatChat.startAnimation(fab_close);
-
-        //크로노미터(스탑워치) 셋팅
-        chronometerInitSetting();
+        //OwnerWalkerlistActivity 에서 받아온 산책시간 선택 데이터
+        Intent intent = getIntent();
+        walkDogName = intent.getStringExtra("walkDogName");
+        defaultWalkTime = intent.getStringExtra("defaultWalkTime");
+        add30minTimeCount = intent.getIntExtra("add30minTimeCount", 0);
 
         //NaverMap 객체 얻어오기
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -105,6 +112,10 @@ public class NaverMapActivity extends BaseActivity implements OnMapReadyCallback
         //UiSettings 는 UI 와 관련된 설정을 담당하는 클래스이다
         UiSettings uiSettings = naverMap.getUiSettings();
         uiSettings.setLocationButtonEnabled(true);
+
+        //DB에 저장된 도그워커의 주소(좌표) 데이터를 불러와 마커로 표시해준다
+        selectWalkerLocationToDB();
+
         //TODO : 위치트랙커 테스트중
         naverMap.setLocationSource(locationSource);
 
@@ -124,21 +135,6 @@ public class NaverMapActivity extends BaseActivity implements OnMapReadyCallback
                 locationOverlay.setPosition(coord);
                 locationOverlay.setBearing(location.getBearing());
 
-                if(lastKnownLocation == null) {
-                    lastKnownLocation = location;
-                    Log.d("DeveloperLog","Distance: null");
-                }
-                else {
-                    distance = lastKnownLocation.distanceTo(location);    //meter
-                    Log.d("DeveloperLog","Distance:"+distance);
-                    makeToast(distance+"");
-//            lastKnownLocation = location;
-                    //화면에 표시
-                    double distanceKm = distance / 1000;
-                    Log.d("DeveloperLog","distanceKm:"+String.format("%.2f", distanceKm));  //소숫점 2자리까지 표현
-                    binding.textViewWalkDistance.setText(String.format("%.2f", distanceKm));
-                    map.moveCamera(CameraUpdate.scrollTo(coord));
-                }
             }
         });
     }
@@ -162,27 +158,133 @@ public class NaverMapActivity extends BaseActivity implements OnMapReadyCallback
 
         map.moveCamera(CameraUpdate.scrollTo(coord));
 
-//        // TODO : TEST 중
-//        distance = lastKnownLocation.distanceTo(location);
-//        makeToast(distance+"");
-//        Log.d("DeveloperLog","Distance:"+distance);
-//
+    }
 
-//        if(lastKnownLocation == null) {
-//            lastKnownLocation = location;
-//            Log.d("DeveloperLog","Distance: null");
-//        }
-//        else {
-//            distance = lastKnownLocation.distanceTo(location);    //meter
-//            Log.d("DeveloperLog","Distance:"+distance);
-//            makeToast(distance+"");
-////            lastKnownLocation = location;
-//            //화면에 표시
-//            double distanceKm = distance / 1000;
-//            Log.d("DeveloperLog","distanceKm:"+String.format("%.2f", distanceKm));  //소숫점 2자리까지 표현
-//            binding.textViewWalkDistance.setText(String.format("%.2f", distanceKm));
-//            map.moveCamera(CameraUpdate.zoomIn());
-//        }
+    //DB에 저장된 도그워커의 주소(좌표) 데이터를 불러온다
+    public void selectWalkerLocationToDB(){
+
+        Call<List<WalkerLocationDTO>> call = retrofitApi.selectWalkerLocation("abc");
+        call.enqueue(new Callback<List<WalkerLocationDTO>>() {
+            @Override
+            public void onResponse(Call<List<WalkerLocationDTO>> call, Response<List<WalkerLocationDTO>> response) {
+                List<WalkerLocationDTO> walkerLocationDTOList = response.body();
+
+                for(int i=0; i<walkerLocationDTOList.size(); i++){
+                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "아이디("+i+") : " + walkerLocationDTOList.get(i).getId());
+                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "만족도("+i+") : " + walkerLocationDTOList.get(i).getSatisfation_score());
+                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "위도("+i+") : " + walkerLocationDTOList.get(i).getLatitude());
+                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "경도("+i+") : " + walkerLocationDTOList.get(i).getLongitude());
+                    //결과 데이터 (위도/경도)
+                    String walker_id = walkerLocationDTOList.get(i).getId();
+                    int satisfation_score = walkerLocationDTOList.get(i).getSatisfation_score();
+                    String latitudeStr = walkerLocationDTOList.get(i).getLatitude();
+                    String longitudeStr = walkerLocationDTOList.get(i).getLongitude();
+                    //String -> double 형변환
+                    if(latitudeStr != null && longitudeStr != null){
+                        double latitude = Double.valueOf(latitudeStr);
+                        double longitude = Double.valueOf(longitudeStr);
+
+                        //DB에서 불러온 도그워커의 위치(좌표)를 마커 객체를 생성해서 지도 위에 추가해준다
+                        createWalkerLocationMarker(walker_id, satisfation_score, latitude, longitude);
+
+                    }else{
+                        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "아이디("+i+")" + walkerLocationDTOList.get(i).getId()+" 는 좌표값이 null 입니다");
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<WalkerLocationDTO>> call, Throwable t) {
+
+            }
+        });
+
+    }
+
+    //DB에서 불러온 도그워커의 위치(좌표)를 마커 객체를 생성해서 지도 위에 추가해준다
+    public void createWalkerLocationMarker(String walker_id, int satisfation_score, double latitude, double longitude){
+
+        Marker marker = new Marker();
+        marker.setTag(walker_id);
+        marker.setPosition(new LatLng(latitude, longitude));
+        marker.setIcon(MarkerIcons.BLACK);
+
+        //만족도에 따른 마커 색상 지정
+        if(satisfation_score >= 0 && satisfation_score <= 20){
+            marker.setIconTintColor(getColor(R.color.markerLevel1));
+        }else if(satisfation_score > 20 && satisfation_score <= 40){
+            marker.setIconTintColor(getColor(R.color.markerLevel2));
+        }else if(satisfation_score > 40 && satisfation_score <= 60){
+            marker.setIconTintColor(getColor(R.color.markerLevel3));
+        }else if(satisfation_score > 60 && satisfation_score <= 80){
+            marker.setIconTintColor(getColor(R.color.markerLevel4));
+        }else if(satisfation_score > 80 && satisfation_score <= 100){
+            marker.setIconTintColor(getColor(R.color.markerLevel5));
+        }
+
+        marker.setMap(map);
+
+        createInfoWindow(marker, walker_id);
+
+        marker.setOnClickListener(overlay -> {
+
+            if(marker.getInfoWindow() == null){
+                //현재 마커에 정보창이 열려있지 않을 경우 정보창을 엶
+                infoWindow.open(marker);
+            }else{
+                //이미 현재 마커에 정보 창이 열려있을 경우 닫음
+                infoWindow.close();
+            }
+
+            return true;
+        });
+    }
+
+    //마커 정보창 객체를 생성한다 (정보창에는 도그워커의 아이디가 표시된다)
+    public void createInfoWindow(Marker marker, String title){
+        //정보창 객체 생성
+        infoWindow = new InfoWindow();
+        infoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(getApplicationContext()) {
+            @NonNull
+            @Override
+            public CharSequence getText(@NonNull InfoWindow infoWindow) {
+//                return null;
+                //정보창 클릭시 이벤트
+                infoWindow.setOnClickListener(new Overlay.OnClickListener() {
+                    @Override
+                    public boolean onClick(@NonNull Overlay overlay) {
+                        makeToast(infoWindow.getMarker().getTag().toString());
+
+                        Intent intentWalkerDetail = new Intent(NaverMapActivity.this, OwnerWalkerDetailActivity.class);
+                        intentWalkerDetail.putExtra("walkerName", infoWindow.getMarker().getTag().toString());                  //도그워커 아이디
+                        intentWalkerDetail.putExtra("walkDogName", walkDogName);                //산책시킬 강아지 이름
+                        intentWalkerDetail.putExtra("defaultWalkTime", defaultWalkTime);        //산책 기본 시간
+                        intentWalkerDetail.putExtra("add30minTimeCount", add30minTimeCount);    //산책 추가 시간
+                        startActivity(intentWalkerDetail);
+                        finish();
+
+                        return true;
+                    }
+                });
+
+                // 정보 창이 열린 마커의 tag를 텍스트로 노출하도록 반환
+                return (CharSequence)infoWindow.getMarker().getTag();
+            }
+        });
+
+//        ViewGroup rootView = (ViewGroup)findViewById(R.id.map);
+//        LocationWalkerMakerAdapter adapter = new LocationWalkerMakerAdapter(getApplicationContext(), rootView);
+//        infoWindow.setAdapter(adapter);
+//        //인포창의 우선순위
+//        infoWindow.setZIndex(10);
+//        //투명도 조정
+//        infoWindow.setAlpha(0.9f);
+
+    }
+
+    //주소, 지역명 으로 검색
+    public void onClickKeywordWalkerSearch(View view){
 
     }
 
@@ -194,105 +296,6 @@ public class NaverMapActivity extends BaseActivity implements OnMapReadyCallback
     public void onClickClose(View view){
         finish();
     }
-
-    //+ 버튼 클릭시 배변횟수가 증가한다
-    public void onClickPlusPoo(View view){
-
-    }
-
-    //- 버튼 클릭시 배변횟수가 감소한다
-    public void onClickMinusPoo(View view){
-
-    }
-
-    //카메라 버튼 클릭시 필터가 적용된 사진을 찍을 수 있다
-    public void onClickBtnFloatCamera(View view){
-    }
-
-    //재생 버튼 클릭시 산책시간 스톱워치를 시작시킬 수 있다
-    public void onClickBtnFloatStart(View view){
-        //스탑워치 시작
-        binding.chronometerStopWatch.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
-        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[start] timeWhenStopped : " + timeWhenStopped);
-        binding.chronometerStopWatch.start();  //시간 갱신을 시작한다
-        stopClicked = false;
-
-    }
-
-    //일시정지 버튼 클릭시 산책시간 스톱워치를 일시정지시킬 수 있다
-    public void onClickBtnFloatPause(View view){
-        //스탑워치 정지
-        if (!stopClicked) {
-            timeWhenStopped = binding.chronometerStopWatch.getBase() - SystemClock.elapsedRealtime();
-            makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[stop] timeWhenStopped : " + timeWhenStopped);
-            binding.chronometerStopWatch.stop();    //시간 갱신을 중지한다
-            stopClicked = true;
-        }
-    }
-
-    //완료 버튼 클릭시 산책을 완료 시킬 수 있다
-    public void onClickBtnFloatDone(View view){
-        //스탑워치 기록 보여줌
-        makeToast(timeWatch);
-    }
-
-    //리스트 버튼 클릭시 영상스트리밍 / 채팅 버튼이 위에 나온다
-    public void onClickBtnFloatList(View view){
-        anim();
-    }
-
-    //비디오 버튼 클릭시 산책하는 모습을 스트리밍을 할 수 있다
-    public void onClickBtnFloatVideo(View view){
-    }
-
-    //채팅 버튼 클릭시 반려인과 채팅할 수 있다
-    public void onClickBtnFloatChat(View view){
-    }
-
-    //플로팅 버튼 관련 에니메이션 메소드
-    public void anim() {
-
-        if (isFabOpen) {
-            binding.onClickBtnFloatVideo.startAnimation(fab_close); //애니메이션 실행
-            binding.onClickBtnFloatChat.startAnimation(fab_close);
-            binding.onClickBtnFloatVideo.setClickable(false);   //버튼 활성화 / 비활성화
-            binding.onClickBtnFloatChat.setClickable(false);
-            isFabOpen = false;
-        } else {
-            binding.onClickBtnFloatVideo.startAnimation(fab_open);
-            binding.onClickBtnFloatChat.startAnimation(fab_open);
-            binding.onClickBtnFloatVideo.setClickable(true);
-            binding.onClickBtnFloatChat.setClickable(true);
-            isFabOpen = true;
-        }
-    }
-
-    //크로노 미터 관련 초기 셋팅
-    public void chronometerInitSetting(){
-        //chronometer 가 바뀔 때 리스너가 작동한다
-        binding.chronometerStopWatch.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener(){
-            @Override
-            public void onChronometerTick(Chronometer chronometer) {
-                long time = SystemClock.elapsedRealtime() - chronometer.getBase();
-                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "time : " + time);
-                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "SystemClock.elapsedRealtime() : " + SystemClock.elapsedRealtime());
-                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "chronometer.getBase() : " + chronometer.getBase());
-                int h = (int)(time /3600000);
-                int m = (int)(time - h*3600000)/60000;
-                int s = (int)(time - h*3600000- m*60000)/1000 ;
-                timeWatch = (h < 10 ? "0"+h: h)+ ":" +(m < 10 ? "0"+m: m)+ ":" + (s < 10 ? "0"+s: s);
-                chronometer.setText(timeWatch);
-                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "timeWatch : " + timeWatch);
-            }
-        });
-
-        //처음 시간 셋팅
-        binding.chronometerStopWatch.setBase(SystemClock.elapsedRealtime());
-        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[set] SystemClock.elapsedRealtime() : " + SystemClock.elapsedRealtime());
-        binding.chronometerStopWatch.setText("00:00:00");
-
-    }
-
 
     /**
      *

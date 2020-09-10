@@ -23,7 +23,7 @@ public class FragmentWalkerDetailReview extends FragmentBase {
         if(getArguments() != null){
             //bundle 을 통해 전달받은 도그워커 이름 데이터
             walkerName = getArguments().getString("walkerName");
-            makeToast(walkerName);
+//            makeToast(walkerName);
         }
 
         return inflater.inflate(R.layout.fragment_walker_detail_review, container, false);

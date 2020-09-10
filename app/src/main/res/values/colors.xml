@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#000</color>
     <color name="colorAccent">#FD8A6B</color>
 
+    <color name="colorTransparent">#00000000</color>
     <color name="colorMain">#06C8B0</color>
     <color name="colorMain2">#7EAFFE</color>
     <color name="colorSub">#FD8A6B</color>
@@ -18,4 +19,10 @@
     <color name="colorLightGray">#f1f1f1</color>
     <color name="colorYellow">#ffcd38</color>
     <color name="colorRed">#c70c18</color>
+
+    <color name="markerLevel1">#2BD2AA</color>
+    <color name="markerLevel2">#63C1FD</color>
+    <color name="markerLevel3">#4387FA</color>
+    <color name="markerLevel4">#2055FE</color>
+    <color name="markerLevel5">#1A1BCB</color>
 </resources>

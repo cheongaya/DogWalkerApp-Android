@@ -154,6 +154,17 @@ public class FragmentWalkDialog extends DialogFragment {
 
     }
 
+    //이전 버튼 클릭시
+    public void onClickWalkTimeSelectedPrev(View view){
+        //강아지 선택 프래그먼트 다이얼로그 띄우기
+        Bundle bundle = new Bundle();
+        FragmentSelectMyDogDialog selectMyDogDialog = new FragmentSelectMyDogDialog();
+        selectMyDogDialog.setArguments(bundle);
+        selectMyDogDialog.show(getFragmentManager(), "fragmentSelectedMyDog");
+        //현재 다이얼로그창 종료
+        dismiss();
+    }
+
     //로그 : 액티비티명 + 함수명 + 원하는 데이터를 한번에 보기위한 로그
     public void makeLog(String methodData, String strData) {
         Log.d(TAG, className + "_" + methodData + "_" + strData);

@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="activity"
+            type="com.example.dogwalker.owner.dialog.DialogPaymentActivity" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:padding="30dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="결제 진행"
+            android:textColor="@color/colorMain2"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:layout_marginBottom="30dp"
+            android:textSize="21sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="예약 정보"
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold"
+            android:layout_marginBottom="15dp"
+            android:textSize="21sp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp">
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@color/colorBlack"
+                android:text="예약할 도그워커"/>
+            <TextView
+                android:id="@+id/textView_payment_walker_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/colorDarkBlue"
+                android:layout_marginLeft="10dp"
+                android:text="예약할 도그워커"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@color/colorBlack"
+                android:text="예약할 강아지"/>
+            <TextView
+                android:id="@+id/textView_payment_dog_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/colorDarkBlue"
+                android:layout_marginLeft="10dp"
+                android:text="예약할 강아지 이름"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp"
+                android:text="예약 날짜"/>
+            <TextView
+                android:id="@+id/textView_payment_walk_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorDarkBlue"
+                android:textSize="16sp"
+                android:layout_marginLeft="10dp"
+                android:text="예약 날짜"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp"
+                android:text="예약 시간"/>
+            <TextView
+                android:id="@+id/textView_payment_walk_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorDarkBlue"
+                android:textSize="16sp"
+                android:layout_marginLeft="10dp"
+                android:text="예약 시간"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@color/colorBlack"
+                android:text="예약한 서비스 시간"/>
+            <TextView
+                android:id="@+id/textView_payment_walk_total_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorDarkBlue"
+                android:textSize="16sp"
+                android:layout_marginLeft="10dp"
+                android:text="예약한 서비스 시간"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="결제 금액"
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold"
+            android:layout_marginBottom="15dp"
+            android:textSize="21sp"
+            android:layout_marginTop="15dp"/>
+
+        <TextView
+            android:id="@+id/textView_payment_total_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorDarkBlue"
+            android:layout_marginLeft="10dp"
+            android:textSize="16sp"
+            android:text="총 결제 금액"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="결제 방법"
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold"
+            android:layout_marginBottom="15dp"
+            android:textSize="21sp"
+            android:layout_marginTop="15dp"/>
+        
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            
+            <RadioButton
+                android:id="@+id/radioButton_payment_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:text="휴대폰결제"/>
+
+            <RadioButton
+                android:id="@+id/radioButton_payment_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:text="카드결제"/>
+
+            <RadioButton
+                android:id="@+id/radioButton_payment_kakaopay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:text="카카오페이"/>
+            
+        </RadioGroup>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="결제 하기"
+            android:background="@color/colorMain2"
+            android:textColor="@color/colorWhite"
+            android:onClick="@{activity::onClickPaymentOK}"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_marginTop="30dp"
+            android:padding="10dp"/>
+
+<!--        <Button-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="신용카드 결제"-->
+<!--            android:background="@color/colorWhite"-->
+<!--            android:textColor="#000"-->
+<!--            android:textSize="18sp"-->
+<!--            android:onClick="@{activity::btnPaymentMethodCard}"-->
+<!--            android:layout_margin="10dp"-->
+<!--            android:padding="10dp"/>-->
+    </LinearLayout>
+</layout>

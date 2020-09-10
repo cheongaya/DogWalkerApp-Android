@@ -9,21 +9,265 @@
     </data>
 
     <LinearLayout
-        android:orientation="vertical" android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/tv1"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="프로필 정보"
-            android:textColor="#000"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:text="산책 가격표"
+            android:textSize="18sp"
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="30dp"/>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="0,1"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="30dp">
+
+            <TableRow android:layout_marginBottom="10dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="30분 기본 산책"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="16sp"/>
+                <TextView
+                    android:id="@+id/textView_walker_profile_price_thirty_minutes"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:inputType="number"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/colorDarkBlue"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:hint="0"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="(원)"
+                    android:layout_marginRight="5dp"
+                    android:textColor="@color/colorBlack"/>
+
+            </TableRow>
+            <TableRow android:layout_marginBottom="10dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="30분 산책 추가금"
+                    android:textSize="16sp"
+                    android:textColor="@color/colorBlack"/>
+                <TextView
+                    android:id="@+id/textView_walker_profile_price_sixty_minutes"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:textColor="@color/colorDarkBlue"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:inputType="number"
+                    android:textAlignment="textEnd"
+                    android:hint="0"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="(원)"
+                    android:layout_marginRight="5dp"
+                    android:textColor="@color/colorBlack"/>
+            </TableRow>
+            <TableRow android:layout_marginBottom="10dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="대형견 이상 추가금"
+                    android:textSize="16sp"
+                    android:textColor="@color/colorBlack"/>
+                <TextView
+                    android:id="@+id/textView_walker_profile_price_add_large_size"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:inputType="number"
+                    android:textColor="@color/colorDarkBlue"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:textAlignment="textEnd"
+                    android:hint="0"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="(원)"
+                    android:layout_marginRight="5dp"
+                    android:textColor="@color/colorBlack"/>
+            </TableRow>
+            <TableRow android:layout_marginBottom="10dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="반려견 1마리 추가금"
+                    android:textSize="16sp"
+                    android:textColor="@color/colorBlack"/>
+                <TextView
+                    android:id="@+id/textView_walker_profile_price_add_one_dog"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorDarkBlue"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:layout_marginRight="10dp"
+                    android:inputType="number"
+                    android:textAlignment="textEnd"
+                    android:hint="0"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="(원)"
+                    android:layout_marginRight="5dp"
+                    android:textColor="@color/colorBlack"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="주말 및 공휴일 할증"
+                    android:textSize="16sp"
+                    android:textColor="@color/colorBlack"/>
+                <TextView
+                    android:id="@+id/textView_walker_profile_price_add_holiday"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:textColor="@color/colorDarkBlue"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:inputType="number"
+                    android:textAlignment="textEnd"
+                    android:hint="0"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="(원)"
+
+                    android:layout_marginRight="5dp"
+                    android:textColor="@color/colorBlack"/>
+            </TableRow>
+        </TableLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="산책 가능 강아지 유형"
+            android:textSize="18sp"
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold"
+            android:layout_margin="30dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+                <ImageView
+                    android:id="@+id/imageView_walker_profile_walkable_type_s"
+                    android:layout_width="25dp"
+                    android:layout_height="60dp"
+                    android:tintMode="multiply"
+                    android:src="@drawable/icon_dogwalker02"
+                    android:layout_marginBottom="5dp"
+                    android:scaleType="fitEnd"
+                    app:tint="#999" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorBlack"
+                    android:text="소형견"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/imageView_walker_profile_walkable_type_m"
+                    android:layout_width="40dp"
+                    android:layout_height="60dp"
+                    android:tintMode="multiply"
+                    android:scaleType="fitEnd"
+                    android:src="@drawable/icon_dogwalker02"
+                    android:layout_marginBottom="5dp"
+                    app:tint="#999" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorBlack"
+                    android:text="중형견"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/imageView_walker_profile_walkable_type_l"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:tintMode="multiply"
+                    android:src="@drawable/icon_dogwalker02"
+                    android:layout_marginBottom="5dp"
+                    app:tint="#999" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorBlack"
+                    android:text="대형견"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="right"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="20dp">
+
+            <LinearLayout
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:background="@color/colorMain"
+                android:layout_gravity="center_vertical"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorMain"
+                android:text="산책 가능"
+                android:paddingLeft="7dp"/>
+
+        </LinearLayout>
+
 
     </LinearLayout>
+
 </layout>

@@ -275,6 +275,12 @@ public class GoogleMapActivity extends BaseActivity implements OnMapReadyCallbac
         makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[set] SystemClock.elapsedRealtime() : " + SystemClock.elapsedRealtime());
         binding.chronometerStopWatch.setText("00:00:00");
 
+        //스탑워치 시작
+//        binding.chronometerStopWatch.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
+        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[start] timeWhenStopped : " + timeWhenStopped);
+        binding.chronometerStopWatch.start();  //시간 갱신을 시작한다
+        stopClicked = false;
+
     }
 
     /**

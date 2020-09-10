@@ -24,6 +24,7 @@ import com.example.dogwalker.decorators.NoneDaysDecorator;
 import com.example.dogwalker.decorators.NoneDaysDecoratorFragment;
 import com.example.dogwalker.decorators.SaturdayDecorator;
 import com.example.dogwalker.decorators.SundayDecorator;
+import com.example.dogwalker.owner.dialog.DialogPaymentActivity;
 import com.example.dogwalker.owner.dialog.DialogTimeActivity;
 import com.example.dogwalker.retrofit2.response.NonServiceDateDTO;
 import com.example.dogwalker.retrofit2.response.ResultDTO;
@@ -47,6 +48,7 @@ import retrofit2.Response;
 public class FragmentWalkerDetailSchedule extends FragmentBase implements View.OnClickListener{
 
     private static final int BOOKING_TIME_SELECTED = 5001;
+    private static final int BOOKING_PAYMENT_SELECTED = 5002;
 
     String walkerName;  //bundle 을 통해 전달받은 도그워커 이름 데이터
     String walkDogName; //bundle 을 통해 전달받은 산책시킬 강아지 이름 데이터
@@ -55,7 +57,10 @@ public class FragmentWalkerDetailSchedule extends FragmentBase implements View.O
 
     String selectedDate; //선택한 예약 날짜
     int selectedTimeCalendarHour, selectedTimeCalendarMin, totalWalkTime;   //선택한 예약 시, 분, 예약한 총 서비스시간
+    int totalPayPrice = 0;  //최종 결제할 금액
 
+    int priceThirtyMinutes, priceSixtyMinutes, priceAddLargeSize, priceAddOneDog, priceAddHoliday;  //DB 에서 불러온 도그워커 정보(가격표)
+    int walkableTypeS, walkableTypeM, walkableTypeL;   //DB 에서 불러온 도그워커 정보(산책가능유형)
 
     MaterialCalendarView calendarViewBooking;
     Button btnBooking;
@@ -80,9 +85,31 @@ public class FragmentWalkerDetailSchedule extends FragmentBase implements View.O
             makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "//[0] walkerName : " + walkerName);
             makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "//[0] defaultWalkTime : " + defaultWalkTime);
             makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "//[0] add30minTimeCount : " + add30minTimeCount);
+
+            priceThirtyMinutes = getArguments().getInt("priceThirtyMinutes");
+            priceSixtyMinutes = getArguments().getInt("priceSixtyMinutes");
+            priceAddLargeSize = getArguments().getInt("priceAddLargeSize");
+            priceAddOneDog = getArguments().getInt("priceAddOneDog");
+            priceAddHoliday = getArguments().getInt("priceAddHoliday");
+            walkableTypeS = getArguments().getInt("walkableTypeS");
+            walkableTypeM = getArguments().getInt("walkableTypeM");
+            walkableTypeL = getArguments().getInt("walkableTypeL");
         }
 
-        //id 연결
+        //string -> int 형변환
+        int defaultWalkTimeInt = Integer.parseInt(defaultWalkTime);
+
+        //최종 결제 금액 계산
+        if(defaultWalkTimeInt == 30){
+            //기본시간 30분이면
+            totalPayPrice = priceThirtyMinutes;
+        }else{
+            //기본시간 60분이면
+            int add30minTimePrice = add30minTimeCount*priceSixtyMinutes;
+            totalPayPrice = priceThirtyMinutes*2 + add30minTimePrice;
+        }
+
+                //id 연결
         calendarViewBooking = (MaterialCalendarView) v.findViewById(R.id.calendarView_booking);
         btnBooking = (Button) v.findViewById(R.id.button_booking_ok);
         tvBookingDate = (TextView)v.findViewById(R.id.textView_booking_date);
@@ -181,45 +208,28 @@ public class FragmentWalkerDetailSchedule extends FragmentBase implements View.O
         switch (v.getId()) {
 
             case R.id.button_booking_ok:
-                //확인버튼 누르면 예약 정보가 DB에 저장된다
-                saveBookingServiceDataToDB();
+//                //확인버튼 누르면 예약 정보가 DB에 저장된다
+//                saveBookingServiceDataToDB();
+
+                //예약하기 버튼 누르면 결제 액티비티 화면으로 이동한다
+                Intent paymentDialogIntent = new Intent(getContext(), DialogPaymentActivity.class);
+                paymentDialogIntent.putExtra("walker_id", walkerName);             //예약할 도그워커 이름
+                paymentDialogIntent.putExtra("owner_dog_name", walkDogName);       //예약할 강아지 이름
+                paymentDialogIntent.putExtra("walk_total_time", totalWalkTime);    //예약할 총시간
+                paymentDialogIntent.putExtra("walk_date", selectedDate);           //예약할 날짜
+                paymentDialogIntent.putExtra("walk_total_price", totalPayPrice);    //총 결제 금액
+
+                if(selectedTimeCalendarMin == 0){
+                    String selectedTimeCalendarMinStr = "00";
+                    paymentDialogIntent.putExtra("walk_time", selectedTimeCalendarHour+":"+selectedTimeCalendarMinStr);        //예약할 시간
+                }else{
+                    paymentDialogIntent.putExtra("walk_time", selectedTimeCalendarHour+":"+selectedTimeCalendarMin);           //예약할 시간
+                }
+
+                startActivityForResult(paymentDialogIntent, BOOKING_PAYMENT_SELECTED);
                 break;
         }
 
-    }
-
-    //확인버튼을 누르면 예약 정보가 DB에 저장된다
-    public void saveBookingServiceDataToDB(){
-
-        HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("walker_id", walkerName);
-        parameters.put("owner_id", applicationClass.currentWalkerID);
-        parameters.put("owner_dog_name", walkDogName);
-        parameters.put("walk_total_time", totalWalkTime);
-        parameters.put("walk_date", selectedDate);
-        if(selectedTimeCalendarMin == 0){
-            String selectedTimeCalendarMinStr = "00";
-            parameters.put("walk_time", selectedTimeCalendarHour+":"+selectedTimeCalendarMinStr);
-        }else{
-            parameters.put("walk_time", selectedTimeCalendarHour+":"+selectedTimeCalendarMin);
-        }
-
-        Call<ResultDTO> call = retrofitApi.insertBookingServiceData(parameters);
-        call.enqueue(new Callback<ResultDTO>() {
-            @Override
-            public void onResponse(Call<ResultDTO> call, Response<ResultDTO> response) {
-                ResultDTO resultDTO = response.body();
-                String resultData = resultDTO.getResponceResult();
-                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "예약정보 저장 성공 : " + resultData);
-                makeToast("예약이 완료되었습니다");
-            }
-
-            @Override
-            public void onFailure(Call<ResultDTO> call, Throwable t) {
-                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "예약정보 저장 실패 : " + t.toString());
-
-            }
-        });
     }
 
     //캘린더 클릭 이벤트 메소드
@@ -237,6 +247,7 @@ public class FragmentWalkerDetailSchedule extends FragmentBase implements View.O
                 int Day = date.getDay();
                 CalendarDay selectedDay = CalendarDay.from(Year, Month, Day);
                 makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "클릭날짜 : " + selectedDay);
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "nonServiceCalendarDates.size() : " + nonServiceCalendarDates.size());
 
                 //DB에 저장해놓은 date 리스트
                 for(int i=0; i<nonServiceCalendarDates.size(); i++){
@@ -276,6 +287,12 @@ public class FragmentWalkerDetailSchedule extends FragmentBase implements View.O
                     }
                 }
 
+                //예약 불가 날짜가 없을 경우
+                if(nonServiceCalendarDates.size() == 0){
+                    dialogTimeOn = true;
+                }
+
+                //시간 다이얼로그 띄어줌
                 if(dialogTimeOn == true){
 
                     Intent timeDialogIntent = new Intent(getContext(), DialogTimeActivity.class);

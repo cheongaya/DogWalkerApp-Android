@@ -10,7 +10,6 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
@@ -28,11 +27,9 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.dogwalker.GpsTracker;
-import com.example.dogwalker.LocationWebViewActivity;
+import com.example.dogwalker.owner.LocationWebViewActivity;
 import com.example.dogwalker.R;
 import com.example.dogwalker.retrofit2.response.ResultDTO;
-import com.example.dogwalker.retrofit2.response.ResultStrDTO;
-import com.example.dogwalker.retrofit2.response.UserOwnerDTO;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
@@ -47,8 +44,6 @@ import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.example.dogwalker.BaseActivity.retrofitApi;
 
 public class WalkerMypageActivity extends WalkerBottomNavigation implements View.OnClickListener{
 
@@ -204,8 +199,11 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
 //            updateLocationDataToDB(address);
 //        }
 
+        String latitudeStr = String.valueOf(latitude);
+        String longitudeStr = String.valueOf(longitude);
+
         //위치 데이터를 user_walker 테이블에 저장하는 메소드
-        updateLocationDataToDB(address);
+        updateLocationDataToDB(address, latitudeStr, longitudeStr);
     }
 
     //현재 위치 권한 체크
@@ -271,11 +269,13 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
                 break;
 
             case WALKER_ADDRESS:  //주소 데이터 검색 팝업창 띄우기
-                String resultAddress = data.getExtras().getString("addressResult");
+                String resultAddress = data.getExtras().getString("addressResult");     //주소, 지명
+                String resultLatitude = data.getExtras().getString("LatitudeResult");   //위도
+                String resultLongitude = data.getExtras().getString("LongitudeResult"); //경도
                 if(resultAddress != null){
                     tvLocation.setText(resultAddress);
                     //위치 데이터를 user_walker 테이블에 저장하는 메소드
-                    updateLocationDataToDB(resultAddress);
+                    updateLocationDataToDB(resultAddress, resultLatitude, resultLongitude);
                 }
 //                tvLocation.setText(resultAddress);
 //                //위치 데이터를 user_walker 테이블에 저장하는 메소드
@@ -340,9 +340,9 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
     }
 
     //위치 데이터를 user_walker 테이블에 저장(수정)하는 메소드
-    public void updateLocationDataToDB(String resultAddress){
+    public void updateLocationDataToDB(String resultAddress, String latitude, String longitude){
         //데이터베이스에 내 위치 저장
-        Call<ResultDTO> call = retrofitApi.updateWalkerLocation(applicationClass.currentWalkerID, resultAddress);
+        Call<ResultDTO> call = retrofitApi.updateWalkerLocation(applicationClass.currentWalkerID, resultAddress, latitude, longitude);
         makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "서버에 보내는 id : " + applicationClass.currentWalkerID);
         makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "서버에 보내는 location : " + resultAddress);
         //비동기 네트워크 처리

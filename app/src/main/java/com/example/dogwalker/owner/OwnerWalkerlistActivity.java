@@ -10,8 +10,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.dogwalker.BaseActivity;
+import com.example.dogwalker.NaverMapActivity;
 import com.example.dogwalker.R;
 import com.example.dogwalker.data.WalkerlistDTO;
+import com.example.dogwalker.databinding.ActivityNaverMapBindingImpl;
 import com.example.dogwalker.databinding.ActivityOwnerWalkerlistBinding;
 
 import java.util.ArrayList;
@@ -30,7 +32,10 @@ public class OwnerWalkerlistActivity extends BaseActivity {
     List<WalkerlistDTO> walkerlistDTOList;
 
     TextView tvSearchWalkerlistNull;
-
+    //Intent 객체에서 받아온 데이터
+    String walkDogName;
+    String defaultWalkTime;
+    int add30minTimeCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +56,9 @@ public class OwnerWalkerlistActivity extends BaseActivity {
 
         //FragmentWalkDialog 에서 받아온 산책시간 선택 데이터
         Intent intent = getIntent();
-        String walkDogName = intent.getStringExtra("seletedDog");
-        String defaultWalkTime = intent.getStringExtra("defaultWalkTime");
-        int add30minTimeCount = intent.getIntExtra("add30minTimeCount", 0);
+        walkDogName = intent.getStringExtra("seletedDog");
+        defaultWalkTime = intent.getStringExtra("defaultWalkTime");
+        add30minTimeCount = intent.getIntExtra("add30minTimeCount", 0);
 
         //아이템 클릭 리스너
         walkerlistAdapter.setOnItemClickListener(new OwnerWalkerlistAdapter.OnItemClickListener() {
@@ -125,6 +130,12 @@ public class OwnerWalkerlistActivity extends BaseActivity {
 
     //지도 아이콘 클릭시 - 현재 위치 기반 주변 도그워커 보여주기
     public void onClickMapWalkerSearch(View view){
+
+        Intent naverMapIntent = new Intent(OwnerWalkerlistActivity.this, NaverMapActivity.class);
+        naverMapIntent.putExtra("walkDogName", walkDogName);                //산책시킬 강아지 이름
+        naverMapIntent.putExtra("defaultWalkTime", defaultWalkTime);        //산책 기본 시간
+        naverMapIntent.putExtra("add30minTimeCount", add30minTimeCount);    //산책 추가 시간
+        startActivity(naverMapIntent);
 
     }
 

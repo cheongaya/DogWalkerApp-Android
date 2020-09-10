@@ -55,7 +55,7 @@ public class WalkerDogwalkingActivity extends WalkerBottomNavigation {
 
     //리사이클러뷰 초기화 셋팅
     public void recyclerViewInitSetting(){
-        recyclerViewBookingList = (RecyclerView)findViewById(R.id.recyclerView_bookinglist);
+        recyclerViewBookingList = (RecyclerView)findViewById(R.id.recyclerView_bookinglist_walker);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerViewBookingList.setLayoutManager(linearLayoutManager); //?? 주석??
@@ -67,7 +67,7 @@ public class WalkerDogwalkingActivity extends WalkerBottomNavigation {
     //DB에서 예약 리스트 데이터 불러오기
     public void loadBookingServiceDataToDB(){
 
-        Call<List<BookingServiceDTO>> call = retrofitApi.selectBookingServiceData(applicationClass.currentWalkerID);
+        Call<List<BookingServiceDTO>> call = retrofitApi.selectWalkerBookingServiceData(applicationClass.currentWalkerID);
         call.enqueue(new Callback<List<BookingServiceDTO>>() {
             @Override
             public void onResponse(Call<List<BookingServiceDTO>> call, Response<List<BookingServiceDTO>> response) {

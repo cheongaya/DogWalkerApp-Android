@@ -135,7 +135,7 @@ public class ApplicationClass extends Application {
              *  Uri 스키마를
              *  content:/// 에서 file:/// 로  변경한다.
              */
-            String[] proj = { MediaStore.Images.Media.DATA };
+            String[] proj = { MediaStore.Images.Media.DATA};
             assert photoUri != null;
             cursor = getContentResolver().query(photoUri, proj, null, null, null);
             assert cursor != null;

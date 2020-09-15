@@ -26,6 +26,7 @@ import android.widget.Chronometer;
 import android.widget.Toast;
 
 import com.example.dogwalker.databinding.ActivityGoogleMapBinding;
+import com.example.dogwalker.walker.WalkerDogwalkingDoneActivity;
 import com.example.dogwalker.walker.WalkerMypageActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -45,6 +46,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -69,6 +71,8 @@ public class GoogleMapActivity extends BaseActivity implements OnMapReadyCallbac
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest locationRequest;
     private Location location;
+    //좌표 값을 담을 배열
+    ArrayList<LatLng> latLngArrayList;
 
     //GPS 관련
     boolean needRequest = false;
@@ -128,6 +132,9 @@ public class GoogleMapActivity extends BaseActivity implements OnMapReadyCallbac
 
         //GPS를 찾지 못하는 장소에 있을 경우 지도의 초기 위치 서울로 설정 (런타임 퍼미션 요청 대화상자나 GPS 활성 요청 대화상자 보이기전)
         setDefaultLocation();
+
+        //좌표값을 담을 배열 선언
+        latLngArrayList = new ArrayList<>();
 
         //런타임 퍼미션 처리
         int hasFineLocationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
@@ -199,6 +206,8 @@ public class GoogleMapActivity extends BaseActivity implements OnMapReadyCallbac
         binding.chronometerStopWatch.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
         makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[start] timeWhenStopped : " + timeWhenStopped);
         binding.chronometerStopWatch.start();  //시간 갱신을 시작한다
+        binding.onClickBtnFloatPause.setVisibility(View.VISIBLE);
+        binding.onClickBtnFloatStart.setVisibility(View.INVISIBLE);
         stopClicked = false;
 
     }
@@ -210,6 +219,8 @@ public class GoogleMapActivity extends BaseActivity implements OnMapReadyCallbac
             timeWhenStopped = binding.chronometerStopWatch.getBase() - SystemClock.elapsedRealtime();
             makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[stop] timeWhenStopped : " + timeWhenStopped);
             binding.chronometerStopWatch.stop();    //시간 갱신을 중지한다
+            binding.onClickBtnFloatStart.setVisibility(View.VISIBLE);
+            binding.onClickBtnFloatPause.setVisibility(View.INVISIBLE);
             stopClicked = true;
         }
     }
@@ -217,7 +228,11 @@ public class GoogleMapActivity extends BaseActivity implements OnMapReadyCallbac
     //완료 버튼 클릭시 산책을 완료 시킬 수 있다
     public void onClickBtnFloatDone(View view){
         //스탑워치 기록 보여줌
-        makeToast(timeWatch);
+//        makeToast(timeWatch);
+        Intent dogwalkingDoneIntent = new Intent(GoogleMapActivity.this, WalkerDogwalkingDoneActivity.class);
+        dogwalkingDoneIntent.putExtra("walkingTime", timeWatch);
+        dogwalkingDoneIntent.putExtra("latLngArrayList", latLngArrayList);
+        startActivity(dogwalkingDoneIntent);
     }
 
     //리스트 버튼 클릭시 영상스트리밍 / 채팅 버튼이 위에 나온다
@@ -279,6 +294,7 @@ public class GoogleMapActivity extends BaseActivity implements OnMapReadyCallbac
 //        binding.chronometerStopWatch.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
         makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[start] timeWhenStopped : " + timeWhenStopped);
         binding.chronometerStopWatch.start();  //시간 갱신을 시작한다
+        binding.onClickBtnFloatStart.setVisibility(View.INVISIBLE);
         stopClicked = false;
 
     }
@@ -311,6 +327,10 @@ public class GoogleMapActivity extends BaseActivity implements OnMapReadyCallbac
                 //현재 위치에 마커 생성하고 이동
                 setCurrentLocation(location, markerTitle, markerSnippet);
                 mCurrentLocatiion = location;
+
+                //좌표 배열에 값을 담는다
+                LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                latLngArrayList.add(currentLatLng);
             }
         }
     };

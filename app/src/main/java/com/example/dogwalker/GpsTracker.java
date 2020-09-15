@@ -16,23 +16,37 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
+//import com.google.android.gms.maps.model.LatLng;
+
+import com.example.dogwalker.walker.WalkerDogwalkingIngActivity;
+import com.naver.maps.geometry.LatLng;
+
+import java.util.ArrayList;
+
 public class GpsTracker extends Service implements LocationListener {
 
     Context context;
     Location location;
     double latitude;
     double longitude;
+
     //이동 거리 계산 관련 변수
     Location lastKnownLocation;
-    double distance=0;
+    public double distance = 0;
+    //좌표 값을 담을 배열
+    public ArrayList<LatLng> latLngArrayList;
 
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 5; //10m
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 1; //10m
     private static final long MIN_TIME_BW_UPDATES = 1000;  //1분 (1000 * 60 * 1)
     protected LocationManager locationManager;
 
     //생성자 -> GpsTracker 객체가 생성되면 getLocation() 메소드가 실행된다
     public GpsTracker(Context context) {
         this.context = context;
+
+        //좌표 담을 배열 객체 생성
+        latLngArrayList = new ArrayList<>();
+
         //getLocation 메소드는 locationManager를 통해 GPS와 네트워크가 사용가능한지 체크한다 . (isGPSEnabled, isNetworkEnabled)
         getLocation();
     }
@@ -133,18 +147,26 @@ public class GpsTracker extends Service implements LocationListener {
         //앱 백그라운드 시에도 위치 정보 받아온다
         Log.d("DeveloperLog", "onLocationChanged() :"+location.getLongitude() + " / " +location.getLatitude());
 
+        //좌표 배열에 값을 담는다
+        LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+        latLngArrayList.add(currentLatLng);
+
         // Get the last location.
-        if(lastKnownLocation==null) {
+        if(lastKnownLocation == null) {
             lastKnownLocation = location;
             Log.d("DeveloperLog","Distance: null");
         }
         else {
-            distance=lastKnownLocation.distanceTo(location);
+            distance = lastKnownLocation.distanceTo(location);
             Log.d("DeveloperLog","Distance:"+distance);
-            lastKnownLocation=location;
+            lastKnownLocation = location;
 
-            Toast.makeText(this, distance+"", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, distance+"", Toast.LENGTH_SHORT).show();
         }
+        //소숫점 2자리 까지 표현
+        double walkingMeter = Double.parseDouble(String.format("%.2f", distance));
+        //이동 거리 계산해서 setText 화면에 표시해주기
+        WalkerDogwalkingIngActivity.binding.textViewWalkDistance.setText(walkingMeter+"");
 
     }
 

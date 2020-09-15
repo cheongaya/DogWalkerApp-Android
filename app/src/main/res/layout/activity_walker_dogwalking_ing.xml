@@ -5,128 +5,132 @@
     <data>
         <variable
             name="activity"
-            type="com.example.dogwalker.GoogleMapActivity" />
+            type="com.example.dogwalker.walker.WalkerDogwalkingIngActivity" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorWhite">
+        android:layout_height="match_parent">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie_splashAct_mainImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/wave_red"
+            android:scaleType="fitXY"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <LinearLayout
-            android:id="@+id/layout_box04"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintTop_toTopOf="parent"
             android:gravity="center"
-            android:paddingTop="10dp">
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="130dp">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_baseline_timer_24_color_white"
+                android:layout_gravity="center"/>
 
             <Chronometer
                 android:id="@+id/chronometer_stop_watch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="24dp"
+                android:textSize="48dp"
                 android:textStyle="bold"
-                android:textColor="@color/colorBlack"
+                android:textColor="@color/colorWhite"
                 android:text="%s"/>
+
+            <TextView
+                android:id="@+id/textView_walk_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.0"
+                android:textSize="28sp"
+                android:layout_marginTop="50dp"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="산책시간"
-                android:textColor="#999"
-                android:textSize="12sp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@drawable/border_top">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:background="@drawable/border_right"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp">
-
-                    <TextView
-                        android:id="@+id/textView_walk_distance"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0.0"
-                        android:textSize="21sp"
-                        android:textColor="@color/colorBlack"
-                        android:textStyle="bold"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="산책거리(KM)"
-                        android:textColor="#999"
-                        android:textSize="12sp"
-                        android:layout_marginTop="5dp"/>
-
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:background="@drawable/border_right">
-
-                    <ImageButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_baseline_remove_24_color_black"
-                        android:onClick="@{activity::onClickPlusPoo"
-                        android:background="@color/colorWhite"
-                        android:padding="5dp"/>
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/icon_poo"/>
-                    <ImageButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:onClick="@{activity::onClickMinusPoo"
-                        android:src="@drawable/ic_baseline_add_24_color_black"
-                        android:background="@color/colorWhite"
-                        android:padding="5dp"/>
-
-                </LinearLayout>
-
-
-            </LinearLayout>
-
+                android:text="산책거리(M)"
+                android:textColor="@color/colorWhite"
+                android:textSize="16sp"
+                android:layout_marginTop="5dp"/>
 
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginRight="20dp"
+            android:gravity="center">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_add_24_color_black"
+                android:onClick="@{activity::onClickPlusPoo}"
+                android:tint="@color/colorWhite"
+                android:background="@color/colorTransparent"
+                android:padding="5dp"/>
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/icon_poo02"
+                android:background="@color/colorTransparent"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{activity::onClickMinusPoo}"
+                android:src="@drawable/ic_baseline_remove_24_color_black"
+                android:tint="@color/colorWhite"
+                android:background="@color/colorTransparent"
+                android:padding="5dp"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView_walkIng_poo_count"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/circular_corner_stroke_red"
+            android:text="0"
+            android:gravity="center"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginBottom="15dp"
+            android:layout_marginRight="5dp"/>
+
 
         <ImageButton
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/ic_baseline_close_24"
-            android:background="@color/colorWhite"
+            android:background="@color/colorTransparent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:scaleType="fitCenter"
             android:onClick="@{activity::onClickClose}"
+            android:tint="@color/colorWhite"
             android:layout_margin="10dp"/>
-
-        <fragment
-            android:id="@+id/googleMap"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            app:layout_constraintTop_toBottomOf="@+id/layout_box04"
-            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/onClickBtnFloatCamera"

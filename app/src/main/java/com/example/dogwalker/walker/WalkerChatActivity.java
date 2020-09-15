@@ -13,7 +13,7 @@ public class WalkerChatActivity extends WalkerBottomNavigation {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_walker_chat);
 
-        Intent intent = new Intent(this, GoogleMapActivity.class);
+        Intent intent = new Intent(this, WalkerDogwalkingIngActivity.class);
         startActivity(intent);
     }
 

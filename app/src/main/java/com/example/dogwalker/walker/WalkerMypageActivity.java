@@ -71,8 +71,6 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
     LinearLayout linearLocation, linearIntroduce, linearWalkableType, linearWalkPrice;
     File tempFile;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

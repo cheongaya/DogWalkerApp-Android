@@ -126,6 +126,7 @@ public class ApplicationClass extends Application {
 
     //앨범에서 불러온 이미지 데이터를 서버에 저장하는 메소드
     public MultipartBody.Part updateAlbumImgToServer(Uri photoUri){
+        //_photoUri : content://com.google.android.apps.photos.contentprovider/-1/1/content%3A%2F%2Fmedia%2Fexternal%2Fimages%2Fmedia%2F36/ORIGINAL/NONE/929063286
 
         File tempFile;
 
@@ -143,7 +144,7 @@ public class ApplicationClass extends Application {
             cursor.moveToFirst();
             tempFile = new File(cursor.getString(column_index));
             makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "tempFile : " + tempFile);
-            //storage/emulated/0/Download/https___specials-images.forbesimg.com_dam_imageserve_968210608_960x0.jpg_fit=scale.jpg
+            //_tempFile : /storage/emulated/0/Download/ST_20181108_BUZZ083DPE_4397649.jpg
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -159,9 +160,13 @@ public class ApplicationClass extends Application {
         //multipart/form-data는 파일 업로드가 있는 양식요소에 사용되는 enctype 속성의 값중 하나
         //폼이 제출될 떄 이 형식이 encType="multipart/form-data" 라는 것을 알려준다
         MultipartBody.Part body = MultipartBody.Part.createFormData("uploaded_file", file.getName(), requestFile);
+
         makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "file.getName() : "+file.getName());
+        //_file.getName() : ST_20181108_BUZZ083DPE_4397649.jpg
         makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "requestFile.contentType() : "+requestFile.contentType());
+        //_requestFile.contentType() : multipart/form-data
         makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "uploadFile.body() : "+body.body());
+        //_uploadFile.body() : okhttp3.RequestBody$Companion$asRequestBody$1@ebaa241
 
         return body;
     }

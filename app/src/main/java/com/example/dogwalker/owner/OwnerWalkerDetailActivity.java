@@ -1,5 +1,6 @@
 package com.example.dogwalker.owner;
 
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -11,11 +12,14 @@ import android.widget.TextView;
 
 import com.example.dogwalker.BaseActivity;
 import com.example.dogwalker.R;
+import com.example.dogwalker.data.WalkerDTO;
 import com.example.dogwalker.data.WalkerlistDTO;
+import com.example.dogwalker.databinding.ActivityOwnerWalkerDetailBinding;
 import com.example.dogwalker.owner.fragment.FragmentWalkerDetailPrice;
 import com.example.dogwalker.owner.fragment.FragmentWalkerDetailProfile;
 import com.example.dogwalker.owner.fragment.FragmentWalkerDetailReview;
 import com.example.dogwalker.owner.fragment.FragmentWalkerDetailSchedule;
+import com.example.dogwalker.retrofit2.response.ResultDTO;
 
 import java.util.List;
 
@@ -24,6 +28,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class OwnerWalkerDetailActivity extends BaseActivity implements View.OnClickListener {
+    
+    ActivityOwnerWalkerDetailBinding binding;
 
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
@@ -33,9 +39,6 @@ public class OwnerWalkerDetailActivity extends BaseActivity implements View.OnCl
     FragmentWalkerDetailSchedule fragmentWalkerDetailSchedule;
     FragmentWalkerDetailPrice fragmentWalkerDetailPrice;
     FragmentWalkerDetailReview fragmentWalkerDetailReview;
-
-    Button btnFragmentProfile, btnFragmentReview, btnFragmentPrice, btnFragmentSchedule;
-    TextView tvWalkerName;
 
     Intent intent;
     String walkerName, walkDogName, defaultWalkTime;
@@ -47,11 +50,13 @@ public class OwnerWalkerDetailActivity extends BaseActivity implements View.OnCl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_owner_walker_detail);
+//        setContentView(R.layout.activity_owner_walker_detail);
 
-        intent = getIntent();
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_owner_walker_detail);
+        binding.setActivity(this);
 
         //intent 로 받아온 데이터
+        intent = getIntent();
         walkerName = intent.getStringExtra("walkerName");   //도그워커 이름 데이터
         walkDogName = intent.getStringExtra("walkDogName"); //산책시킬 강아지 이름 데이터
         defaultWalkTime = intent.getStringExtra("defaultWalkTime"); //기본 산책시간 데이터
@@ -61,34 +66,123 @@ public class OwnerWalkerDetailActivity extends BaseActivity implements View.OnCl
 
         //해당 도그워커의 정보 DB에서 불러오기
         selectWalkerInfoToDB();
+        
+        //북마크 유무 DB에서 불러오기
+        selectBookmarkToDB(applicationClass.currentWalkerID, walkerName);
 
-        //id 연결
-        btnFragmentProfile = (Button)findViewById(R.id.button_fragment_profile);
-        btnFragmentSchedule = (Button)findViewById(R.id.button_fragment_schedule);
-        btnFragmentReview = (Button)findViewById(R.id.button_fragment_review);
-        btnFragmentPrice = (Button)findViewById(R.id.button_fragment_price);
-        tvWalkerName = (TextView)findViewById(R.id.textView_walker_detail_walkerName);
-
+        //프래그먼트 객체 생성
         fragmentWalkerDetailProfile = new FragmentWalkerDetailProfile();
         fragmentWalkerDetailSchedule = new FragmentWalkerDetailSchedule();
         fragmentWalkerDetailPrice = new FragmentWalkerDetailPrice();
         fragmentWalkerDetailReview = new FragmentWalkerDetailReview();
 
-        btnFragmentProfile.setOnClickListener(this);
-        btnFragmentSchedule.setOnClickListener(this);
-        btnFragmentReview.setOnClickListener(this);
-        btnFragmentPrice.setOnClickListener(this);
+        //클릭리스너 연결
+        binding.buttonFragmentProfile.setOnClickListener(this);
+        binding.buttonFragmentSchedule.setOnClickListener(this);
+        binding.buttonFragmentReview.setOnClickListener(this);
+        binding.buttonFragmentPrice.setOnClickListener(this);
+    }
+
+    //북마크 생성
+    public void btnBookmarkOn(View view){
+        //해당 유저가 도그워커를 북마크 한다 -> DB에 북마크 정보 저장
+        insertBookmarkToDB(applicationClass.currentWalkerID, walkerName);
+        //서버에 해당 도그워크를 북마크한 데이터가 있으면 색칠된 별표 이미지를 노출시킨다
+        binding.imageButtonBookmarkOn.setVisibility(View.VISIBLE);
+        binding.imageButtonBookmarkOff.setVisibility(View.GONE);
+    }
+
+    //북마크 제거
+    public void btnBookmarkOff(View view){
+        //해당 유저가 도그워커 북마크를 해제한다 -> DB에 북마크 정보 삭제
+        deleteBookmarkToDB(applicationClass.currentWalkerID, walkerName);
+        //서버에 해당 도그워크를 북마크한 데이터가 없으면 빈 별표 이미지를 노출시킨다
+        binding.imageButtonBookmarkOn.setVisibility(View.GONE);
+        binding.imageButtonBookmarkOff.setVisibility(View.VISIBLE);
+    }
+    
+    //해당 유저가 도그워커를 북마크 했는지 유무 정보를 DB에서 불러오기
+    public void selectBookmarkToDB(String bmk_user_id, String bmk_owner_id){
+        
+        Call<ResultDTO> call = retrofitApi.selectOwnerBookmark(bmk_user_id, bmk_owner_id);
+        call.enqueue(new Callback<ResultDTO>() {
+            @Override
+            public void onResponse(Call<ResultDTO> call, Response<ResultDTO> response) {
+                ResultDTO resultDTO = response.body();
+                //서버로부터 받은 북마크 조회 결과 (반환값 : 0, 1)
+                String bookmarkSelectResultDataFromServer = resultDTO.getResponceResult();
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "북마크 정보 조회 성공 : " + resultDTO.getResponceResult());
+
+                //북마크 이미지 노출
+                if(bookmarkSelectResultDataFromServer.contentEquals("0")){
+                    //서버에 해당 도그워크를 북마크한 데이터가 없으면 빈 별표 이미지를 노출시킨다
+                    binding.imageButtonBookmarkOn.setVisibility(View.GONE);
+                    binding.imageButtonBookmarkOff.setVisibility(View.VISIBLE);
+                }else if(bookmarkSelectResultDataFromServer.contentEquals("1")){
+                    //서버에 해당 도그워크를 북마크한 데이터가 있으면 색칠된 별표 이미지를 노출시킨다
+                    binding.imageButtonBookmarkOn.setVisibility(View.VISIBLE);
+                    binding.imageButtonBookmarkOff.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResultDTO> call, Throwable t) {
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "북마크 정보 조회 실패");
+                makeLog(new Object() {
+                }.getClass().getEnclosingMethod().getName() + "()", "에러 내용 : " + t.toString());
+            }
+        });
+    }
+
+    //해당 유저가 도그워커를 북마크 한다 -> DB에 북마크 정보 저장
+    public void insertBookmarkToDB(String bmk_user_id, String bmk_owner_id){
+
+        Call<ResultDTO> call = retrofitApi.insertOwnerBookmark(bmk_user_id, bmk_owner_id);
+        call.enqueue(new Callback<ResultDTO>() {
+            @Override
+            public void onResponse(Call<ResultDTO> call, Response<ResultDTO> response) {
+                ResultDTO resultDTO = response.body();
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "북마크 정보 저장 성공 : " + resultDTO.getResponceResult());
+            }
+
+            @Override
+            public void onFailure(Call<ResultDTO> call, Throwable t) {
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "북마크 정보 저장 실패");
+                makeLog(new Object() {
+                }.getClass().getEnclosingMethod().getName() + "()", "에러 내용 : " + t.toString());
+            }
+        });
+    }
+
+    //해당 유저가 도그워커 북마크를 해제 -> DB에 북마크 정보 삭제
+    public void deleteBookmarkToDB(String bmk_user_id, String bmk_owner_id){
+
+        Call<ResultDTO> call = retrofitApi.deleteOwnerBookmark(bmk_user_id, bmk_owner_id);
+        call.enqueue(new Callback<ResultDTO>() {
+            @Override
+            public void onResponse(Call<ResultDTO> call, Response<ResultDTO> response) {
+                ResultDTO resultDTO = response.body();
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "북마크 정보 삭제 성공 : " + resultDTO.getResponceResult());
+            }
+
+            @Override
+            public void onFailure(Call<ResultDTO> call, Throwable t) {
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "북마크 정보 삭제 실패");
+                makeLog(new Object() {
+                }.getClass().getEnclosingMethod().getName() + "()", "에러 내용 : " + t.toString());
+            }
+        });
     }
 
     //해당 도그워커의 정보 DB에서 불러오기
     public void selectWalkerInfoToDB(){
 
-        Call<List<WalkerlistDTO>> call = retrofitApi.selectWalkerProfileData(walkerName);   //도그워커 아이디가 매개변수
-        call.enqueue(new Callback<List<WalkerlistDTO>>() {
+        Call<List<WalkerDTO>> call = retrofitApi.selectWalkerProfileData(walkerName);   //도그워커 아이디가 매개변수
+        call.enqueue(new Callback<List<WalkerDTO>>() {
             @Override
-            public void onResponse(Call<List<WalkerlistDTO>> call, Response<List<WalkerlistDTO>> response) {
+            public void onResponse(Call<List<WalkerDTO>> call, Response<List<WalkerDTO>> response) {
 
-                List<WalkerlistDTO> walkerlistDTOList = response.body();
+                List<WalkerDTO> walkerlistDTOList = response.body();
                 //프로필 정보
                 name = walkerlistDTOList.get(0).getName();
                 introduce = walkerlistDTOList.get(0).getIntroduce();
@@ -110,7 +204,7 @@ public class OwnerWalkerDetailActivity extends BaseActivity implements View.OnCl
                 //번들에 전달할 데이터를 넣는다
                 putDataIntoBundle();
 
-                tvWalkerName.setText(name);
+                binding.textViewWalkerDetailWalkerName.setText(name);
 
                 fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.add(R.id.linearLayout_fragment_container_walker_detail, fragmentWalkerDetailProfile);
@@ -121,7 +215,7 @@ public class OwnerWalkerDetailActivity extends BaseActivity implements View.OnCl
             }
 
             @Override
-            public void onFailure(Call<List<WalkerlistDTO>> call, Throwable t) {
+            public void onFailure(Call<List<WalkerDTO>> call, Throwable t) {
 
             }
         });

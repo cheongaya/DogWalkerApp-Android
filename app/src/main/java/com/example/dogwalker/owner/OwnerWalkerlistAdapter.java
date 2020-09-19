@@ -67,7 +67,8 @@ public class OwnerWalkerlistAdapter extends RecyclerView.Adapter<OwnerWalkerlist
         private TextView tvWalkerIntroduce;
         private TextView tvWalkerReviewCount;
         private TextView tvWalkerThirtyMinPrice;
-        private ImageView imvWalkerBookMarkImg;
+        private ImageView imvWalkerBookMarkImgON;
+        private ImageView imvWalkerBookMarkImgOFF;
         private ImageView imvWalkerProfileImg;
 
         public ItemViewHolder(@NonNull View itemView) {
@@ -78,7 +79,8 @@ public class OwnerWalkerlistAdapter extends RecyclerView.Adapter<OwnerWalkerlist
             tvWalkerIntroduce = itemView.findViewById(R.id.textView_item_walker_introduce);
             tvWalkerReviewCount = itemView.findViewById(R.id.textView_item_walker_review);
             tvWalkerThirtyMinPrice = itemView.findViewById(R.id.textView_item_walker_price_thirty_minutes);
-            imvWalkerBookMarkImg = itemView.findViewById(R.id.imageVeiw_item_walker_bookmark);
+            imvWalkerBookMarkImgON = itemView.findViewById(R.id.imageVeiw_item_walker_bookmark_on);
+            imvWalkerBookMarkImgOFF = itemView.findViewById(R.id.imageVeiw_item_walker_bookmark_off);
             imvWalkerProfileImg = itemView.findViewById(R.id.imageView_item_walker_img);
 
             //onClick 선언
@@ -111,6 +113,15 @@ public class OwnerWalkerlistAdapter extends RecyclerView.Adapter<OwnerWalkerlist
                     .override(300,300)
                     .apply(applicationClass.requestOptions.fitCenter().circleCrop())
                     .into(imvWalkerProfileImg);
+
+            //즐겨찾기 이미지 셋팅
+            if(walkerlistDTO.getBmk_user_id() == null && walkerlistDTO.getBmk_walker_id() == null){
+                imvWalkerBookMarkImgOFF.setVisibility(View.VISIBLE);
+                imvWalkerBookMarkImgON.setVisibility(View.GONE);
+            }else if(walkerlistDTO.getId().contentEquals(walkerlistDTO.getBmk_walker_id())){
+                imvWalkerBookMarkImgOFF.setVisibility(View.GONE);
+                imvWalkerBookMarkImgON.setVisibility(View.VISIBLE);
+            }
         }
     }
 

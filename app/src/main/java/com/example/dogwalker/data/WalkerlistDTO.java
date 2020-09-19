@@ -4,42 +4,24 @@ public class WalkerlistDTO {
 
     String id;
     String name;
-    String phonenumber;
     String profile_img;
     String location;
     int review_score;
-    int satisfation_score;
-    int customer_score;
     String introduce;
-    int walkable_type_s;
-    int walkable_type_m;
-    int walkable_type_l;
-    int walkable_dog_number;
     int price_thirty_minutes;
-    int price_sixty_minutes;
-    int addprice_large_size;
-    int addprice_one_dog;
-    int addprice_holiday;
+    String bmk_user_id;
+    String bmk_walker_id;
 
-    public WalkerlistDTO(String id, String name, String phonenumber, String profile_img, String location, int review_score, int satisfation_score, int customer_score, String introduce, int walkable_type_s, int walkable_type_m, int walkable_type_l, int walkable_dog_number, int price_thirty_minutes, int price_sixty_minutes, int addprice_large_size, int addprice_one_dog, int addprice_holiday) {
+    public WalkerlistDTO(String id, String name, String profile_img, String location, int review_score, String introduce, int price_thirty_minutes, String bmk_user_id, String bmk_walker_id) {
         this.id = id;
         this.name = name;
-        this.phonenumber = phonenumber;
         this.profile_img = profile_img;
         this.location = location;
         this.review_score = review_score;
-        this.satisfation_score = satisfation_score;
-        this.customer_score = customer_score;
         this.introduce = introduce;
-        this.walkable_type_s = walkable_type_s;
-        this.walkable_type_m = walkable_type_m;
-        this.walkable_type_l = walkable_type_l;
-        this.walkable_dog_number = walkable_dog_number;
         this.price_thirty_minutes = price_thirty_minutes;
-        this.price_sixty_minutes = price_sixty_minutes;
-        this.addprice_large_size = addprice_large_size;
-        this.addprice_one_dog = addprice_one_dog;
-        this.addprice_holiday = addprice_holiday;
+        this.bmk_user_id = bmk_user_id;
+        this.bmk_walker_id = bmk_walker_id;
     }
 
     public String getId() {
@@ -56,14 +38,6 @@ public class WalkerlistDTO {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getPhonenumber() {
-        return phonenumber;
-    }
-
-    public void setPhonenumber(String phonenumber) {
-        this.phonenumber = phonenumber;
     }
 
     public String getProfile_img() {
@@ -90,60 +64,12 @@ public class WalkerlistDTO {
         this.review_score = review_score;
     }
 
-    public int getSatisfation_score() {
-        return satisfation_score;
-    }
-
-    public void setSatisfation_score(int satisfation_score) {
-        this.satisfation_score = satisfation_score;
-    }
-
-    public int getCustomer_score() {
-        return customer_score;
-    }
-
-    public void setCustomer_score(int customer_score) {
-        this.customer_score = customer_score;
-    }
-
     public String getIntroduce() {
         return introduce;
     }
 
     public void setIntroduce(String introduce) {
         this.introduce = introduce;
-    }
-
-    public int getWalkable_type_s() {
-        return walkable_type_s;
-    }
-
-    public void setWalkable_type_s(int walkable_type_s) {
-        this.walkable_type_s = walkable_type_s;
-    }
-
-    public int getWalkable_type_m() {
-        return walkable_type_m;
-    }
-
-    public void setWalkable_type_m(int walkable_type_m) {
-        this.walkable_type_m = walkable_type_m;
-    }
-
-    public int getWalkable_type_l() {
-        return walkable_type_l;
-    }
-
-    public void setWalkable_type_l(int walkable_type_l) {
-        this.walkable_type_l = walkable_type_l;
-    }
-
-    public int getWalkable_dog_number() {
-        return walkable_dog_number;
-    }
-
-    public void setWalkable_dog_number(int walkable_dog_number) {
-        this.walkable_dog_number = walkable_dog_number;
     }
 
     public int getPrice_thirty_minutes() {
@@ -154,35 +80,19 @@ public class WalkerlistDTO {
         this.price_thirty_minutes = price_thirty_minutes;
     }
 
-    public int getPrice_sixty_minutes() {
-        return price_sixty_minutes;
+    public String getBmk_user_id() {
+        return bmk_user_id;
     }
 
-    public void setPrice_sixty_minutes(int price_sixty_minutes) {
-        this.price_sixty_minutes = price_sixty_minutes;
+    public void setBmk_user_id(String bmk_user_id) {
+        this.bmk_user_id = bmk_user_id;
     }
 
-    public int getAddprice_large_size() {
-        return addprice_large_size;
+    public String getBmk_walker_id() {
+        return bmk_walker_id;
     }
 
-    public void setAddprice_large_size(int addprice_large_size) {
-        this.addprice_large_size = addprice_large_size;
-    }
-
-    public int getAddprice_one_dog() {
-        return addprice_one_dog;
-    }
-
-    public void setAddprice_one_dog(int addprice_one_dog) {
-        this.addprice_one_dog = addprice_one_dog;
-    }
-
-    public int getAddprice_holiday() {
-        return addprice_holiday;
-    }
-
-    public void setAddprice_holiday(int addprice_holiday) {
-        this.addprice_holiday = addprice_holiday;
+    public void setBmk_walker_id(String bmk_walker_id) {
+        this.bmk_walker_id = bmk_walker_id;
     }
 }

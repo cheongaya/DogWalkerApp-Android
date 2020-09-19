@@ -79,8 +79,16 @@ public class OwnerWalkerlistActivity extends BaseActivity {
         });
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        //DB에서 도그워커 리스트 데이터 불러오기
+        loadWalkerDataToDB();
+    }
+
     //리사이클러뷰 초기화 셋팅
     public void recyclerViewInitSetting(){
+
         recyclerViewWalkerlist =  (RecyclerView)findViewById(R.id.recyclerView_walkerlist);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerViewWalkerlist.setLayoutManager(linearLayoutManager); //?? 주석??
@@ -91,7 +99,7 @@ public class OwnerWalkerlistActivity extends BaseActivity {
 
     //DB에서 도그워커 데이터 불러오기
     public void loadWalkerDataToDB(){
-        Call<List<WalkerlistDTO>> call = retrofitApi.selectWalkerlistData("user_walker");
+        Call<List<WalkerlistDTO>> call = retrofitApi.selectWalkerlistData(applicationClass.currentWalkerID);
         call.enqueue(new Callback<List<WalkerlistDTO>>() {
             @Override
             public void onResponse(Call<List<WalkerlistDTO>> call, Response<List<WalkerlistDTO>> response) {

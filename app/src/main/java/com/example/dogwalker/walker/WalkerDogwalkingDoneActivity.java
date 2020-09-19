@@ -22,6 +22,7 @@ import com.example.dogwalker.BaseActivity;
 import com.example.dogwalker.R;
 import com.example.dogwalker.databinding.ActivityWalkerDogwalkingDoneBinding;
 import com.example.dogwalker.owner.DogListAdapter;
+import com.example.dogwalker.retrofit2.response.ResultDTO;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
@@ -32,8 +33,16 @@ import com.naver.maps.map.overlay.PolylineOverlay;
 import com.naver.maps.map.util.FusedLocationSource;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+
+import okhttp3.MultipartBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.http.Multipart;
 
 public class WalkerDogwalkingDoneActivity extends BaseActivity implements OnMapReadyCallback{
 
@@ -65,7 +74,15 @@ public class WalkerDogwalkingDoneActivity extends BaseActivity implements OnMapR
         walkingDistance = intent.getStringExtra("walkingDistance");
         walkingPooCount = intent.getStringExtra("walkingPooCount");
         latLngArrayList = intent.getParcelableArrayListExtra("latLngArrayList");
+
+        //현재 시간 구하기
+        long nowTime = System.currentTimeMillis();
+        Date date = new Date(nowTime);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy년 MM월 dd일, HH시 mm분");
+        String getTime = simpleDateFormat.format(date);
+
         //화면에 데이터 표시
+        binding.textViewWalkDoneCurrentTime.setText(getTime);
         binding.textViewWalkDoneWalkingTime.setText(walkingTime);
         binding.textViewWalkDoneDistance.setText(walkingDistance);
         binding.textViewWalkDonePooCount.setText(walkingPooCount);
@@ -122,17 +139,21 @@ public class WalkerDogwalkingDoneActivity extends BaseActivity implements OnMapR
             //앨범에서 이미지 다중 선택
             case PICK_FROM_MULTI_ALBUM :
 
-                ArrayList imageList = new ArrayList<>();
+                ArrayList<MultipartBody.Part> imageFileList = new ArrayList<>();
+                MultipartBody.Part body;
 
                 // 멀티 선택을 지원하지 않는 기기에서는 getClipdata()가 없음 => getData()로 접근해야 함
                 if (data.getClipData() == null) {
                     makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "1. single choice : " +  String.valueOf(data.getData()));
-                    imageList.add(String.valueOf(data.getData()));
+//                    imageFileList.add(String.valueOf(data.getData()));
+                    //앨범에서 getData Uri 받아온 후
+                    Uri photoUri = data.getData();
+                    //photoUri 값을 경로 변환 -> File 객체 생성해주는 메소드에 보내준다
+                    body = applicationClass.updateAlbumImgToServer(photoUri);
                 } else {
 
                     ClipData clipData = data.getClipData();
-                    makeLog(new Object() {
-                    }.getClass().getEnclosingMethod().getName() + "()", "1. ClipData 갯수 : " + String.valueOf(clipData.getItemCount()));
+                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "1. ClipData 갯수 : " + String.valueOf(clipData.getItemCount()));
 
                     if (clipData.getItemCount() > 6) {
                         makeToast("사진은 6개까지 선택가능 합니다.");
@@ -145,16 +166,48 @@ public class WalkerDogwalkingDoneActivity extends BaseActivity implements OnMapR
                         }.getClass().getEnclosingMethod().getName() + "()", "2. clipdata choice : " + String.valueOf(clipData.getItemAt(0).getUri()));
                         makeLog(new Object() {
                         }.getClass().getEnclosingMethod().getName() + "()", "2. single choice : " + clipData.getItemAt(0).getUri().getPath());
-                        imageList.add(dataStr);
-                        //멀티 선택에서 하나 초과 ~ 6 이하로 선택했을 경우
+//                        imageList.add(dataStr);
+                        //앨범에서 getData Uri 받아온 후
+                        Uri photoUri = clipData.getItemAt(0).getUri();
+                        //photoUri 값을 경로 변환 -> File 객체 생성해주는 메소드에 보내준다
+                        body = applicationClass.updateAlbumImgToServer(photoUri);
+
+                    //멀티 선택에서 하나 초과 ~ 6 이하로 선택했을 경우
                     } else if (clipData.getItemCount() > 1 && clipData.getItemCount() <= 6) {
                         for (int i = 0; i < clipData.getItemCount(); i++) {
                             //content://com.google.android.apps.photos.contentprovider/-1/1/content%3A%2F%2Fmedia%2Fexternal%2Fimages%2Fmedia%2F35/ORIGINAL/NONE/61072326
-                            makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "2. single choice : " + String.valueOf(clipData.getItemAt(i).getUri()));
-                            imageList.add(String.valueOf(clipData.getItemAt(i).getUri()));
+                            makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "2. multi choice : " + String.valueOf(clipData.getItemAt(i).getUri()));
+//                            imageList.add(String.valueOf(clipData.getItemAt(i).getUri()));
+                            //앨범에서 getData Uri 받아온 후
+                            Uri photoUri = clipData.getItemAt(i).getUri();
+                            //photoUri 값을 경로 변환 -> File 객체 생성해주는 메소드에 보내준다
+                            body = applicationClass.updateAlbumImgToServer(photoUri);
+                            imageFileList.add(body);
+
+                            //TODO: 다중 이미지 업로드  test
+                            //위 메소드의 return 값은 return body(MultipartBody.Part) 형태로 반환된다
+                            Call<ResultDTO> call = retrofitApi.insertWalkDoneRecodeData(imageFileList);
+                            call.enqueue(new Callback<ResultDTO>() {
+                                @Override
+                                public void onResponse(Call<ResultDTO> call, Response<ResultDTO> response) {
+                                    ResultDTO resultDTO = response.body();
+                                    String resultDataStr = resultDTO.getResponceResult();
+                                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "앨범이미지 서버 저장 성공");
+                                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", resultDataStr);
+                                }
+
+                                @Override
+                                public void onFailure(Call<ResultDTO> call, Throwable t) {
+                                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "앨범이미지 서버 저장 실패");
+                                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", t.toString());
+                                }
+                            });
+
                         }
                     }
                 }
+
+
 
                 break;
 

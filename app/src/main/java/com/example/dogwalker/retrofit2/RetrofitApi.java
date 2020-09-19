@@ -1,6 +1,7 @@
 package com.example.dogwalker.retrofit2;
 
 import com.example.dogwalker.data.DogDTO;
+import com.example.dogwalker.data.WalkerDTO;
 import com.example.dogwalker.data.WalkerlistDTO;
 import com.example.dogwalker.retrofit2.response.BookingServiceDTO;
 import com.example.dogwalker.retrofit2.response.NonServiceDateDTO;
@@ -11,6 +12,7 @@ import com.example.dogwalker.retrofit2.response.WalkPriceDTO;
 import com.example.dogwalker.retrofit2.response.WalkableTypeDTO;
 import com.example.dogwalker.retrofit2.response.WalkerLocationDTO;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -130,11 +132,11 @@ public interface RetrofitApi {
     Call<ResultDTO> updateOwnerImageData(@Query("id") String id, @Part MultipartBody.Part file);
     //도그워커 정보 조회
     @GET("walker/select_walkerlist_data.php")
-    Call<List<WalkerlistDTO>> selectWalkerlistData(@Query("tableName") String tableName);
+    Call<List<WalkerlistDTO>> selectWalkerlistData(@Query("owner_id") String owner_id);
 
     //반려인이 -> 도그워커 정보(프로필에서 도그워커 한명의 상세정보) 조회
     @GET("owner/select_walker_profile_data.php")
-    Call<List<WalkerlistDTO>> selectWalkerProfileData(@Query("walker_id") String walker_id);
+    Call<List<WalkerDTO>> selectWalkerProfileData(@Query("walker_id") String walker_id);
     //예약 정보 저장
     @FormUrlEncoded
     @POST("owner/insert_booking_service_data.php")
@@ -145,6 +147,19 @@ public interface RetrofitApi {
     //예약 정보 조회 (반려인)
     @GET("owner/select_booking_service_data.php")
     Call<List<BookingServiceDTO>> selectOwnerBookingServiceData(@Query("owner_id") String owner_id);
+    //북마크 생성
+    @GET("owner/insert_owner_bookmark.php")
+    Call<ResultDTO> insertOwnerBookmark(@Query("bmk_user_id") String bmk_user_id, @Query("bmk_walker_id") String bmk_walker_id);
+    //북마크 조회
+    @GET("owner/select_owner_bookmark.php")
+    Call<ResultDTO> selectOwnerBookmark(@Query("bmk_user_id") String bmk_user_id, @Query("bmk_walker_id") String bmk_walker_id);
+    //북마크 삭제
+    @GET("owner/delete_owner_bookmark.php")
+    Call<ResultDTO> deleteOwnerBookmark(@Query("bmk_user_id") String bmk_user_id, @Query("bmk_walker_id") String bmk_walker_id);
+    //산책 기록 저장 (다중 이미지 저장)
+    @Multipart
+    @POST("common/insert_walk_done_recode.php")
+    Call<ResultDTO> insertWalkDoneRecodeData(@Part ArrayList<MultipartBody.Part> partArrayList);
 
 
 //    @Multipart

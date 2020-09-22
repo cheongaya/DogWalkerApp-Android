@@ -1,5 +1,6 @@
 package com.example.dogwalker.retrofit2;
 
+import com.example.dogwalker.ApplicationClass;
 import com.example.dogwalker.data.DogDTO;
 import com.example.dogwalker.data.WalkerDTO;
 import com.example.dogwalker.data.WalkerlistDTO;
@@ -29,7 +30,8 @@ import retrofit2.http.Query;
 public interface RetrofitApi {
 
 //    public static String BASE_URL = "http://192.168.179.129/";
-    public static String BASE_URL = "http://13.125.0.82/";
+//    public static String BASE_URL = "http://13.125.0.82/";
+    public static String BASE_URL = ApplicationClass.BASE_URL;
 
     //공통
     //회원가입 (아이디/비밀번호/이름/전화번호)
@@ -159,7 +161,7 @@ public interface RetrofitApi {
     //산책 기록 저장 (다중 이미지 저장)
     @Multipart
     @POST("common/insert_walk_done_recode.php")
-    Call<ResultDTO> insertWalkDoneRecodeData(@Part ArrayList<MultipartBody.Part> partArrayList);
+    Call<ResultDTO> insertWalkDoneRecodeData(@Part ArrayList<MultipartBody.Part> file);
 
 
 //    @Multipart

@@ -166,7 +166,7 @@ public class GpsTracker extends Service implements LocationListener {
         //소숫점 2자리 까지 표현
         double walkingMeter = Double.parseDouble(String.format("%.2f", distance));
         //이동 거리 계산해서 setText 화면에 표시해주기
-        WalkerDogwalkingIngActivity.binding.textViewWalkDistance.setText(walkingMeter+"");
+//        WalkerDogwalkingIngActivity.binding.textViewWalkDistance.setText(walkingMeter+"");
 
     }
 

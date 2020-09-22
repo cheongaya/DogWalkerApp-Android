@@ -316,7 +316,7 @@ public class OwnerMypageActivity extends OwnerBottomNavigation implements View.O
                 Uri photoUri = data.getData();
                 makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "photoUri : " + photoUri);
                 //photoUri 값을 경로 변환 -> File 객체 생성해주는 메소드에 보내준다
-                MultipartBody.Part body = applicationClass.updateAlbumImgToServer(photoUri);
+                MultipartBody.Part body = applicationClass.updateAlbumImgToServer(photoUri, "uploaded_file");
                 //위 메소드의 return 값은 return body(MultipartBody.Part) 형태로 반환된다
                 Call<ResultDTO> call = retrofitApi.updateOwnerImageData(applicationClass.currentWalkerID, body);
                 call.enqueue(new Callback<ResultDTO>() {

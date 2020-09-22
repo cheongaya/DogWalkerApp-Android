@@ -288,7 +288,7 @@ public class OwnerAddDogActivity extends BaseActivity {
                 Uri photoUri = data.getData();
                 makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "photoUri : " + photoUri);
                 //photoUri 값을 경로 변환 -> File 객체 생성해주는 메소드에 보내준다
-                body = applicationClass.updateAlbumImgToServer(photoUri);
+                body = applicationClass.updateAlbumImgToServer(photoUri, "uploaded_file");
 
                 //이미지 셋팅
                 binding.imageViewMydogAddImg.setImageURI(data.getData());

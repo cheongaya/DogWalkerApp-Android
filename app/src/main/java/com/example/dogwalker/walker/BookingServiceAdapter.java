@@ -71,7 +71,6 @@ public class BookingServiceAdapter extends RecyclerView.Adapter<BookingServiceAd
         private TextView tvBookingWalkTime;
         private Button btnWalkStart;
 
-
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -99,9 +98,13 @@ public class BookingServiceAdapter extends RecyclerView.Adapter<BookingServiceAd
             btnWalkStart.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    int position = getAdapterPosition();
 //                    Intent intent = new Intent(context, WalkerStopWatchActivity.class);
 //                    context.startActivity(intent);
-                    Intent intent = new Intent(context, GoogleMapActivity.class);
+                    Intent intent = new Intent(context, WalkerDogwalkingIngActivity.class);
+                    intent.putExtra("booking_id", bookingServiceDTOArrayList.get(position).getIdx());
+                    intent.putExtra("owner_dog_name", bookingServiceDTOArrayList.get(position).getOwner_dog_name());
+                    intent.putExtra("walk_total_time", bookingServiceDTOArrayList.get(position).getWalk_total_time());
                     context.startActivity(intent);
                 }
             });

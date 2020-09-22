@@ -29,6 +29,8 @@ public class ApplicationClass extends Application {
     private static final String TAG = "DeveloperLog";
     String className = getClass().getSimpleName().trim();
 
+    public static String BASE_URL = "http://13.125.123.145/";
+
     //쉐어드프리퍼런스 클래스 객체 생성
     public MySharedPref mySharedPref = MySharedPref.getInstance(this);
 
@@ -125,7 +127,7 @@ public class ApplicationClass extends Application {
     }
 
     //앨범에서 불러온 이미지 데이터를 서버에 저장하는 메소드
-    public MultipartBody.Part updateAlbumImgToServer(Uri photoUri){
+    public MultipartBody.Part updateAlbumImgToServer(Uri photoUri, String fileName){
         //_photoUri : content://com.google.android.apps.photos.contentprovider/-1/1/content%3A%2F%2Fmedia%2Fexternal%2Fimages%2Fmedia%2F36/ORIGINAL/NONE/929063286
 
         File tempFile;
@@ -159,7 +161,8 @@ public class ApplicationClass extends Application {
         //Multipart는 HTTP를 통해 File을 SERVER 로 전송하기위해 사용되는 Content-type  이다
         //multipart/form-data는 파일 업로드가 있는 양식요소에 사용되는 enctype 속성의 값중 하나
         //폼이 제출될 떄 이 형식이 encType="multipart/form-data" 라는 것을 알려준다
-        MultipartBody.Part body = MultipartBody.Part.createFormData("uploaded_file", file.getName(), requestFile);
+        MultipartBody.Part body = MultipartBody.Part.createFormData(fileName, file.getName(), requestFile);
+        //name : "uploaded_file"
 
         makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "file.getName() : "+file.getName());
         //_file.getName() : ST_20181108_BUZZ083DPE_4397649.jpg

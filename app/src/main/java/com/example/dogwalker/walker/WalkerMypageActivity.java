@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.dogwalker.ApplicationClass;
 import com.example.dogwalker.GpsTracker;
 import com.example.dogwalker.owner.LocationWebViewActivity;
 import com.example.dogwalker.R;
@@ -162,7 +163,7 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
                 String resultDataStr = resultDTO.getResponceResult();
                 //반려인 사진 셋팅
                 Glide.with(getApplicationContext())
-                        .load("http://13.125.0.82/"+resultDataStr)
+                        .load(ApplicationClass.BASE_URL +resultDataStr)
                         .override(300,300)
                         .apply(applicationClass.requestOptions.fitCenter().centerCrop())
                         .into(profileImg);
@@ -228,7 +229,7 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
                 Uri photoUri = data.getData();
                 makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "photoUri : " + photoUri);
                 //photoUri 값을 경로 변환 -> File 객체 생성해주는 메소드에 보내준다
-                MultipartBody.Part body = applicationClass.updateAlbumImgToServer(photoUri);
+                MultipartBody.Part body = applicationClass.updateAlbumImgToServer(photoUri, "uploaded_file");
                 //위 메소드의 return 값은 return body(MultipartBody.Part) 형태로 반환된다
                 Call<ResultDTO> call = retrofitApi.updateWalkerImageData(applicationClass.currentWalkerID, body);
                 call.enqueue(new Callback<ResultDTO>() {
@@ -341,8 +342,10 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
     public void updateLocationDataToDB(String resultAddress, String latitude, String longitude){
         //데이터베이스에 내 위치 저장
         Call<ResultDTO> call = retrofitApi.updateWalkerLocation(applicationClass.currentWalkerID, resultAddress, latitude, longitude);
-        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "서버에 보내는 id : " + applicationClass.currentWalkerID);
-        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "서버에 보내는 location : " + resultAddress);
+        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[1] 서버에 보내는 id : " + applicationClass.currentWalkerID);
+        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[2] 서버에 보내는 location : " + resultAddress);
+        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[3] 서버에 보내는 latitude : " + latitude);
+        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[4] 서버에 보내는 longitude : " + longitude);
         //비동기 네트워크 처리
         call.enqueue(new Callback<ResultDTO>() {
             @Override
@@ -353,13 +356,14 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
                 makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "서버에서 받아온 결과 : " + resultCodeStr);
 
                 if(resultCodeStr.contentEquals("ok")){
-//                    makeToast("위치 데이터 저장 완료");
+                    makeToast("위치가 추가되었습니다");
                 }
             }
 
             @Override
             public void onFailure(Call<ResultDTO> call, Throwable t) {
-                makeToast("위치 데이터 저장 실패");
+                makeToast("다시 위치를 추가해주세요");
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "위치 데이터 저장 실패 : " + t.toString());
             }
         });
     }

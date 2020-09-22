@@ -23,6 +23,7 @@ import com.example.dogwalker.R;
 import com.example.dogwalker.databinding.ActivityWalkerDogwalkingDoneBinding;
 import com.example.dogwalker.owner.DogListAdapter;
 import com.example.dogwalker.retrofit2.response.ResultDTO;
+import com.example.dogwalker.retrofit2.response.ResultStrDTO;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
@@ -49,8 +50,13 @@ public class WalkerDogwalkingDoneActivity extends BaseActivity implements OnMapR
     private static final int  PICK_FROM_MULTI_ALBUM = 6001;
 
     ActivityWalkerDogwalkingDoneBinding binding;
+    int booking_id;         //해당 산책 DB 컬럼 인덱스
+    String owner_dog_name;  //산책 받는 강아지 이름
+    int walk_total_time;    //산책 예약한 총 시간
     String walkingTime, walkingDistance, walkingPooCount;
     MultiAlbumAdapter multiAlbumAdapter;
+
+    ArrayList<MultipartBody.Part> imageFileList;    //다중 이미지 서버에 업로드할 multipartbody 리스트
 
     ArrayList<LatLng> latLngArrayList;  //이동한 경로 좌표 배열
     PolylineOverlay polylineOverlay;    //폴리라인 오버레이 객체
@@ -70,10 +76,13 @@ public class WalkerDogwalkingDoneActivity extends BaseActivity implements OnMapR
 
         Intent intent = getIntent();
         //받아온 데이터 담기
-        walkingTime = intent.getStringExtra("walkingTime");
-        walkingDistance = intent.getStringExtra("walkingDistance");
-        walkingPooCount = intent.getStringExtra("walkingPooCount");
-        latLngArrayList = intent.getParcelableArrayListExtra("latLngArrayList");
+        booking_id = intent.getIntExtra("booking_id", 0);            //산책 idx
+        owner_dog_name = intent.getStringExtra("owner_dog_name");               //산책 받는 강아지 이름
+        walk_total_time = intent.getIntExtra("walk_total_time", 0);  //산책 예약 총 시간
+        walkingTime = intent.getStringExtra("walkingTime");                     //산책한 스탑워치 시간
+        walkingDistance = intent.getStringExtra("walkingDistance");             //산책 이동 거리
+        walkingPooCount = intent.getStringExtra("walkingPooCount");             //산책 배변 횟수
+        latLngArrayList = intent.getParcelableArrayListExtra("latLngArrayList");//산책 이동 좌표 arraylist
 
         //현재 시간 구하기
         long nowTime = System.currentTimeMillis();
@@ -139,7 +148,7 @@ public class WalkerDogwalkingDoneActivity extends BaseActivity implements OnMapR
             //앨범에서 이미지 다중 선택
             case PICK_FROM_MULTI_ALBUM :
 
-                ArrayList<MultipartBody.Part> imageFileList = new ArrayList<>();
+                imageFileList = new ArrayList<>();
                 MultipartBody.Part body;
 
                 // 멀티 선택을 지원하지 않는 기기에서는 getClipdata()가 없음 => getData()로 접근해야 함
@@ -149,7 +158,7 @@ public class WalkerDogwalkingDoneActivity extends BaseActivity implements OnMapR
                     //앨범에서 getData Uri 받아온 후
                     Uri photoUri = data.getData();
                     //photoUri 값을 경로 변환 -> File 객체 생성해주는 메소드에 보내준다
-                    body = applicationClass.updateAlbumImgToServer(photoUri);
+                    body = applicationClass.updateAlbumImgToServer(photoUri, "uploaded_files[]");
                 } else {
 
                     ClipData clipData = data.getClipData();
@@ -170,7 +179,7 @@ public class WalkerDogwalkingDoneActivity extends BaseActivity implements OnMapR
                         //앨범에서 getData Uri 받아온 후
                         Uri photoUri = clipData.getItemAt(0).getUri();
                         //photoUri 값을 경로 변환 -> File 객체 생성해주는 메소드에 보내준다
-                        body = applicationClass.updateAlbumImgToServer(photoUri);
+                        body = applicationClass.updateAlbumImgToServer(photoUri, "uploaded_files[]");
 
                     //멀티 선택에서 하나 초과 ~ 6 이하로 선택했을 경우
                     } else if (clipData.getItemCount() > 1 && clipData.getItemCount() <= 6) {
@@ -178,42 +187,46 @@ public class WalkerDogwalkingDoneActivity extends BaseActivity implements OnMapR
                             //content://com.google.android.apps.photos.contentprovider/-1/1/content%3A%2F%2Fmedia%2Fexternal%2Fimages%2Fmedia%2F35/ORIGINAL/NONE/61072326
                             makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "2. multi choice : " + String.valueOf(clipData.getItemAt(i).getUri()));
 //                            imageList.add(String.valueOf(clipData.getItemAt(i).getUri()));
+
                             //앨범에서 getData Uri 받아온 후
                             Uri photoUri = clipData.getItemAt(i).getUri();
                             //photoUri 값을 경로 변환 -> File 객체 생성해주는 메소드에 보내준다
-                            body = applicationClass.updateAlbumImgToServer(photoUri);
+                            body = applicationClass.updateAlbumImgToServer(photoUri, "uploaded_files[]");
                             imageFileList.add(body);
-
-                            //TODO: 다중 이미지 업로드  test
-                            //위 메소드의 return 값은 return body(MultipartBody.Part) 형태로 반환된다
-                            Call<ResultDTO> call = retrofitApi.insertWalkDoneRecodeData(imageFileList);
-                            call.enqueue(new Callback<ResultDTO>() {
-                                @Override
-                                public void onResponse(Call<ResultDTO> call, Response<ResultDTO> response) {
-                                    ResultDTO resultDTO = response.body();
-                                    String resultDataStr = resultDTO.getResponceResult();
-                                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "앨범이미지 서버 저장 성공");
-                                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", resultDataStr);
-                                }
-
-                                @Override
-                                public void onFailure(Call<ResultDTO> call, Throwable t) {
-                                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "앨범이미지 서버 저장 실패");
-                                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", t.toString());
-                                }
-                            });
-
                         }
                     }
                 }
-
-
 
                 break;
 
             default:
                 break;
         }
+    }
+
+    //산책 내용 저장 버튼 클릭시
+    public void btnSaveWalkingRecode(View view){
+
+        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "다중이미지 배열 갯수 : " + imageFileList.size());
+
+        //TODO: 다중 이미지 업로드  test
+        //위 메소드의 return 값은 return body(MultipartBody.Part) 형태로 반환된다
+        Call<ResultDTO> call = retrofitApi.insertWalkDoneRecodeData(imageFileList);
+        call.enqueue(new Callback<ResultDTO>() {
+            @Override
+            public void onResponse(Call<ResultDTO> call, Response<ResultDTO> response) {
+                ResultDTO resultDTO = response.body();
+                String resultDataStr = resultDTO.getResponceResult();
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "앨범이미지 서버 저장 성공");
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", resultDataStr);
+            }
+            @Override
+            public void onFailure(Call<ResultDTO> call, Throwable t) {
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "앨범이미지 서버 저장 실패");
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", t.toString());
+            }
+        });
+
     }
 
     @Override

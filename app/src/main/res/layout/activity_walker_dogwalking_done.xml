@@ -213,6 +213,7 @@
             android:textSize="16sp"
             android:textColor="@color/colorWhite"
             android:textStyle="bold"
+            android:onClick="@{activity::btnSaveWalkingRecode}"
             android:background="@drawable/circular_corner_stroke_mint"
             android:layout_marginTop="20dp"
             android:text="산책 내용 저장"/>

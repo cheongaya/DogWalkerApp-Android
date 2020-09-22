@@ -29,6 +29,11 @@ public class WalkerDogwalkingIngActivity extends BaseActivity {
     private Animation fab_open, fab_close;
     private Boolean isFabOpen = false;
 
+    //Intent로 받은 산책 관련 데이터
+    int booking_id;         //해당 산책 DB 컬럼 인덱스
+    String owner_dog_name;  //산책 받는 강아지 이름
+    int walk_total_time;    //산책 예약한 총 시간
+
     //스탑워치 관련 변수
     private long timeWhenStopped = 0;
     private boolean stopClicked;
@@ -49,6 +54,14 @@ public class WalkerDogwalkingIngActivity extends BaseActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_walker_dogwalking_ing);
         binding.setActivity(this);
 
+        //Intent 에서 얻은 데이터
+        Intent intent = getIntent();
+        booking_id = intent.getIntExtra("booking_id", 0);
+        owner_dog_name = intent.getStringExtra("owner_dog_name");
+        walk_total_time = intent.getIntExtra("walk_total_time", 0);
+        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[산책 데이터] booking_id : " + booking_id);
+        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[산책 데이터] owner_dog_name : " + owner_dog_name);
+        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[산책 데이터] walk_total_time : " + walk_total_time);
         //플로팅 버튼 열고 / 닫는 애니메이션 연결
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.floating_btn_open);
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.floating_btn_close);
@@ -134,9 +147,12 @@ public class WalkerDogwalkingIngActivity extends BaseActivity {
         //스탑워치 기록 보여줌
 //        makeToast(timeWatch);
         Intent dogwalkingDoneIntent = new Intent(WalkerDogwalkingIngActivity.this, WalkerDogwalkingDoneActivity.class);
-        dogwalkingDoneIntent.putExtra("walkingTime", timeWatch);
-        dogwalkingDoneIntent.putExtra("walkingDistance", binding.textViewWalkDistance.getText().toString());
-        dogwalkingDoneIntent.putExtra("walkingPooCount", binding.textViewWalkIngPooCount.getText().toString());
+        dogwalkingDoneIntent.putExtra("booking_id", booking_id);            //산책 idx
+        dogwalkingDoneIntent.putExtra("owner_dog_name", owner_dog_name);    //산책 받는 강아지 이름
+        dogwalkingDoneIntent.putExtra("walk_total_time", walk_total_time);  //산책 예약 총 시간
+        dogwalkingDoneIntent.putExtra("walkingTime", timeWatch);            //산책 스탑워치 시간
+        dogwalkingDoneIntent.putExtra("walkingDistance", binding.textViewWalkDistance.getText().toString());    //산책 이동거리
+        dogwalkingDoneIntent.putExtra("walkingPooCount", binding.textViewWalkIngPooCount.getText().toString()); //산책 배변횟수
         makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "좌표 배열 크기 : " + gpsTracker.latLngArrayList.size());
         dogwalkingDoneIntent.putExtra("latLngArrayList", gpsTracker.latLngArrayList);
         startActivity(dogwalkingDoneIntent);

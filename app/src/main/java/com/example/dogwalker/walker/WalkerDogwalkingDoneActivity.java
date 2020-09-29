@@ -38,12 +38,17 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
+import okhttp3.MediaType;
 import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.http.Multipart;
+import retrofit2.http.PartMap;
 
 public class WalkerDogwalkingDoneActivity extends BaseActivity implements OnMapReadyCallback{
 
@@ -55,6 +60,7 @@ public class WalkerDogwalkingDoneActivity extends BaseActivity implements OnMapR
     int walk_total_time;    //산책 예약한 총 시간
     String walkingTime, walkingDistance, walkingPooCount;
     MultiAlbumAdapter multiAlbumAdapter;
+    String getTime;         //산책 끝난 시간
 
     ArrayList<MultipartBody.Part> imageFileList;    //다중 이미지 서버에 업로드할 multipartbody 리스트
 
@@ -84,11 +90,11 @@ public class WalkerDogwalkingDoneActivity extends BaseActivity implements OnMapR
         walkingPooCount = intent.getStringExtra("walkingPooCount");             //산책 배변 횟수
         latLngArrayList = intent.getParcelableArrayListExtra("latLngArrayList");//산책 이동 좌표 arraylist
 
-        //현재 시간 구하기
+        //현재 시간(산책 끝난 시간) 구하기
         long nowTime = System.currentTimeMillis();
         Date date = new Date(nowTime);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy년 MM월 dd일, HH시 mm분");
-        String getTime = simpleDateFormat.format(date);
+        getTime = simpleDateFormat.format(date);
 
         //화면에 데이터 표시
         binding.textViewWalkDoneCurrentTime.setText(getTime);
@@ -207,22 +213,44 @@ public class WalkerDogwalkingDoneActivity extends BaseActivity implements OnMapR
     //산책 내용 저장 버튼 클릭시
     public void btnSaveWalkingRecode(View view){
 
-        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "다중이미지 배열 갯수 : " + imageFileList.size());
+//        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "다중이미지 배열 갯수 : " + imageFileList.size());
+
+        //산책 기록 데이터 추가
+        Map<String, RequestBody> partMap = new HashMap<>();
+        partMap.put("booking_id", RequestBody.create(MediaType.parse("text/plain"), String.valueOf(booking_id)));
+        partMap.put("done_current_time", RequestBody.create(MediaType.parse("text/plain"), getTime));
+        partMap.put("done_walking_time", RequestBody.create(MediaType.parse("text/plain"), walkingTime));
+        partMap.put("done_distance", RequestBody.create(MediaType.parse("text/plain"), walkingDistance));
+        partMap.put("done_poo_count", RequestBody.create(MediaType.parse("text/plain"), walkingPooCount));
+        partMap.put("done_memo", RequestBody.create(MediaType.parse("text/plain"), binding.editTextWalkDoneMemo.getText().toString()));
+        partMap.put("done_upload_img", RequestBody.create(MediaType.parse("text/plain"), "null"));
+//        RequestBody descriptionPart = RequestBody.create(MultipartBody.FORM, "설명이다");
+
+        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "보낼 데이터 : " + booking_id+" "+walkingTime+" "+walkingDistance+" "+walkingPooCount);
 
         //TODO: 다중 이미지 업로드  test
         //위 메소드의 return 값은 return body(MultipartBody.Part) 형태로 반환된다
-        Call<ResultDTO> call = retrofitApi.insertWalkDoneRecodeData(imageFileList);
+//        Call<ResultDTO> call = retrofitApi.insertWalkDoneRecodeData(partMap, imageFileList);
+        Call<ResultDTO> call = retrofitApi.insertWalkDoneRecodeData(partMap);
         call.enqueue(new Callback<ResultDTO>() {
             @Override
             public void onResponse(Call<ResultDTO> call, Response<ResultDTO> response) {
                 ResultDTO resultDTO = response.body();
                 String resultDataStr = resultDTO.getResponceResult();
-                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "앨범이미지 서버 저장 성공");
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "산책기록 서버 저장 성공");
                 makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", resultDataStr);
+
+                if(resultDataStr.contentEquals("ok")){
+                    //쌓인 스택을 모두 비우고 메인 예약화면으로 화면전환하기
+                    Intent intent = new Intent(WalkerDogwalkingDoneActivity.this, WalkerDogwalkingActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
+                }
             }
             @Override
             public void onFailure(Call<ResultDTO> call, Throwable t) {
-                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "앨범이미지 서버 저장 실패");
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "산책기록 서버 저장 실패");
                 makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", t.toString());
             }
         });

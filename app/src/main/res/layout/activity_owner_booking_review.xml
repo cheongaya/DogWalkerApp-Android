@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="activity"
+            type="com.example.dogwalker.owner.OwnerBookingReviewActivity" />
+    </data>
+
+    <LinearLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:background="@color/colorWhite"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="리뷰 쓰기"
+                    android:textColor="@color/colorBlack"
+                    android:gravity="center"
+                    android:textSize="18sp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="#e9e9e9"
+                    android:padding="10dp"
+                    android:layout_marginTop="20dp">
+
+                    <ImageView
+                        android:id="@+id/imageView_review_walker_img"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/circular_corner_stroke_mydog4"
+                        android:src="@drawable/ic_baseline_perm_identity_24"
+                        android:scaleType="centerInside"
+                        android:padding="10dp"/>
+
+                    <!-- 예약정보 (도그워커 프로필 이미지 + 도그워커 이름 + 간략한 예약 정보) -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/textView_review_walker_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="도그워커 이름"
+                            android:textStyle="bold"
+                            android:textColor="@color/colorBlack"/>
+
+                        <TextView
+                            android:id="@+id/textView_review_booking_content"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="예약 내용"
+                            android:textColor="@color/colorBlack"
+                            android:layout_marginTop="3dp"
+                            android:textSize="13sp"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- 만족도 평가 -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="도그워커 서비스에 대해 만족하셨나요?"
+                    android:textColor="@color/colorBlack"
+                    android:textStyle="bold"
+                    android:layout_marginTop="30dp"
+                    android:textSize="18sp"
+                    android:layout_marginBottom="20dp"/>
+
+                <SeekBar
+                    android:id="@+id/seekBar_review_satisfation_score"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="100"
+                    android:progress="0"/>
+
+                <TextView
+                    android:id="@+id/textView_reivew_satisfation_score"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="만족도 0"
+                    android:textColor="@color/colorSub"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:textSize="16sp"
+                    android:layout_marginTop="10dp"/>
+
+                <!-- 리뷰 메모 -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="이용하신 도그워커의 서비스는 어떠셨나요?"
+                    android:textColor="@color/colorBlack"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="10dp"/>
+
+                <EditText
+                    android:id="@+id/editText_reivew_memo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="서비스를 이용하며 느끼신 점을 입력해주세요"
+                    android:layout_marginBottom="10dp"
+                    android:padding="5dp"
+                    android:textSize="14sp"
+                    android:background="@drawable/border_bottom"/>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textColor="@color/colorWhite"
+                    android:textStyle="bold"
+                    android:onClick="@{activity::btnReviewFileUpload}"
+                    android:background="@drawable/circular_corner_stroke_red"
+                    android:layout_marginTop="10dp"
+                    android:text="사진/동영상 첨부하기"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView_review_file_upload"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="서비스와 무관한 사진/동영상을 첨부한 리뷰는 통보없이 삭제될 수 있습니다"
+                    android:textColor="@color/colorRed"
+                    android:textSize="14sp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp"/>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <!-- 버튼 영역 (리뷰 취소/등록) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp">
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold"
+                android:onClick="@{activity::btnReviewCancel}"
+                android:background="@drawable/circular_corner_stroke_gray"
+                android:text="취소"/>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold"
+                android:onClick="@{activity::btnReviewUpload}"
+                android:background="@drawable/circular_corner_stroke_mint"
+                android:text="등록"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>

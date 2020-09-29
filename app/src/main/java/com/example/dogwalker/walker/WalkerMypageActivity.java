@@ -102,8 +102,12 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
         //DB에 저장된 데이터 조회해서 setText() 해주기
         applicationClass.loadData1ColumnToDB("user_walker", "name", "id", applicationClass.currentWalkerID, tvName);
         applicationClass.loadData1ColumnToDB("user_walker", "location", "id", applicationClass.currentWalkerID, tvLocation);
+
         //DB에서 도그워커 데이터 불러오기
         loadWalkerDataToDB();
+
+        //DB에서 도그워커 리뷰+만족도 데이터 불러오기
+//        loadWalkerReviewDataToDB();
     }
 
 //    @Override

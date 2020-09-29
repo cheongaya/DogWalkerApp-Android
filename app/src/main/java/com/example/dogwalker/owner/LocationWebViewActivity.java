@@ -62,7 +62,7 @@ public class LocationWebViewActivity extends BaseActivity {
         //web client 를 chrome 으로 설정
         webView.setWebChromeClient(new WebChromeClient());
         //webview url load.php 파일 주소
-        webView.loadUrl("http://13.125.123.145/walker/daum_address.php");
+        webView.loadUrl("http://52.78.138.74/walker/daum_address.php");
     }
 
     private class AndroidBridge{

@@ -9,8 +9,9 @@ public class BookingServiceDTO {
     int walk_total_time;
     String walk_date;
     String walk_time;
+    String walking_status;
 
-    public BookingServiceDTO(int idx, String walker_id, String owner_id, String owner_dog_name, int walk_total_time, String walk_date, String walk_time) {
+    public BookingServiceDTO(int idx, String walker_id, String owner_id, String owner_dog_name, int walk_total_time, String walk_date, String walk_time, String walking_status) {
         this.idx = idx;
         this.walker_id = walker_id;
         this.owner_id = owner_id;
@@ -18,6 +19,7 @@ public class BookingServiceDTO {
         this.walk_total_time = walk_total_time;
         this.walk_date = walk_date;
         this.walk_time = walk_time;
+        this.walking_status = walking_status;
     }
 
     public int getIdx() {
@@ -74,5 +76,13 @@ public class BookingServiceDTO {
 
     public void setWalk_time(String walk_time) {
         this.walk_time = walk_time;
+    }
+
+    public String getWalking_status() {
+        return walking_status;
+    }
+
+    public void setWalking_status(String walking_status) {
+        this.walking_status = walking_status;
     }
 }

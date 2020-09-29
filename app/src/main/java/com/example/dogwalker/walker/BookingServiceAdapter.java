@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -70,6 +71,7 @@ public class BookingServiceAdapter extends RecyclerView.Adapter<BookingServiceAd
         private TextView tvBookingWalkTotalTime;
         private TextView tvBookingWalkTime;
         private Button btnWalkStart;
+        private Button btnWalkEnd;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -79,6 +81,7 @@ public class BookingServiceAdapter extends RecyclerView.Adapter<BookingServiceAd
             tvBookingWalkTotalTime = itemView.findViewById(R.id.textView_item_booking_walk_total_time);
             tvBookingWalkTime = itemView.findViewById(R.id.textView_item_booking_walk_time);
             btnWalkStart = itemView.findViewById(R.id.button_item_walk_start);
+            btnWalkEnd = itemView.findViewById(R.id.button_item_walk_end);
 
             //onClick 선언
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -108,6 +111,13 @@ public class BookingServiceAdapter extends RecyclerView.Adapter<BookingServiceAd
                     context.startActivity(intent);
                 }
             });
+
+            btnWalkEnd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(context, "완료된 산책입니다", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
 
         public void onBind(BookingServiceDTO bookingServiceDTO) {
@@ -116,6 +126,15 @@ public class BookingServiceAdapter extends RecyclerView.Adapter<BookingServiceAd
             tvBookingOwnerDogName.setText(bookingServiceDTO.getOwner_dog_name());
             tvBookingWalkTotalTime.setText(bookingServiceDTO.getWalk_total_time()+"분");
             tvBookingWalkTime.setText(bookingServiceDTO.getWalk_date()+" "+bookingServiceDTO.getWalk_time());
+            //DB에서 불러온 산책 상태 데이터가 "before" 이면 [산책시간] 버튼 노출
+            if(bookingServiceDTO.getWalking_status().contentEquals("before")){
+                btnWalkStart.setVisibility(View.VISIBLE);
+                btnWalkEnd.setVisibility(View.GONE);
+            //DB에서 불러온 산책 상태 데이터가 "after" 이면 [산책완료] 버튼 노출
+            }else if(bookingServiceDTO.getWalking_status().contentEquals("after")){
+                btnWalkStart.setVisibility(View.GONE);
+                btnWalkEnd.setVisibility(View.VISIBLE);
+            }
         }
     }
 

@@ -22,7 +22,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning,UnusedAttribute">
-        <activity android:name=".walker.WalkerDogwalkingIngActivity"></activity>
+        <activity android:name=".owner.OwnerBookingReviewActivity"/>
+        <activity android:name=".owner.OwnerBookingRecordActivity" />
+        <activity android:name=".walker.WalkerDogwalkingIngActivity" />
         <activity android:name=".walker.WalkerDogwalkingDoneActivity" />
         <activity android:name=".owner.PaymentDoneActivity" />
         <activity android:name=".owner.dialog.DialogPaymentActivity" /> <!-- 네이버 지도 API -->

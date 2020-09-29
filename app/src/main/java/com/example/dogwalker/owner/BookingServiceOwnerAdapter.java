@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.dogwalker.ApplicationClass;
 import com.example.dogwalker.R;
 import com.example.dogwalker.retrofit2.response.BookingServiceDTO;
+import com.example.dogwalker.walker.WalkerDogwalkingIngActivity;
 import com.example.dogwalker.walker.WalkerStopWatchActivity;
 
 import java.util.ArrayList;
@@ -70,6 +71,7 @@ public class BookingServiceOwnerAdapter extends RecyclerView.Adapter<BookingServ
         private TextView tvBookingOwnerDogName;
         private TextView tvBookingWalkTotalTime;
         private TextView tvBookingWalkTime;
+        private Button btnWalkRecord;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -78,6 +80,7 @@ public class BookingServiceOwnerAdapter extends RecyclerView.Adapter<BookingServ
             tvBookingOwnerDogName = itemView.findViewById(R.id.textView_item_booking_owner_dog_name);
             tvBookingWalkTotalTime = itemView.findViewById(R.id.textView_item_booking_walk_total_time);
             tvBookingWalkTime = itemView.findViewById(R.id.textView_item_booking_walk_time);
+            btnWalkRecord = itemView.findViewById(R.id.button_item_walk_record);
 
             //onClick 선언
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -93,6 +96,21 @@ public class BookingServiceOwnerAdapter extends RecyclerView.Adapter<BookingServ
                 }
             });
 
+            //산책 기록 버튼 클릭시 -> 산책 기록 화면으로 전환
+            btnWalkRecord.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    Intent intent = new Intent(context, OwnerBookingRecordActivity.class);
+                    intent.putExtra("booking_id", bookingServiceDTOArrayList.get(position).getIdx());
+                    intent.putExtra("booking_dog_name", bookingServiceDTOArrayList.get(position).getOwner_dog_name());
+                    intent.putExtra("walker_id", bookingServiceDTOArrayList.get(position).getWalker_id());
+                    intent.putExtra("owner_id", bookingServiceDTOArrayList.get(position).getOwner_id());
+                    context.startActivity(intent);
+                }
+            });
+
+
         }
 
         public void onBind(BookingServiceDTO bookingServiceDTO) {
@@ -101,6 +119,14 @@ public class BookingServiceOwnerAdapter extends RecyclerView.Adapter<BookingServ
             tvBookingOwnerDogName.setText(bookingServiceDTO.getOwner_dog_name());
             tvBookingWalkTotalTime.setText(bookingServiceDTO.getWalk_total_time()+"분");
             tvBookingWalkTime.setText(bookingServiceDTO.getWalk_date()+" "+bookingServiceDTO.getWalk_time());
+
+            //DB에서 불러온 산책 상태 데이터가 "before" 이면 [산책기록] 버튼 비노출
+            if(bookingServiceDTO.getWalking_status().contentEquals("before")){
+                btnWalkRecord.setVisibility(View.GONE);
+            //DB에서 불러온 산책 상태 데이터가 "after" 이면 [산책기록] 버튼 노출
+            }else if(bookingServiceDTO.getWalking_status().contentEquals("after")){
+                btnWalkRecord.setVisibility(View.VISIBLE);
+            }
         }
     }
 

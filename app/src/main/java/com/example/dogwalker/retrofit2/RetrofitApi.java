@@ -4,6 +4,7 @@ import com.example.dogwalker.ApplicationClass;
 import com.example.dogwalker.data.DogDTO;
 import com.example.dogwalker.data.WalkerDTO;
 import com.example.dogwalker.data.WalkerlistDTO;
+import com.example.dogwalker.retrofit2.response.BookingDoneRecordDTO;
 import com.example.dogwalker.retrofit2.response.BookingServiceDTO;
 import com.example.dogwalker.retrofit2.response.NonServiceDateDTO;
 import com.example.dogwalker.retrofit2.response.ResultDTO;
@@ -16,8 +17,11 @@ import com.example.dogwalker.retrofit2.response.WalkerLocationDTO;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
@@ -25,6 +29,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.PartMap;
 import retrofit2.http.Query;
 
 public interface RetrofitApi {
@@ -158,10 +163,21 @@ public interface RetrofitApi {
     //북마크 삭제
     @GET("owner/delete_owner_bookmark.php")
     Call<ResultDTO> deleteOwnerBookmark(@Query("bmk_user_id") String bmk_user_id, @Query("bmk_walker_id") String bmk_walker_id);
-    //산책 기록 저장 (다중 이미지 저장)
+
+    //산책 기록 저장 (다중 이미지(파일) 업로드)
     @Multipart
     @POST("common/insert_walk_done_recode.php")
-    Call<ResultDTO> insertWalkDoneRecodeData(@Part ArrayList<MultipartBody.Part> file);
+    Call<ResultDTO> insertWalkDoneRecodeData(@PartMap Map<String, RequestBody> recordData);
+//    Call<ResultDTO> insertWalkDoneRecodeData(@PartMap Map<String, RequestBody> recordData, @Part ArrayList<MultipartBody.Part> imgFiles);
+
+    //산책 기록 데이터 불러오기
+    @GET("owner/select_booking_done_record.php")
+    Call<List<BookingDoneRecordDTO>> selectBookingDoneRecordData(@Query("booking_id") int booking_id);
+
+    //산책 리뷰 저장 (다중 이미지(파일) 업로드)
+    @Multipart
+    @POST("owner/insert_booking_review.php")
+    Call<ResultDTO> insertBookingReviewData(@PartMap Map<String, RequestBody> reviewData);
 
 
 //    @Multipart

@@ -29,7 +29,7 @@ public class ApplicationClass extends Application {
     private static final String TAG = "DeveloperLog";
     String className = getClass().getSimpleName().trim();
 
-    public static String BASE_URL = "http://13.125.123.145/";
+    public static String BASE_URL = "http://52.78.138.74/";
 
     //쉐어드프리퍼런스 클래스 객체 생성
     public MySharedPref mySharedPref = MySharedPref.getInstance(this);

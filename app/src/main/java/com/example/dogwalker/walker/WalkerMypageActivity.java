@@ -31,6 +31,7 @@ import com.example.dogwalker.GpsTracker;
 import com.example.dogwalker.owner.LocationWebViewActivity;
 import com.example.dogwalker.R;
 import com.example.dogwalker.retrofit2.response.ResultDTO;
+import com.example.dogwalker.retrofit2.response.WalkerMypageDTO;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
@@ -68,8 +69,8 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
     //xml 관련
     ImageView profileImg;
     ImageButton btnUserDataEdit, btnLocation, btnGPS;
-    TextView tvLocation, tvName;
-    LinearLayout linearLocation, linearIntroduce, linearWalkableType, linearWalkPrice;
+    TextView tvLocation, tvName, tvReviewScore, tvSatisfationScore, tvCustomerScore;
+    LinearLayout linearLocation, linearIntroduce, linearWalkableType, linearWalkPrice, linearCustomer, linearReview;
     File tempFile;
 
     @Override
@@ -83,10 +84,15 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
         btnGPS = (ImageButton)findViewById(R.id.imageButton_GPS);
         tvLocation = (TextView)findViewById(R.id.textView_location);
         tvName = (TextView)findViewById(R.id.textView_name);
+        tvReviewScore = (TextView)findViewById(R.id.textView_walker_mypage_review_score);
+        tvSatisfationScore = (TextView)findViewById(R.id.textView_walker_mypage_satisfation_score);
+        tvCustomerScore = (TextView)findViewById(R.id.textView_walker_mypage_customer_score);
         linearLocation = (LinearLayout)findViewById(R.id.linearLayout_location);
         linearIntroduce = (LinearLayout)findViewById(R.id.linearLayout_introduce);
         linearWalkableType = (LinearLayout)findViewById(R.id.linearLayout_walkable_type);
         linearWalkPrice = (LinearLayout)findViewById(R.id.linearLayout_walk_price);
+        linearCustomer = (LinearLayout)findViewById(R.id.linearLayout_walker_mypage_customer);
+        linearReview = (LinearLayout)findViewById(R.id.linearLayout_walker_mypage_review);
 
 //        profileImg.setOnClickListener(this);
         btnUserDataEdit.setOnClickListener(this);
@@ -95,28 +101,23 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
         linearIntroduce.setOnClickListener(this);
         linearWalkableType.setOnClickListener(this);
         linearWalkPrice.setOnClickListener(this);
+        linearCustomer.setOnClickListener(this);
+        linearReview.setOnClickListener(this);
 
         //GPS 위치 권한 체크
         checkLocationGpsStatus();
 
-        //DB에 저장된 데이터 조회해서 setText() 해주기
-        applicationClass.loadData1ColumnToDB("user_walker", "name", "id", applicationClass.currentWalkerID, tvName);
-        applicationClass.loadData1ColumnToDB("user_walker", "location", "id", applicationClass.currentWalkerID, tvLocation);
-
-        //DB에서 도그워커 데이터 불러오기
+        //DB에서 도그워커 데이터 불러오기 (아이디, 프로필이미지, 위치, 리뷰갯수, 평균만족도, 단골갯수)
         loadWalkerDataToDB();
-
-        //DB에서 도그워커 리뷰+만족도 데이터 불러오기
-//        loadWalkerReviewDataToDB();
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//
-//        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "이름 setText : " + getNameToServer);
-//        tvName.setText(getNameToServer);
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //DB에 저장된 데이터 조회해서 setText() 해주기
+//        applicationClass.loadData1ColumnToDB("user_walker", "name", "id", applicationClass.currentWalkerID, tvName);
+//        applicationClass.loadData1ColumnToDB("user_walker", "location", "id", applicationClass.currentWalkerID, tvLocation);
+    }
 
     //클릭 이벤트
     @Override
@@ -152,30 +153,43 @@ public class WalkerMypageActivity extends WalkerBottomNavigation implements View
                 Intent intentWalkPrice = new Intent(this, WalkPriceActivity.class);
                 startActivityForResult(intentWalkPrice, WALKER_WALKPRICE);
                 break;
+            case R.id.linearLayout_walker_mypage_customer :
+                //단골 고객 리스트 화면 띄우기
+                Intent intentCustomerList = new Intent(this, WalkerCustomerListActivity.class);
+                startActivity(intentCustomerList);
+                break;
+            case R.id.linearLayout_walker_mypage_review:
+                //리뷰+답글 리스트 화면 띄우기
+                Intent intentReviewManage = new Intent(this, WalkerReviewManageActivity.class);
+                startActivity(intentReviewManage);
+                break;
         }
 
     }
 
     //DB에서 도그워커 데이터 불러오기
     public void loadWalkerDataToDB(){
-        Call<ResultDTO> call = retrofitApi.selectWalkerData1Column("user_walker", "profile_img", "id", applicationClass.currentWalkerID);
-        call.enqueue(new Callback<ResultDTO>() {
+        Call<WalkerMypageDTO> call = retrofitApi.selectWalkerMypageData(applicationClass.currentWalkerID);
+        call.enqueue(new Callback<WalkerMypageDTO>() {
             @Override
-            public void onResponse(Call<ResultDTO> call, Response<ResultDTO> response) {
-
-                ResultDTO resultDTO = response.body();
-                String resultDataStr = resultDTO.getResponceResult();
+            public void onResponse(Call<WalkerMypageDTO> call, Response<WalkerMypageDTO> response) {
+                WalkerMypageDTO walkerMypageDTO = response.body();
+                //도그워커 데이터 화면에 표시
+                tvName.setText(walkerMypageDTO.getId());
+                tvLocation.setText(walkerMypageDTO.getLocation());
+                tvReviewScore.setText(walkerMypageDTO.getReview_count()+"개");
+                tvSatisfationScore.setText(walkerMypageDTO.getSatisfation_score()+"점");
+                tvCustomerScore.setText(walkerMypageDTO.getCustomer_count()+"명");
                 //반려인 사진 셋팅
                 Glide.with(getApplicationContext())
-                        .load(ApplicationClass.BASE_URL +resultDataStr)
+                        .load(walkerMypageDTO.getProfile_img())
                         .override(300,300)
                         .apply(applicationClass.requestOptions.fitCenter().centerCrop())
                         .into(profileImg);
-
             }
 
             @Override
-            public void onFailure(Call<ResultDTO> call, Throwable t) {
+            public void onFailure(Call<WalkerMypageDTO> call, Throwable t) {
 
             }
         });

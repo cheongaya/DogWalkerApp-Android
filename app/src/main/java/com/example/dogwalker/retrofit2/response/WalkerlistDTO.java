@@ -1,4 +1,4 @@
-package com.example.dogwalker.data;
+package com.example.dogwalker.retrofit2.response;
 
 public class WalkerlistDTO {
 

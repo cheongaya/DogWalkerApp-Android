@@ -14,18 +14,63 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical">
 
+        <!-- 리뷰 없을 때 -->
         <TextView
-            android:id="@+id/tv1"
+            android:id="@+id/textView_walker_review_null"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="리뷰가 없습니다"
             android:textColor="#000"
             android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:visibility="gone"/>
+
+        <!-- 리뷰 있을 때 -->
+        <LinearLayout
+            android:id="@+id/linearLayout_walker_review_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_margin="30dp">
+
+            <!-- 고객후기 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="고객 후기 "
+                    android:textSize="18sp"
+                    android:textColor="@color/colorBlack"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/textView_walker_review_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorMain"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" 개"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorBlack"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+            <!-- 리뷰 -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView_walker_review"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginTop="20dp"/>
+
+        </LinearLayout>
+
 
     </LinearLayout>
 </layout>

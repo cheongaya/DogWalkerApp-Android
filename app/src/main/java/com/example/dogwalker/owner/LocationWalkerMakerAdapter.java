@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.example.dogwalker.R;
-import com.example.dogwalker.data.DogDTO;
 import com.example.dogwalker.retrofit2.response.WalkerLocationDTO;
 import com.naver.maps.map.overlay.InfoWindow;
 

@@ -1,9 +1,12 @@
 package com.example.dogwalker.owner;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,17 +16,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.dogwalker.ApplicationClass;
 import com.example.dogwalker.R;
-import com.example.dogwalker.data.WalkerlistDTO;
+import com.example.dogwalker.retrofit2.response.WalkerlistDTO;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
-public class OwnerWalkerlistAdapter extends RecyclerView.Adapter<OwnerWalkerlistAdapter.ItemViewHolder> {
+public class OwnerWalkerlistAdapter extends RecyclerView.Adapter<OwnerWalkerlistAdapter.ItemViewHolder> implements Filterable {
 
     Context context;
     //ApplicationClass 객체 생성
     ApplicationClass applicationClass;
     //adapter에 들어갈 list
-    public static ArrayList<WalkerlistDTO> walkerlistDTOArrayList = new ArrayList<>();
+    public static ArrayList<WalkerlistDTO> walkerlistDTOArrayList = new ArrayList<>(); //출력 개념
+    //키워드로 검색한 결과 list
+//    public static ArrayList<String> unFilteredlist = null;
+    public static ArrayList<WalkerlistDTO> walkerlistDTOArrayListAll; //보관 개념
     //클릭 리스너
     private OwnerWalkerlistAdapter.OnItemClickListener mListener = null ;
 
@@ -131,6 +139,53 @@ public class OwnerWalkerlistAdapter extends RecyclerView.Adapter<OwnerWalkerlist
 
     public void setWalkerlistDTOArrayList(ArrayList<WalkerlistDTO> walkerlistDTOArrayList){
         this.walkerlistDTOArrayList = walkerlistDTOArrayList;
+        this.walkerlistDTOArrayListAll = new ArrayList<>(walkerlistDTOArrayList);
     }
 
+    //필터 검색 기능
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                String charString = constraint.toString();
+                makeLog("charString.performFiltering() : " + charString);
+                //필터 리스트
+                ArrayList<WalkerlistDTO> filteredList = new ArrayList<>();
+                //검색 키워드 없을때
+                if(charString.isEmpty() || charString.length() == 0 || constraint == null) {
+                    filteredList.addAll(walkerlistDTOArrayListAll);
+                    makeLog("charString.isEmpty() : " + charString);
+                } else {
+                //검색 키워드 있을때
+                    makeLog("charString.isNotEmpty() : " + charString);
+//                    ArrayList<WalkerlistDTO> filteringList = new ArrayList<>();
+                    String filterPattern = constraint.toString().toLowerCase().trim();
+                    for(WalkerlistDTO walkerlistDTO : walkerlistDTOArrayListAll) {
+                        if(walkerlistDTO.getIntroduce().toLowerCase().contains(filterPattern)
+                        || walkerlistDTO.getName().toLowerCase().contains(filterPattern)
+                        || walkerlistDTO.getLocation().toLowerCase().contains(filterPattern)) {
+                            filteredList.add(walkerlistDTO);
+                        }
+                    }
+//                    filteredList = filteringList;
+                }
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = filteredList;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                walkerlistDTOArrayList.clear();
+                walkerlistDTOArrayList.addAll((ArrayList)results.values);
+                notifyDataSetChanged();
+            }
+        };
+    }
+
+    //로그 : 액티비티명 + 함수명 + 원하는 데이터를 한번에 보기위한 로그
+    public void makeLog(String strData) {
+        Log.d("DeveloperLog", strData);
+    }
 }

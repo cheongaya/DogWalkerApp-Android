@@ -60,25 +60,24 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:background="@drawable/circular_corner_stroke_search_edittext">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_search_24"
+                android:layout_gravity="center_vertical"
+                android:paddingLeft="20dp"/>
             <EditText
                 android:id="@+id/editText_walker_keyword_search"
                 android:layout_width="0dp"
                 android:layout_weight="4"
                 android:layout_height="50dp"
-                android:hint="도그워커 이름 등.. 키워드 입력"
+                android:hint="도그워커 이름, 주소 등.. 키워드 입력"
+                android:textSize="14sp"
                 android:paddingLeft="20dp"
                 android:background="@drawable/circular_corner_stroke_search_edittext"/>
-            <Button
-                android:id="@+id/button_walker_keyword_search"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="50dp"
-                android:background="@drawable/circular_corner_stroke_search_button"
-                android:textSize="18sp"
-                android:onClick="@{activity::onClickKeywordWalkerSearch}"
-                android:textColor="@color/colorWhite"
-                android:text="검색"/>
         </LinearLayout>
 
         <LinearLayout
@@ -86,28 +85,37 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="10dp"
+            android:gravity="right">
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorMain2"
-                android:background="@drawable/circular_corner_stroke_filter_off"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:onClick="@{activity::onClickFilteringLocation}"
-                android:text="지역 선택"/>
+<!--            <Button-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:textColor="@color/colorMain2"-->
+<!--                android:background="@drawable/circular_corner_stroke_filter_off"-->
+<!--                android:textSize="16sp"-->
+<!--                android:textStyle="bold"-->
+<!--                android:onClick="@{activity::onClickFilteringLocation}"-->
+<!--                android:text="지역 선택"/>-->
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorMain2"
-                android:background="@drawable/circular_corner_stroke_filter_off"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:onClick="@{activity::onClickFilteringDate}"
-                android:layout_marginLeft="10dp"
-                android:text="날짜 선택"/>
+<!--            <Button-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:textColor="@color/colorMain2"-->
+<!--                android:background="@drawable/circular_corner_stroke_filter_off"-->
+<!--                android:textSize="16sp"-->
+<!--                android:textStyle="bold"-->
+<!--                android:onClick="@{activity::onClickFilteringDate}"-->
+<!--                android:layout_marginLeft="10dp"-->
+<!--                android:text="날짜 선택"/>-->
+
+            <ImageButton
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:scaleType="fitXY"
+                android:onClick="@{activity::onClickFilterSelect}"
+                android:src="@drawable/ic_baseline_tune_24"
+                android:background="@color/colorTransparent"/>
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView

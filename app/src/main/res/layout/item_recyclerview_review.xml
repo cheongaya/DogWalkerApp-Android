@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="20dp">
+
+    <!-- 반려인 프로필 -->
+    <ImageView
+        android:id="@+id/imageView_item_walker_review_profile_img"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:src="@drawable/ic_baseline_perm_identity_24"
+        android:scaleType="centerInside"
+        android:background="@drawable/circular_corner_stroke_mydog2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/textView_item_walker_review_owner_name" />
+    <!-- 반려인 이름 -->
+    <TextView
+        android:id="@+id/textView_item_walker_review_owner_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="반려인"
+        android:textSize="18sp"
+        android:textColor="@color/colorBlack"
+        android:textStyle="bold"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/imageView_item_walker_review_profile_img" />
+    <!-- 리뷰 쓴 날짜 -->
+    <TextView
+        android:id="@+id/textView_item_walker_review_write_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0000년 00월 00일"
+        android:textSize="15sp"
+        android:textColor="#666"
+        android:layout_marginTop="3dp"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/textView_item_walker_review_owner_name"/>
+    <!-- 댓글 수정/삭제 버튼 영역 -->
+    <LinearLayout
+        android:id="@+id/linearLayout_review_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/textView_item_walker_review_write_date"
+        android:layout_marginLeft="10dp">
+        <ImageButton
+            android:id="@+id/imageButton_review_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_edit_black_24"
+            android:background="@color/colorTransparent" />
+        <ImageButton
+            android:id="@+id/imageButton_review_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_delete_24_color_black"
+            android:background="@color/colorTransparent"/>
+    </LinearLayout>
+    <!-- 리뷰 -->
+    <TextView
+        android:id="@+id/textView_item_walker_review"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="리뷰내용 리뷰내용 리뷰내용 리뷰내용 리뷰내용 리뷰내용 리뷰내용 리뷰내용 리뷰내용 "
+        android:textSize="14sp"
+        android:textColor="@color/colorBlack"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintTop_toBottomOf="@id/textView_item_walker_review_owner_name"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/imageView_item_walker_review_profile_img"
+        app:layout_constraintStart_toStartOf="@id/textView_item_walker_review_owner_name"
+        app:layout_constraintEnd_toEndOf="parent" />
+    <!-- 답글 컨텐츠 -->
+    <LinearLayout
+        android:id="@+id/linearLayout_reply"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/textView_item_walker_review"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:background="@drawable/circular_corner_stroke_lightgray"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:layout_marginTop="10dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <!-- 도그워커 이름 -->
+            <TextView
+                android:id="@+id/textView_item_reply_walker_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="도그워커"
+                android:textSize="18sp"
+                android:textColor="@color/colorBlack"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintTop_toTopOf="parent" />
+            <!-- 답글 쓴 날짜 -->
+            <TextView
+                android:id="@+id/textView_item_reply_write_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0000년 00월 00일"
+                android:textSize="15sp"
+                android:textColor="#666"
+                android:layout_marginTop="3dp"
+                android:layout_marginLeft="10dp"/>
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:gravity="right"-->
+<!--                android:layout_marginRight="10dp">-->
+<!--                <ImageButton-->
+<!--                    android:id="@+id/imageButton_reply_edit"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:src="@drawable/ic_baseline_edit_black_24"-->
+<!--                    android:background="@color/colorTransparent" />-->
+<!--                <ImageButton-->
+<!--                    android:id="@+id/imageButton_reply_delete"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:src="@drawable/ic_baseline_delete_24_color_black"-->
+<!--                    android:background="@color/colorTransparent"/>-->
+<!--            </LinearLayout>-->
+        </LinearLayout>
+        <!-- 답글 -->
+        <TextView
+            android:id="@+id/textView_item_reply_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="답글내용 답글내용 답글내용 답글내용 답글내용 답글내용 답글내용 답글내용 답글내용 "
+            android:textSize="14sp"
+            android:textColor="@color/colorBlack"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

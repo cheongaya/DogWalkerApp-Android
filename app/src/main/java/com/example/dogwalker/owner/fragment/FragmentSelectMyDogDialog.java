@@ -1,5 +1,4 @@
 package com.example.dogwalker.owner.fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,10 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.dogwalker.ApplicationClass;
 import com.example.dogwalker.BaseActivity;
 import com.example.dogwalker.R;
-import com.example.dogwalker.data.DogDTO;
+import com.example.dogwalker.retrofit2.response.DogDTO;
 import com.example.dogwalker.databinding.FragmentSelectMydogDialogBinding;
-import com.example.dogwalker.owner.DogListAdapter;
-import com.example.dogwalker.owner.OwnerWalkerlistActivity;
 import com.example.dogwalker.owner.SelectDogListAdapter;
 
 import java.util.ArrayList;

@@ -1,9 +1,13 @@
 package com.example.dogwalker.retrofit2;
 
 import com.example.dogwalker.ApplicationClass;
-import com.example.dogwalker.data.DogDTO;
-import com.example.dogwalker.data.WalkerDTO;
-import com.example.dogwalker.data.WalkerlistDTO;
+import com.example.dogwalker.retrofit2.response.CustomerDTO;
+import com.example.dogwalker.retrofit2.response.DogDTO;
+import com.example.dogwalker.retrofit2.response.WalkerDTO;
+import com.example.dogwalker.retrofit2.response.WalkerMypageDTO;
+import com.example.dogwalker.retrofit2.response.WalkerReviewManageDTO;
+import com.example.dogwalker.retrofit2.response.WalkerReviewDTO;
+import com.example.dogwalker.retrofit2.response.WalkerlistDTO;
 import com.example.dogwalker.retrofit2.response.BookingDoneRecordDTO;
 import com.example.dogwalker.retrofit2.response.BookingServiceDTO;
 import com.example.dogwalker.retrofit2.response.NonServiceDateDTO;
@@ -14,14 +18,12 @@ import com.example.dogwalker.retrofit2.response.WalkPriceDTO;
 import com.example.dogwalker.retrofit2.response.WalkableTypeDTO;
 import com.example.dogwalker.retrofit2.response.WalkerLocationDTO;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
@@ -73,6 +75,9 @@ public interface RetrofitApi {
     //user_walker 데이터 조회 (1개 칼럼 조회 가능)
     @GET("walker/select_walker_data_1column.php")
     Call<ResultDTO> selectWalkerData1Column(@Query("tableName") String tableName, @Query("selectCol") String selectCol, @Query("primaryCol") String primaryCol, @Query("primaryVal") String primaryVal);
+    //도그워커 마이페이지 데이터 조회
+    @GET("walker/select_walker_mypage_data.php")
+    Call<WalkerMypageDTO> selectWalkerMypageData(@Query("walker_id") String walker_id);
     //산책가능 유형 데이터 수정 (3개 칼럼 수정 가능)
     @FormUrlEncoded
     @POST("walker/update_walker_data_3column.php")
@@ -178,6 +183,29 @@ public interface RetrofitApi {
     @Multipart
     @POST("owner/insert_booking_review.php")
     Call<ResultDTO> insertBookingReviewData(@PartMap Map<String, RequestBody> reviewData);
+
+    //리뷰 데이터 불러오기
+    @GET("owner/select_walker_review_data.php")
+    Call<List<WalkerReviewDTO>> selectWalkerReviewData(@Query("walker_id") String walker_id);
+
+    //도그워커 단골 리스트 데이터 불러오기
+    @GET("walker/select_walker_customer_data.php")
+    Call<List<CustomerDTO>> selectWalkerCustomerData(@Query("walker_id") String walker_id);
+
+    //리뷰 + 답변 데이터 불러오기
+    @GET("walker/select_walker_review_manage_data.php")
+    Call<List<WalkerReviewManageDTO>> selectWalkerReviewManageData(@Query("walker_id") String walker_id);
+
+    //답변 데이터 저장
+    @FormUrlEncoded
+    @POST("walker/insert_walker_reply_for_review.php")
+    Call<ResultDTO> insertReplyForReviewData(@FieldMap HashMap<String, Object> parameters);
+    //답변 데이터 수정
+    @GET("walker/update_walker_reply_data.php")
+    Call<ResultDTO> updateReplyData(@Query("reply_id") int reply_id, @Query("reply_updated_memo") String reply_updated_memo);
+    //답변 데이터 삭제
+    @GET("walker/delete_walker_reply_data.php")
+    Call<ResultDTO> deleteReplyData(@Query("reply_id") int reply_id);
 
 
 //    @Multipart

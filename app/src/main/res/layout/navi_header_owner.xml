@@ -47,18 +47,20 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             app:srcCompat="@drawable/ic_baseline_perm_identity_24"
-            android:background="@color/colorMain2"
-            android:contentDescription="반려인 김청아"
+            android:background="@drawable/circular_corner_stroke_sky"
+            android:scaleType="centerInside"
+            android:contentDescription="도그워커 김청아"
             android:id="@+id/imageView"/>
 
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/textView_navi_header_owner_name"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="반려인 김청아"
+            android:text="000"
             android:textColor="@color/colorBlack"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="10dp"
             android:gravity="center_vertical"
-            android:textSize="18sp"
+            android:textSize="19sp"
             android:textStyle="bold"/>
 
     </LinearLayout>

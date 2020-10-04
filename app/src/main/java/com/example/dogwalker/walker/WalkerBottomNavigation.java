@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -136,6 +137,9 @@ public abstract class WalkerBottomNavigation extends AppCompatActivity implement
         switch (item.getItemId()){
             case android.R.id.home:{ // 왼쪽 상단 버튼 눌렀을 때
                 mDrawerLayout.openDrawer(GravityCompat.START);
+                //네비 상단 로그인한 유저 이름 데이터 노출
+                TextView naviHeaderWalkerName = (TextView) findViewById(R.id.textView_navi_header_walker_name);
+                naviHeaderWalkerName.setText(applicationClass.currentWalkerID);
                 return true;
             }
         }

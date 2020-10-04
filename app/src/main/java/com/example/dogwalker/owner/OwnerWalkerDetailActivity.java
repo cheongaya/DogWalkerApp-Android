@@ -7,13 +7,10 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.example.dogwalker.BaseActivity;
 import com.example.dogwalker.R;
-import com.example.dogwalker.data.WalkerDTO;
-import com.example.dogwalker.data.WalkerlistDTO;
+import com.example.dogwalker.retrofit2.response.WalkerDTO;
 import com.example.dogwalker.databinding.ActivityOwnerWalkerDetailBinding;
 import com.example.dogwalker.owner.fragment.FragmentWalkerDetailPrice;
 import com.example.dogwalker.owner.fragment.FragmentWalkerDetailProfile;

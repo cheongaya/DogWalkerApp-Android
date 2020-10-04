@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -138,6 +139,9 @@ public abstract class OwnerBottomNavigation extends AppCompatActivity implements
         switch (item.getItemId()){
             case android.R.id.home:{ // 왼쪽 상단 버튼 눌렀을 때
                 mDrawerLayout.openDrawer(GravityCompat.START);
+                //네비 상단 로그인한 유저 이름 데이터 노출
+                TextView naviHeaderOwnerName = (TextView) findViewById(R.id.textView_navi_header_owner_name);
+                naviHeaderOwnerName.setText(applicationClass.currentWalkerID);
                 return true;
             }
         }

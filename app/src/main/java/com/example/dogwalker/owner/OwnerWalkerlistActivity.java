@@ -6,14 +6,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.dogwalker.BaseActivity;
 import com.example.dogwalker.NaverMapActivity;
 import com.example.dogwalker.R;
-import com.example.dogwalker.data.WalkerlistDTO;
-import com.example.dogwalker.databinding.ActivityNaverMapBindingImpl;
+import com.example.dogwalker.retrofit2.response.WalkerlistDTO;
 import com.example.dogwalker.databinding.ActivityOwnerWalkerlistBinding;
 
 import java.util.ArrayList;
@@ -48,11 +49,14 @@ public class OwnerWalkerlistActivity extends BaseActivity {
         //검색된 도그워커가 없을때
         tvSearchWalkerlistNull = (TextView)findViewById(R.id.textView_search_walkerlist_null);
 
-        //리사이클러뷰 초기화 셋팅
+       //리사이클러뷰 초기화 셋팅
         recyclerViewInitSetting();
 
         //DB에서 도그워커 리스트 데이터 불러오기
         loadWalkerDataToDB();
+
+        //도그워커 키워드 검색 기능
+        searchWalker();
 
         //FragmentWalkDialog 에서 받아온 산책시간 선택 데이터
         Intent intent = getIntent();
@@ -95,6 +99,30 @@ public class OwnerWalkerlistActivity extends BaseActivity {
 
         walkerlistAdapter = new OwnerWalkerlistAdapter(this);
         recyclerViewWalkerlist.setAdapter(walkerlistAdapter);
+    }
+
+    //도그워커 키워드 검색 기능
+    public void searchWalker(){
+        binding.editTextWalkerKeywordSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "beforeTextChanged : " + charSequence);
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "onTextChanged : " + charSequence);
+                walkerlistAdapter.getFilter().filter(charSequence);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "afterTextChanged : " + editable);
+//                String searchKeyword = binding.editTextWalkerKeywordSearch.getText().toString();
+//                walkerlistAdapter.filter(searchKeyword);
+            }
+        });
     }
 
     //DB에서 도그워커 데이터 불러오기
@@ -152,14 +180,19 @@ public class OwnerWalkerlistActivity extends BaseActivity {
 
     }
 
-    //필터링 - 지역 선택
-    public void onClickFilteringLocation(View view){
+//    //필터링 - 지역 선택
+//    public void onClickFilteringLocation(View view){
+//
+//    }
+//
+//    //필터링 - 날짜 선택
+//    public void onClickFilteringDate(View view){
+//
+//    }
 
-    }
-
-    //필터링 - 날짜 선택
-    public void onClickFilteringDate(View view){
-
+    //필터링 - 필터 선택
+    public void onClickFilterSelect(View view){
+        makeToast("서비스 준비중입니다");
     }
 
 }

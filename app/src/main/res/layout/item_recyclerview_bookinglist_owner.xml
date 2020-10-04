@@ -5,16 +5,17 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingTop="10dp"
-    android:paddingLeft="20dp"
     android:paddingBottom="10dp"
-    android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp"
-    android:layout_marginBottom="5dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="10dp"
     android:background="@drawable/circular_corner_stroke_lightsky">
 
     <TextView
         android:id="@+id/textView_item_booking_walker_name_text"
-        android:layout_width="wrap_content"
+        android:layout_width="85dp"
         android:layout_height="wrap_content"
         android:text="예약 도그워커"
         android:textColor="@color/colorBlack"
@@ -33,7 +34,7 @@
 
     <TextView
         android:id="@+id/textView_item_booking_owner_dog_name_text"
-        android:layout_width="wrap_content"
+        android:layout_width="85dp"
         android:layout_height="wrap_content"
         android:text="예약 강아지"
         android:textStyle="bold"
@@ -67,7 +68,7 @@
 
     <TextView
         android:id="@+id/textView_item_booking_walk_total_time_text"
-        android:layout_width="wrap_content"
+        android:layout_width="85dp"
         android:layout_height="wrap_content"
         android:text="산책시간"
         android:textStyle="bold"
@@ -88,7 +89,7 @@
 
     <TextView
         android:id="@+id/textView_item_booking_walk_time_text"
-        android:layout_width="wrap_content"
+        android:layout_width="85dp"
         android:layout_height="wrap_content"
         android:text="예약일시"
         android:textStyle="bold"

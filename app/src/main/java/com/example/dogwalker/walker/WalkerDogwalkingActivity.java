@@ -1,17 +1,13 @@
 package com.example.dogwalker.walker;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.dogwalker.R;
-import com.example.dogwalker.data.WalkerlistDTO;
-import com.example.dogwalker.owner.OwnerWalkerlistAdapter;
 import com.example.dogwalker.retrofit2.response.BookingServiceDTO;
 
 import java.util.ArrayList;

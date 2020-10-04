@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.dogwalker.R;
-import com.example.dogwalker.data.DogDTO;
+import com.example.dogwalker.retrofit2.response.DogDTO;
 import com.example.dogwalker.retrofit2.response.ResultDTO;
 import com.example.dogwalker.retrofit2.response.UserOwnerDTO;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;

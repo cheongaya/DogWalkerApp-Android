@@ -177,11 +177,10 @@
                     android:layout_marginLeft="10dp">
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerView_dogwalking_file_upload"
+                        android:id="@+id/recyclerView_dogwalking_file_record"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginLeft="10dp"/>
+                        android:orientation="horizontal"/>
 
                 </LinearLayout>
 
@@ -192,22 +191,21 @@
                     android:layout_height="200dp"
                     android:layout_marginTop="20dp"/>
 
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textColor="@color/colorWhite"
+                    android:textStyle="bold"
+                    android:onClick="@{activity::btnWriteWalkerReview}"
+                    android:background="@drawable/circular_corner_stroke_mint"
+                    android:layout_marginTop="20dp"
+                    android:text="도그워커 후기 쓰기"/>
+
             </LinearLayout>
 
 
         </ScrollView>
-
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="@color/colorWhite"
-            android:textStyle="bold"
-            android:onClick="@{activity::btnWriteWalkerReview}"
-            android:background="@drawable/circular_corner_stroke_mint"
-            android:layout_marginTop="20dp"
-            android:text="도그워커 후기 쓰기"/>
 
 
     </LinearLayout>

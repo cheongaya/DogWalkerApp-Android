@@ -1,36 +1,28 @@
-package com.example.dogwalker.walker;
+package com.example.dogwalker.owner;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.dogwalker.ApplicationClass;
-import com.example.dogwalker.GoogleMapActivity;
 import com.example.dogwalker.R;
-import com.example.dogwalker.retrofit2.response.BookingServiceDTO;
+import com.example.dogwalker.walker.BookingServiceAdapter;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.util.ArrayList;
 
-import retrofit2.http.Url;
-
-public class MultiAlbumAdapter extends RecyclerView.Adapter<MultiAlbumAdapter.ItemViewHolder>  {
+public class RecordAlbumAdapter extends RecyclerView.Adapter<RecordAlbumAdapter.ItemViewHolder>  {
 
     Context context;
     //ApplicationClass 객체 생성
@@ -50,7 +42,7 @@ public class MultiAlbumAdapter extends RecyclerView.Adapter<MultiAlbumAdapter.It
         this.listenter = listener ;
     }
 
-    public MultiAlbumAdapter(Context context) {
+    public RecordAlbumAdapter(Context context) {
         this.context = context;
     }
     @NonNull
@@ -59,17 +51,13 @@ public class MultiAlbumAdapter extends RecyclerView.Adapter<MultiAlbumAdapter.It
         applicationClass = (ApplicationClass)context.getApplicationContext();
 
         // return ViewHolder
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recyclerview_file_upload, parent, false);
-        return new MultiAlbumAdapter.ItemViewHolder(view);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recyclerview_file_record, parent, false);
+        return new RecordAlbumAdapter.ItemViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-        try {
-            holder.onBind(imageUrlArraylist.get(position));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        holder.onBind(imageUrlArraylist.get(position));
     }
 
     @Override
@@ -80,13 +68,11 @@ public class MultiAlbumAdapter extends RecyclerView.Adapter<MultiAlbumAdapter.It
     public class ItemViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView imvMultiAlbum;
-        private ImageButton btnImageDelete;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            imvMultiAlbum = itemView.findViewById(R.id.imageView_item_file_upload_img);
-            btnImageDelete = itemView.findViewById(R.id.imageButton_item_file_upload_delete);
+            imvMultiAlbum = itemView.findViewById(R.id.imageView_item_file_record_img);
 
             //onClick 선언
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -101,31 +87,28 @@ public class MultiAlbumAdapter extends RecyclerView.Adapter<MultiAlbumAdapter.It
                     }
                 }
             });
-
-            //버튼 클릭시 이벤트
-            btnImageDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                    Intent intent = new Intent(context, WalkerStopWatchActivity.class);
-//                    context.startActivity(intent);
-                }
-            });
         }
 
-        public void onBind(String s) throws IOException {
+        public void onBind(String s){
 
             int position = getAdapterPosition();
 
             // 앨범에서 선택한 이미지 셋팅
-            // string -> uri 변환
-            Uri uri = Uri.parse(imageUrlArraylist.get(position));
+//            // string -> uri 변환
+//            Uri uri = Uri.parse(imageUrlArraylist.get(position));
+//
+//            // 선택한 이미지에서 비트맵 생성
+//            InputStream inputStream = context.getContentResolver().openInputStream(uri);
+//            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+//            inputStream.close();
+//            // 이미지 표시
+//            imvMultiAlbum.setImageBitmap(bitmap);
 
-            // 선택한 이미지에서 비트맵 생성
-            InputStream inputStream = context.getContentResolver().openInputStream(uri);
-            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-            inputStream.close();
-            // 이미지 표시
-            imvMultiAlbum.setImageBitmap(bitmap);
+            Glide.with(context)
+                    .load(imageUrlArraylist.get(position))
+                    .override(300,300)
+//                    .apply(applicationClass.requestOptions.fitCenter().circleCrop())
+                    .into(imvMultiAlbum);
         }
     }
 

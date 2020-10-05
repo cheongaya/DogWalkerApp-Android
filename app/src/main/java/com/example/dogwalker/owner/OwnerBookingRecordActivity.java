@@ -3,6 +3,7 @@ package com.example.dogwalker.owner;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import com.example.dogwalker.BaseActivity;
 import com.example.dogwalker.R;
 import com.example.dogwalker.databinding.ActivityOwnerBookingRecordBinding;
 import com.example.dogwalker.retrofit2.response.BookingDoneRecordDTO;
+import com.example.dogwalker.walker.MultiAlbumAdapter;
 
 import java.util.List;
 
@@ -23,6 +25,8 @@ import retrofit2.Response;
 public class OwnerBookingRecordActivity extends BaseActivity {
 
     ActivityOwnerBookingRecordBinding binding;
+
+    RecordAlbumAdapter recordAlbumAdapter;
 
     int booking_id;          //예약 번호
     String booking_dog_name; //산책예약 강아지 이름
@@ -42,8 +46,21 @@ public class OwnerBookingRecordActivity extends BaseActivity {
         walker_id = intent.getStringExtra("walker_id");
         owner_id = intent.getStringExtra("owner_id");
 
+        //리사이클러뷰 초기화 셋팅
+        recyclerViewInitSetting();
+
         //DB에서 해당 예약 기록 데이터 불러오기
         selectBookingDoneRecordToDB();
+    }
+
+    //리사이클러뷰 초기화 셋팅
+    public void recyclerViewInitSetting(){
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        binding.recyclerViewDogwalkingFileRecord.setLayoutManager(linearLayoutManager); //?? 주석??
+        binding.recyclerViewDogwalkingFileRecord.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
+        recordAlbumAdapter = new RecordAlbumAdapter(this);
+        binding.recyclerViewDogwalkingFileRecord.setAdapter(recordAlbumAdapter);
     }
 
     //DB에서 해당 예약 기록 데이터 불러오기
@@ -63,6 +80,11 @@ public class OwnerBookingRecordActivity extends BaseActivity {
                 binding.textViewWalkDonePooCount.setText(bookingDoneRecordDTOList.get(0).getDone_poo_count()+"");
                 binding.textViewWalkDoneMemo.setText(bookingDoneRecordDTOList.get(0).getDone_memo());
                 //TODO: 산책 이미지 setImage 해야함
+                if(bookingDoneRecordDTOList.get(0).getMultiFileArrayList().size() != 0){
+                    recordAlbumAdapter.setImageUrlArraylist(bookingDoneRecordDTOList.get(0).getMultiFileArrayList());
+                    recordAlbumAdapter.notifyDataSetChanged();
+                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "이미지경로배열 : " + bookingDoneRecordDTOList.get(0).getMultiFileArrayList().toString());
+                }
             }
 
             @Override

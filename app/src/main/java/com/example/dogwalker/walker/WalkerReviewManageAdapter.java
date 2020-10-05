@@ -14,10 +14,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.dogwalker.ApplicationClass;
 import com.example.dogwalker.R;
+import com.example.dogwalker.owner.RecordAlbumAdapter;
 import com.example.dogwalker.retrofit2.RetrofitApi;
 import com.example.dogwalker.retrofit2.RetrofitUtil;
 import com.example.dogwalker.retrofit2.response.ResultDTO;
@@ -86,6 +89,7 @@ public class WalkerReviewManageAdapter extends RecyclerView.Adapter<WalkerReview
         //댓글 관련
         private ImageView imvReviewOwnerImg;
         private TextView tvReviewOwnerName, tvReviewCreatedDate, tvReviewMemo;
+        private RecyclerView recyReviewFile;
         //답글 관련
         private Button btnCreateReply;
         private LinearLayout linearReplyCnt;    //답글영역
@@ -100,6 +104,7 @@ public class WalkerReviewManageAdapter extends RecyclerView.Adapter<WalkerReview
             tvReviewOwnerName = itemView.findViewById(R.id.textView_item_walker_review_owner_name);
             tvReviewCreatedDate = itemView.findViewById(R.id.textView_item_walker_review_write_date);
             tvReviewMemo = itemView.findViewById(R.id.textView_item_walker_review);
+            recyReviewFile = itemView.findViewById(R.id.recyclerView_item_walker_review);   //이미지 첨부파일 리사이클러뷰
             //답글 관련
             btnCreateReply = itemView.findViewById(R.id.button_item_reply_create);
             linearReplyCnt = itemView.findViewById(R.id.linearLayout_reply);
@@ -162,6 +167,13 @@ public class WalkerReviewManageAdapter extends RecyclerView.Adapter<WalkerReview
 
         public void onBind(WalkerReviewManageDTO walkerReviewManageDTO) {
 
+            //유저 이미지
+            Glide.with(context)
+                    .load(walkerReviewManageDTO.getReview_owner_profile_img())
+                    .override(300,300)
+                    .apply(applicationClass.requestOptions.fitCenter().circleCrop())
+                    .into(imvReviewOwnerImg);
+
             //리뷰 관련
 //            imvReviewOwnerImg.setImageURI(bookingServiceDTO.getOwner_id());
             tvReviewOwnerName.setText(walkerReviewManageDTO.getReview_owner_id());
@@ -183,6 +195,19 @@ public class WalkerReviewManageAdapter extends RecyclerView.Adapter<WalkerReview
                     tvReplyCreatedDate.setText(walkerReviewManageDTO.getReply_updated_date());
                     applicationClass.makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "walkerReviewManageDTO.getReply_updated_date() : " + walkerReviewManageDTO.getReply_updated_date());
                 }
+            }
+
+            //리뷰 관련 첨부파일 이중리사이클러뷰 코드
+            if(walkerReviewManageDTO.getMultiFileArrayList().size() != 0){
+
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+                recyReviewFile.setLayoutManager(linearLayoutManager);
+                recyReviewFile.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+                RecordAlbumAdapter recordAlbumAdapter = new RecordAlbumAdapter(context);
+                recyReviewFile.setAdapter(recordAlbumAdapter);
+
+                recordAlbumAdapter.setImageUrlArraylist(walkerReviewManageDTO.getMultiFileArrayList());
+                recordAlbumAdapter.notifyDataSetChanged();
             }
 
         }
@@ -221,7 +246,7 @@ public class WalkerReviewManageAdapter extends RecyclerView.Adapter<WalkerReview
     }
 
     //서버에서 답변 데이터 삭제
-    public void deleteReplyDataToDB(DialogInterface dialog, int position,  View linearReplyCnt, View btnCreateReply){
+    public void deleteReplyDataToDB(DialogInterface dialog, int position, View linearReplyCnt, View btnCreateReply){
         Call<ResultDTO> call = retrofitApi.deleteReplyData(walkerReviewManageDTOArrayList.get(position).getReply_idx());
         call.enqueue(new Callback<ResultDTO>() {
             @Override

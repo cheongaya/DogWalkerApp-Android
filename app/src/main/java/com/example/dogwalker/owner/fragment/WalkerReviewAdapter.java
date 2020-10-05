@@ -11,10 +11,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.dogwalker.ApplicationClass;
 import com.example.dogwalker.R;
+import com.example.dogwalker.owner.RecordAlbumAdapter;
 import com.example.dogwalker.retrofit2.response.WalkerReviewDTO;
 
 import java.util.ArrayList;
@@ -71,9 +74,10 @@ public class WalkerReviewAdapter extends RecyclerView.Adapter<WalkerReviewAdapte
 
         //댓글 관련
         private ImageView imvReviewOwnerImg;
-        private TextView tvReviewOwnerName;
-        private TextView tvReviewCreatedDate;
-        private TextView tvReviewMemo;
+        private TextView tvReviewOwnerName, tvReviewCreatedDate, tvReviewMemo;
+        private RecyclerView recyReviewFile;
+        private LinearLayout linearReviewButton;
+        private ImageButton btnUpdateReview, btnDeleteReview;
         //답글 관련
         private LinearLayout linearReplyCnt;    //답글영역
         private TextView tvReplyWalkerName, tvReplyCreatedDate, tvReplyMemo;
@@ -86,6 +90,10 @@ public class WalkerReviewAdapter extends RecyclerView.Adapter<WalkerReviewAdapte
             tvReviewOwnerName = itemView.findViewById(R.id.textView_item_walker_review_owner_name);
             tvReviewCreatedDate = itemView.findViewById(R.id.textView_item_walker_review_write_date);
             tvReviewMemo = itemView.findViewById(R.id.textView_item_walker_review);
+            recyReviewFile = itemView.findViewById(R.id.recyclerView_item_walker_review);   //이미지 첨부파일 리사이클러뷰
+            linearReviewButton = itemView.findViewById(R.id.linearLayout_review_button);
+            btnUpdateReview = itemView.findViewById(R.id.imageButton_review_edit);
+            btnDeleteReview = itemView.findViewById(R.id.imageButton_review_delete);
             //답글 관련
             linearReplyCnt = itemView.findViewById(R.id.linearLayout_reply);
             tvReplyWalkerName = itemView.findViewById(R.id.textView_item_reply_walker_name);
@@ -110,6 +118,20 @@ public class WalkerReviewAdapter extends RecyclerView.Adapter<WalkerReviewAdapte
 
         public void onBind(WalkerReviewDTO walkerReviewDTO) {
 
+            //유저 프로필 이미지
+            Glide.with(context)
+                    .load(walkerReviewDTO.getReview_owner_profile_img())
+                    .override(300,300)
+                    .apply(applicationClass.requestOptions.fitCenter().circleCrop())
+                    .into(imvReviewOwnerImg);
+
+            //리뷰 수정/삭제 버튼 영역 노출 or 비노출
+            if(walkerReviewDTO.getReview_owner_id().contains(applicationClass.currentWalkerID)){
+                linearReviewButton.setVisibility(View.VISIBLE);
+            }else{
+                linearReviewButton.setVisibility(View.GONE);
+            }
+
             //리뷰 관련
 //            imvReviewOwnerImg.setImageURI(bookingServiceDTO.getOwner_id());
             tvReviewOwnerName.setText(walkerReviewDTO.getReview_owner_id());
@@ -123,6 +145,19 @@ public class WalkerReviewAdapter extends RecyclerView.Adapter<WalkerReviewAdapte
                 tvReplyWalkerName.setText(walkerReviewDTO.getReply_walker_id());
                 tvReplyCreatedDate.setText(walkerReviewDTO.getReply_created_date());
                 tvReplyMemo.setText(walkerReviewDTO.getReply_memo());
+            }
+
+            //리뷰 관련 첨부파일 이중리사이클러뷰 코드
+            if(walkerReviewDTO.getMultiFileArrayList().size() != 0){
+
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+                recyReviewFile.setLayoutManager(linearLayoutManager);
+                recyReviewFile.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+                RecordAlbumAdapter recordAlbumAdapter = new RecordAlbumAdapter(context);
+                recyReviewFile.setAdapter(recordAlbumAdapter);
+
+                recordAlbumAdapter.setImageUrlArraylist(walkerReviewDTO.getMultiFileArrayList());
+                recordAlbumAdapter.notifyDataSetChanged();
             }
 
         }

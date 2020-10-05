@@ -18,6 +18,7 @@ import com.example.dogwalker.retrofit2.response.WalkPriceDTO;
 import com.example.dogwalker.retrofit2.response.WalkableTypeDTO;
 import com.example.dogwalker.retrofit2.response.WalkerLocationDTO;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -172,8 +173,7 @@ public interface RetrofitApi {
     //산책 기록 저장 (다중 이미지(파일) 업로드)
     @Multipart
     @POST("common/insert_walk_done_recode.php")
-    Call<ResultDTO> insertWalkDoneRecodeData(@PartMap Map<String, RequestBody> recordData);
-//    Call<ResultDTO> insertWalkDoneRecodeData(@PartMap Map<String, RequestBody> recordData, @Part ArrayList<MultipartBody.Part> imgFiles);
+    Call<ResultDTO> insertWalkDoneRecodeData(@PartMap Map<String, RequestBody> recordData, @Part List<MultipartBody.Part> imgFiles);
 
     //산책 기록 데이터 불러오기
     @GET("owner/select_booking_done_record.php")
@@ -181,8 +181,8 @@ public interface RetrofitApi {
 
     //산책 리뷰 저장 (다중 이미지(파일) 업로드)
     @Multipart
-    @POST("owner/insert_booking_review.php")
-    Call<ResultDTO> insertBookingReviewData(@PartMap Map<String, RequestBody> reviewData);
+    @POST("common/insert_booking_review.php")
+    Call<ResultDTO> insertBookingReviewData(@PartMap Map<String, RequestBody> reviewData, @Part List<MultipartBody.Part> imgFiles);
 
     //리뷰 데이터 불러오기
     @GET("owner/select_walker_review_data.php")

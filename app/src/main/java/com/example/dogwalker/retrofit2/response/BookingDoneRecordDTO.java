@@ -1,5 +1,7 @@
 package com.example.dogwalker.retrofit2.response;
 
+import java.util.ArrayList;
+
 public class BookingDoneRecordDTO {
 
     int idx;
@@ -9,9 +11,9 @@ public class BookingDoneRecordDTO {
     String done_distance;       //산책한 거리
     int done_poo_count;         //배변횟수
     String done_memo;           //산책 메모
-    String done_upload_img;     //산책 사진
+    ArrayList<String> multiFileArrayList = new ArrayList<>(); //산책 첨부파일
 
-    public BookingDoneRecordDTO(int idx, int booking_id, String done_current_time, String done_walking_time, String done_distance, int done_poo_count, String done_memo, String done_upload_img) {
+    public BookingDoneRecordDTO(int idx, int booking_id, String done_current_time, String done_walking_time, String done_distance, int done_poo_count, String done_memo, ArrayList<String> multiFileArrayList) {
         this.idx = idx;
         this.booking_id = booking_id;
         this.done_current_time = done_current_time;
@@ -19,7 +21,7 @@ public class BookingDoneRecordDTO {
         this.done_distance = done_distance;
         this.done_poo_count = done_poo_count;
         this.done_memo = done_memo;
-        this.done_upload_img = done_upload_img;
+        this.multiFileArrayList = multiFileArrayList;
     }
 
     public int getIdx() {
@@ -78,11 +80,11 @@ public class BookingDoneRecordDTO {
         this.done_memo = done_memo;
     }
 
-    public String getDone_upload_img() {
-        return done_upload_img;
+    public ArrayList<String> getMultiFileArrayList() {
+        return multiFileArrayList;
     }
 
-    public void setDone_upload_img(String done_upload_img) {
-        this.done_upload_img = done_upload_img;
+    public void setMultiFileArrayList(ArrayList<String> multiFileArrayList) {
+        this.multiFileArrayList = multiFileArrayList;
     }
 }

@@ -59,10 +59,11 @@ public class WalkerDogwalkingDoneActivity extends BaseActivity implements OnMapR
     String owner_dog_name;  //산책 받는 강아지 이름
     int walk_total_time;    //산책 예약한 총 시간
     String walkingTime, walkingDistance, walkingPooCount;
-    MultiAlbumAdapter multiAlbumAdapter;
     String getTime;         //산책 끝난 시간
 
-    ArrayList<MultipartBody.Part> imageFileList;    //다중 이미지 서버에 업로드할 multipartbody 리스트
+    public static ArrayList<MultipartBody.Part> imageFileList;    //다중 이미지 서버에 업로드할 multipartbody 리스트
+    MultiAlbumAdapter multiAlbumAdapter;
+    ArrayList<String> imageUrlArraylist;    //앨범에서 선택한 다중이미지 경로를 담은 이미지경로배열
 
     ArrayList<LatLng> latLngArrayList;  //이동한 경로 좌표 배열
     PolylineOverlay polylineOverlay;    //폴리라인 오버레이 객체
@@ -170,29 +171,34 @@ public class WalkerDogwalkingDoneActivity extends BaseActivity implements OnMapR
                     ClipData clipData = data.getClipData();
                     makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "1. ClipData 갯수 : " + String.valueOf(clipData.getItemCount()));
 
-                    if (clipData.getItemCount() > 6) {
-                        makeToast("사진은 6개까지 선택가능 합니다.");
+                    if (clipData.getItemCount() > 5) {
+                        makeToast("사진은 5개까지 선택가능 합니다.");
                         return;
                     }
                     // 멀티 선택에서 하나만 선택했을 경우
                     else if (clipData.getItemCount() == 1) {
                         String dataStr = String.valueOf(clipData.getItemAt(0).getUri());
-                        makeLog(new Object() {
-                        }.getClass().getEnclosingMethod().getName() + "()", "2. clipdata choice : " + String.valueOf(clipData.getItemAt(0).getUri()));
-                        makeLog(new Object() {
-                        }.getClass().getEnclosingMethod().getName() + "()", "2. single choice : " + clipData.getItemAt(0).getUri().getPath());
+                        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "2. clipdata choice : " + String.valueOf(clipData.getItemAt(0).getUri()));
+                        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "2. single choice : " + clipData.getItemAt(0).getUri().getPath());
 //                        imageList.add(dataStr);
                         //앨범에서 getData Uri 받아온 후
                         Uri photoUri = clipData.getItemAt(0).getUri();
                         //photoUri 값을 경로 변환 -> File 객체 생성해주는 메소드에 보내준다
                         body = applicationClass.updateAlbumImgToServer(photoUri, "uploaded_files[]");
 
-                    //멀티 선택에서 하나 초과 ~ 6 이하로 선택했을 경우
-                    } else if (clipData.getItemCount() > 1 && clipData.getItemCount() <= 6) {
+                    //멀티 선택에서 하나 초과 ~ 5 이하로 선택했을 경우
+                    } else if (clipData.getItemCount() > 1 && clipData.getItemCount() <= 5) {
+
+                        //앨범에서 받은 이미지 데이터 경로를 담을 배열 생성
+                        imageUrlArraylist = new ArrayList<>();
+
                         for (int i = 0; i < clipData.getItemCount(); i++) {
                             //content://com.google.android.apps.photos.contentprovider/-1/1/content%3A%2F%2Fmedia%2Fexternal%2Fimages%2Fmedia%2F35/ORIGINAL/NONE/61072326
                             makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "2. multi choice : " + String.valueOf(clipData.getItemAt(i).getUri()));
 //                            imageList.add(String.valueOf(clipData.getItemAt(i).getUri()));
+
+                            //이미지 경롤 배열에 이미지 Uri 추가
+                            imageUrlArraylist.add(clipData.getItemAt(i).getUri().toString());
 
                             //앨범에서 getData Uri 받아온 후
                             Uri photoUri = clipData.getItemAt(i).getUri();
@@ -200,6 +206,10 @@ public class WalkerDogwalkingDoneActivity extends BaseActivity implements OnMapR
                             body = applicationClass.updateAlbumImgToServer(photoUri, "uploaded_files[]");
                             imageFileList.add(body);
                         }
+
+                        //이미지 경로 배열 adapter setting
+                        multiAlbumAdapter.setImageUrlArraylist(imageUrlArraylist);
+                        multiAlbumAdapter.notifyDataSetChanged();
                     }
                 }
 
@@ -213,7 +223,7 @@ public class WalkerDogwalkingDoneActivity extends BaseActivity implements OnMapR
     //산책 내용 저장 버튼 클릭시
     public void btnSaveWalkingRecode(View view){
 
-//        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "다중이미지 배열 갯수 : " + imageFileList.size());
+        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "다중이미지 배열 갯수 : " + imageFileList.size());
 
         //산책 기록 데이터 추가
         Map<String, RequestBody> partMap = new HashMap<>();
@@ -223,15 +233,14 @@ public class WalkerDogwalkingDoneActivity extends BaseActivity implements OnMapR
         partMap.put("done_distance", RequestBody.create(MediaType.parse("text/plain"), walkingDistance));
         partMap.put("done_poo_count", RequestBody.create(MediaType.parse("text/plain"), walkingPooCount));
         partMap.put("done_memo", RequestBody.create(MediaType.parse("text/plain"), binding.editTextWalkDoneMemo.getText().toString()));
-        partMap.put("done_upload_img", RequestBody.create(MediaType.parse("text/plain"), "null"));
+//        partMap.put("done_upload_img", RequestBody.create(MediaType.parse("text/plain"), "null"));
 //        RequestBody descriptionPart = RequestBody.create(MultipartBody.FORM, "설명이다");
 
         makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "보낼 데이터 : " + booking_id+" "+walkingTime+" "+walkingDistance+" "+walkingPooCount);
 
         //TODO: 다중 이미지 업로드  test
         //위 메소드의 return 값은 return body(MultipartBody.Part) 형태로 반환된다
-//        Call<ResultDTO> call = retrofitApi.insertWalkDoneRecodeData(partMap, imageFileList);
-        Call<ResultDTO> call = retrofitApi.insertWalkDoneRecodeData(partMap);
+        Call<ResultDTO> call = retrofitApi.insertWalkDoneRecodeData(partMap, imageFileList);
         call.enqueue(new Callback<ResultDTO>() {
             @Override
             public void onResponse(Call<ResultDTO> call, Response<ResultDTO> response) {
@@ -246,6 +255,8 @@ public class WalkerDogwalkingDoneActivity extends BaseActivity implements OnMapR
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
+                }else{
+                    makeToast("산책 기록 저장에 실패하였습니다");
                 }
             }
             @Override

@@ -1,36 +1,27 @@
 package com.example.dogwalker.walker;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.dogwalker.ApplicationClass;
-import com.example.dogwalker.GoogleMapActivity;
 import com.example.dogwalker.R;
-import com.example.dogwalker.retrofit2.response.BookingServiceDTO;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.util.ArrayList;
 
-import retrofit2.http.Url;
-
-public class MultiAlbumAdapter extends RecyclerView.Adapter<MultiAlbumAdapter.ItemViewHolder>  {
+public class RecordAlbumUpdateAdapter extends RecyclerView.Adapter<RecordAlbumUpdateAdapter.ItemViewHolder>  {
 
     Context context;
     //ApplicationClass 객체 생성
@@ -39,18 +30,18 @@ public class MultiAlbumAdapter extends RecyclerView.Adapter<MultiAlbumAdapter.It
     public static ArrayList<String> imageUrlArraylist = new ArrayList<>();
 
     //클릭 리스너
-    private MultiAlbumAdapter.OnItemClickListener listenter = null;
+    private RecordAlbumUpdateAdapter.OnItemClickListener listenter = null;
 
     public interface OnItemClickListener {
         void onItemClick(View v, int position);
     }
 
     // OnItemClickListener 리스너 객체 참조를 어댑터에 전달하는 메서드
-    public void setOnItemClickListener(MultiAlbumAdapter.OnItemClickListener listener) {
+    public void setOnItemClickListener(RecordAlbumUpdateAdapter.OnItemClickListener listener) {
         this.listenter = listener ;
     }
 
-    public MultiAlbumAdapter(Context context) {
+    public RecordAlbumUpdateAdapter(Context context) {
         this.context = context;
     }
     @NonNull
@@ -60,7 +51,7 @@ public class MultiAlbumAdapter extends RecyclerView.Adapter<MultiAlbumAdapter.It
 
         // return ViewHolder
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recyclerview_file_upload, parent, false);
-        return new MultiAlbumAdapter.ItemViewHolder(view);
+        return new RecordAlbumUpdateAdapter.ItemViewHolder(view);
     }
 
     @Override
@@ -99,7 +90,7 @@ public class MultiAlbumAdapter extends RecyclerView.Adapter<MultiAlbumAdapter.It
                 }
             });
 
-            //버튼 클릭시 이벤트
+            //삭제 버튼 클릭시 이벤트
             btnImageDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

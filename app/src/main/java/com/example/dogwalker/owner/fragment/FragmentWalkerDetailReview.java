@@ -46,10 +46,15 @@ public class FragmentWalkerDetailReview extends FragmentBase {
         //리사이클러뷰 초기화 셋팅
         recyclerViewInitSetting();
 
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
         //DB 에서 리뷰 데이터 불러오기
         selectWalkerReviewDataToDB();
-
-        return view;
     }
 
     //리사이클러뷰 초기화 셋팅

@@ -57,8 +57,7 @@ android:layout_height="match_parent">
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="right"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="10dp">
+                android:layout_marginRight="10dp">
 
                 <ImageButton
                     android:id="@+id/imageButton_walker_booking_list"
@@ -66,6 +65,8 @@ android:layout_height="match_parent">
                     android:layout_height="25dp"
                     android:src="@drawable/ic_baseline_view_list_24_color_black"
                     android:background="@color/colorTransparent"
+                    android:tintMode="multiply"
+                    android:tint="@color/colorSub"
                     android:layout_marginRight="5dp"
                     android:scaleType="fitXY"/>
 
@@ -74,27 +75,84 @@ android:layout_height="match_parent">
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:scaleType="centerInside"
+                    android:tint="@color/colorBlack"
                     android:padding="3dp"
                     android:src="@drawable/ic_baseline_calendar_today_24_color_black"
                     android:background="@color/colorTransparent" />
             </LinearLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView_bookinglist_walker"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
+            <!-- 버튼영역 -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="10dp">
+                <Button
+                    android:id="@+id/button_booking_ing_list"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="진행중 예약"
+                    android:background="@color/colorTransparent"
+                    android:textColor="@color/colorSub"
+                    android:textSize="16sp"/>
+                <Button
+                    android:id="@+id/button_booking_end_list"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="지난 예약"
+                    android:textColor="@color/colorBlack"
+                    android:background="@color/colorTransparent"
+                    android:textSize="16sp"/>
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/textView_booking_list_null"
+            <!-- 진행중 예약 컨텐츠 영역 -->
+            <LinearLayout
+                android:id="@+id/linearLayout_ing_booking_list_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="예약 리스트가 없습니다"
-                android:layout_gravity="center_vertical"
-                android:gravity="center"
-                android:textColor="@color/colorBlack"
-                android:textSize="21sp"
-                android:visibility="gone"/>
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView_ing_bookinglist"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+                <TextView
+                    android:id="@+id/textView_ing_booking_list_null"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="진행중인 예약 리스트가 없습니다"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="16sp"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <!-- 지난 예약 컨텐츠 영역 -->
+            <LinearLayout
+                android:id="@+id/linearLayout_end_booking_list_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView_end_bookinglist"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+                <TextView
+                    android:id="@+id/textView_end_booking_list_null"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="진행중인 예약 리스트가 없습니다"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="16sp"
+                    android:visibility="gone"/>
+            </LinearLayout>
 
         </LinearLayout>
 

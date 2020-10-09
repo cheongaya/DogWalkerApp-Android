@@ -28,8 +28,8 @@ import retrofit2.Response;
 public class WalkerReplyActivity extends BaseActivity {
 
     ActivityWalkerReplyBinding binding;
-    String order_act, reply_text;
-    int review_id, reply_id;
+    String order_act, reply_text, review_text;
+    int review_id, reply_id, review_idx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,17 +42,21 @@ public class WalkerReplyActivity extends BaseActivity {
         //받아온 데이터
         Intent intent = getIntent();
         order_act = intent.getStringExtra("order_act");
-        review_id = intent.getIntExtra("review_id", 0);
 
         //행동 명령 - 답변 생성
         if(order_act.contains("created_reply")){
 
+            review_id = intent.getIntExtra("review_id", 0);
+
             binding.textViewReplyTitle.setText("답변 작성");
             binding.buttonReplySave.setVisibility(View.VISIBLE);
             binding.buttonReplyUpdate.setVisibility(View.GONE);
+            binding.buttonReviewUpdate.setVisibility(View.GONE);
 
         //행동 명령 - 답변 수정
         }else if(order_act.contains("updated_reply")){
+
+            review_id = intent.getIntExtra("review_id", 0);
 
             //intent 로 받아온 답변 텍스트 데이터, 답변 인덱스
             reply_text = intent.getStringExtra("reply_text");
@@ -62,6 +66,21 @@ public class WalkerReplyActivity extends BaseActivity {
             binding.editTextReply.setText(reply_text);
             binding.buttonReplySave.setVisibility(View.GONE);
             binding.buttonReplyUpdate.setVisibility(View.VISIBLE);
+            binding.buttonReviewUpdate.setVisibility(View.GONE);
+
+        //행동 명령 - 리뷰 수정
+        }else if(order_act.contains("updated_review")){
+
+            //intent 로 받아온 데이터
+            review_idx = intent.getIntExtra("review_idx", 0);
+            review_text = intent.getStringExtra("review_text");
+
+            binding.textViewReplyTitle.setText("리뷰 수정");
+            binding.editTextReply.setText(review_text);
+            binding.buttonReplySave.setVisibility(View.GONE);
+            binding.buttonReplyUpdate.setVisibility(View.GONE);
+            binding.buttonReviewUpdate.setVisibility(View.VISIBLE);
+
         }
     }
 
@@ -81,6 +100,12 @@ public class WalkerReplyActivity extends BaseActivity {
     public void onUpdateReply(View view){
         //DB에 답변 데이터 수정
         updateReplyDataToDB();
+    }
+
+    //버튼 - 리뷰 수정 완료
+    public void onUpdateReview(View view){
+        //DB에 리뷰 데이터 수정
+        updateReviewDataToDB();
     }
 
     //답변 취소 버튼 클릭시 한번더 취소여부를 물어보는 다이얼로그
@@ -192,4 +217,34 @@ public class WalkerReplyActivity extends BaseActivity {
             }
         });
     }
+    //DB에 리뷰 데이터 수정
+    public void updateReviewDataToDB(){
+
+        String review_updated_memo = binding.editTextReply.getText().toString();
+
+        Call<ResultDTO> call = retrofitApi.updateReviewData(review_idx, review_updated_memo);
+        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "수정할 리뷰데이터 : " + review_idx+" / "+review_updated_memo);
+        call.enqueue(new Callback<ResultDTO>() {
+            @Override
+            public void onResponse(Call<ResultDTO> call, Response<ResultDTO> response) {
+                ResultDTO resultDTO = response.body();
+                String resultDataStr = resultDTO.getResponceResult();
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "리뷰 데이터 서버 수정 성공");
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", resultDataStr);
+
+                if(resultDataStr.contentEquals("ok")){
+                    makeToast("리뷰가 수정되었습니다");
+                    finish();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResultDTO> call, Throwable t) {
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "리뷰 데이터 서버 수정 실패");
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", t.toString());
+            }
+        });
+
+    }
+
 }

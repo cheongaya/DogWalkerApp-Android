@@ -1,6 +1,8 @@
 package com.example.dogwalker.owner.fragment;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,9 +21,17 @@ import com.bumptech.glide.Glide;
 import com.example.dogwalker.ApplicationClass;
 import com.example.dogwalker.R;
 import com.example.dogwalker.owner.RecordAlbumAdapter;
+import com.example.dogwalker.retrofit2.RetrofitApi;
+import com.example.dogwalker.retrofit2.RetrofitUtil;
+import com.example.dogwalker.retrofit2.response.ResultDTO;
 import com.example.dogwalker.retrofit2.response.WalkerReviewDTO;
+import com.example.dogwalker.walker.WalkerReplyActivity;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static java.sql.Types.NULL;
 
@@ -29,6 +40,8 @@ public class WalkerReviewAdapter extends RecyclerView.Adapter<WalkerReviewAdapte
     Context context;
     //ApplicationClass 객체 생성
     ApplicationClass applicationClass;
+    //retrofit 객체 생성
+    public static RetrofitApi retrofitApi;
     //adapter에 들어갈 list
     public static ArrayList<WalkerReviewDTO> walkerReviewDTOArrayList = new ArrayList<>();
 
@@ -54,6 +67,8 @@ public class WalkerReviewAdapter extends RecyclerView.Adapter<WalkerReviewAdapte
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         applicationClass = (ApplicationClass)context.getApplicationContext();
+        //객체와 인터페이스 연결
+        retrofitApi = new RetrofitUtil().getRetrofitApi();
 
         // return ViewHolder
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recyclerview_review, parent, false);
@@ -114,6 +129,29 @@ public class WalkerReviewAdapter extends RecyclerView.Adapter<WalkerReviewAdapte
                 }
             });
 
+            //수정 버튼 클릭시
+            btnUpdateReview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    Intent intent = new Intent(context, WalkerReplyActivity.class);
+                    intent.putExtra("order_act", "updated_review");   //명령행동
+                    intent.putExtra("review_idx", walkerReviewDTOArrayList.get(position).getReview_idx());
+                    intent.putExtra("review_text", walkerReviewDTOArrayList.get(position).getReview_memo());
+                    context.startActivity(intent);
+                }
+            });
+
+            //삭제 버튼 클릭시
+            btnDeleteReview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    //리뷰 삭제 버튼 클릭시 한번더 삭제여부를 물어보는 다이얼로그
+                    confirmReviewDeleteAlertDialog(position);
+                }
+            });
+
         }
 
         public void onBind(WalkerReviewDTO walkerReviewDTO) {
@@ -169,5 +207,56 @@ public class WalkerReviewAdapter extends RecyclerView.Adapter<WalkerReviewAdapte
 
     public void setWalkerReviewDTOArrayList(ArrayList<WalkerReviewDTO> walkerReviewDTOArrayList){
         this.walkerReviewDTOArrayList = walkerReviewDTOArrayList;
+    }
+
+    //리뷰 삭제 버튼 클릭시 한번더 삭제여부를 물어보는 다이얼로그
+    public void confirmReviewDeleteAlertDialog(int position){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        builder.setTitle("리뷰 삭제")
+                .setMessage("리뷰를 삭제하시겠습니까?");
+
+        builder.setPositiveButton("네", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                deleteReplyDataToDB(dialog, position);
+            }
+        }).setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    //서버에서 답변 데이터 삭제
+    public void deleteReplyDataToDB(DialogInterface dialog, int position){
+        Call<ResultDTO> call = retrofitApi.deleteReviewData(walkerReviewDTOArrayList.get(position).getReview_idx());
+        call.enqueue(new Callback<ResultDTO>() {
+            @Override
+            public void onResponse(Call<ResultDTO> call, Response<ResultDTO> response) {
+                applicationClass.makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "리뷰 삭제 성공");
+                ResultDTO resultDTO = response.body();
+                if(resultDTO.getResponceResult().contains("ok")){
+                    //삭제 진행
+                    walkerReviewDTOArrayList.remove(position);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, walkerReviewDTOArrayList.size());
+//                    linearReplyCnt.setVisibility(View.GONE);    //답변 영역 비노출
+//                    btnCreateReply.setVisibility(View.VISIBLE); //답변 추가 버튼 노출
+//                    applicationClass.makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "item 삭제 완료");
+                    dialog.cancel();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResultDTO> call, Throwable t) {
+                applicationClass.makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "리뷰 삭제 실패");
+                applicationClass.makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", t.toString());
+            }
+        });
     }
 }

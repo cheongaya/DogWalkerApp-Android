@@ -8,8 +8,6 @@
     android:paddingBottom="10dp"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
     android:layout_marginBottom="10dp"
     android:background="@drawable/circular_corner_stroke_lightsky">
 

@@ -73,6 +73,16 @@
                 android:onClick="@{activity::onUpdateReply}"
                 android:background="@color/colorSub"/>
 
+            <Button
+                android:id="@+id/button_review_update"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="수정"
+                android:visibility="gone"
+                android:onClick="@{activity::onUpdateReview}"
+                android:background="@color/colorSub"/>
+
         </LinearLayout>
 
 

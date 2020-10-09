@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class BookingDoneRecordDTO {
 
-    int idx;
-    int booking_id;             //예약번호
+    int idx;                    //산책기록번호
+    int booking_id;             //산책예약번호
     String done_current_time;   //산책 끝난 시간
     String done_walking_time;   //산책한 시간
     String done_distance;       //산책한 거리

@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -41,13 +43,14 @@ import retrofit2.Response;
 
 public class OwnerBookingActivity extends OwnerBottomNavigation implements View.OnClickListener{
 
-    Button btnBookingPage;  //예약하기 버튼
-    ImageButton btnCalendarMonthView; //월간달력보기 버튼
-    MaterialCalendarView materialCalendarView;  //예약 내역 확인 달력
-    RecyclerView recyclerViewBookingList;
-    BookingServiceOwnerAdapter bookingServiceOwnerAdapter;
+    RecyclerView recyclerViewIngBookingList, recyclerViewEndBookingList;
+    BookingServiceOwnerAdapter ingBookingServiceAdapter, endBookingServiceAdapter;
+    List<BookingServiceDTO> ingBookingServiceDTOList, endBookingServiceDTOList;
 
-    ArrayList<CalendarDay> bookingServiceCalendarDates; //DB에서 받아온 예약 날짜 String List 를 CalendarDay List 에 담는다
+    LinearLayout linearIngBookingCnt, linearEndBookingCnt;
+    TextView tvIngBookingListNull, tvEndBookingListNull;
+    Button btnIngBookingList, btnEndBookingList, btnBookingPage;
+    ImageButton btnCalendarMonthView; //월간달력보기 버튼
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,210 +59,213 @@ public class OwnerBookingActivity extends OwnerBottomNavigation implements View.
 
         btnBookingPage = (Button)findViewById(R.id.button_booking_page);
         btnCalendarMonthView = (ImageButton)findViewById(R.id.imageButton_calendar_month_view);
-        materialCalendarView = (MaterialCalendarView) findViewById(R.id.calendarView_owner_booking);
 
-        //캘린더 셋팅
-        calendarViewInitSetting();
+        //예약 리스트가 없을때의 텍스트 표시
+        tvIngBookingListNull = (TextView)findViewById(R.id.textView_ing_booking_list_null_owner);
+        tvEndBookingListNull = (TextView)findViewById(R.id.textView_end_booking_list_null_owner);
+        //진행중 / 지난 예약 버튼
+        btnIngBookingList = (Button)findViewById(R.id.button_booking_ing_list_owner);
+        btnEndBookingList = (Button)findViewById(R.id.button_booking_end_list_owner);
+        //진행중 / 지난 예약 컨텐츠 영역
+        linearIngBookingCnt = (LinearLayout)findViewById(R.id.linearLayout_ing_booking_list_content_owner);
+        linearEndBookingCnt = (LinearLayout)findViewById(R.id.linearLayout_end_booking_list_content_owner);
 
-        //캘린더 예약 내역 DB 에서 데이터 불러와서 해당 날짜들에 addDecorator 점 표시 지정해주기
-        loadBookingServiceDatesToDB();
-
-        //리사이클러뷰 초기화 셋팅
-        recyclerViewInitSetting();
-
-        //캘린더 클릭 리스너 이벤트
-        onClickCalendarView();
+        //리사이클러뷰 (진행중 예약) 초기화 셋팅
+        IngRecyclerViewInitSetting();
+        //리사이클러뷰 (지난 예약) 초기화 셋팅
+        EndRecyclerViewInitSetting();
 
         //클릭 리스너 연결
         btnBookingPage.setOnClickListener(this);
         btnCalendarMonthView.setOnClickListener(this);
+        btnIngBookingList.setOnClickListener(this);
+        btnEndBookingList.setOnClickListener(this);
 
     }
 
-    //캘린터 기본 셋팅 메소드
-    public void calendarViewInitSetting(){
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-        Calendar calendarMax = Calendar.getInstance();
-        calendarMax.add(Calendar.YEAR, +1);
-
-        materialCalendarView.state().edit()
-                .setFirstDayOfWeek(Calendar.SUNDAY)
-                .setMinimumDate(CalendarDay.from(2000, 0, 1))
-                .setMaximumDate(calendarMax)    //1년 뒤
-                .setCalendarDisplayMode(CalendarMode.WEEKS)
-                .commit();
-
-        materialCalendarView.setCurrentDate(new Date(System.currentTimeMillis())); //Data형을 파라미터로 받아서 캘린더를 띄울때 현재 날짜를 기본으로 띄울 수 있다.
-        materialCalendarView.setDateSelected(new Date(System.currentTimeMillis()), false); // 파라미터로 넣어준 날짜에 대한 선택여부를 결정한다.
-//        binding.calendarView.setSelectedDate(new Date(System.currentTimeMillis()));
-//        binding.calendarView.removeDecorators(); //decorators를 제거하여 초기화 해주고
+        //DB에서 진행중 예약 리스트 데이터 불러오기
+        loadIngBookingServiceDataToDB();
+        //DB에서 지난 예약 리스트 데이터 불러오기
+        loadEndBookingServiceDataToDB();
     }
 
-    //리사이클러뷰 초기화 셋팅
-    public void recyclerViewInitSetting(){
-        recyclerViewBookingList = (RecyclerView)findViewById(R.id.recyclerView_bookinglist_owner);
-
+    //진행중 예약 - 리사이클러뷰 초기화 셋팅
+    public void IngRecyclerViewInitSetting(){
+        recyclerViewIngBookingList = (RecyclerView)findViewById(R.id.recyclerView_ing_bookinglist_owner);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerViewBookingList.setLayoutManager(linearLayoutManager); //?? 주석??
-
-        bookingServiceOwnerAdapter = new BookingServiceOwnerAdapter(this);
-        recyclerViewBookingList.setAdapter(bookingServiceOwnerAdapter);
+        recyclerViewIngBookingList.setLayoutManager(linearLayoutManager); //?? 주석??
+        ingBookingServiceAdapter = new BookingServiceOwnerAdapter(this);
+        recyclerViewIngBookingList.setAdapter(ingBookingServiceAdapter);
     }
 
-    //예약 내역 DB 에서 데이터 불러와서 해당 날짜들에 addDecorator 점 표시 지정해주기
-    public void loadBookingServiceDatesToDB(){
+    //지난 예약 -리사이클러뷰 초기화 셋팅
+    public void EndRecyclerViewInitSetting(){
+        recyclerViewEndBookingList = (RecyclerView)findViewById(R.id.recyclerView_end_bookinglist_owner);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerViewEndBookingList.setLayoutManager(linearLayoutManager); //?? 주석??
+        endBookingServiceAdapter = new BookingServiceOwnerAdapter(this);
+        recyclerViewEndBookingList.setAdapter(endBookingServiceAdapter);
+    }
 
-        ArrayList<String> bookingDatesList = new ArrayList<>();
+    //진행중 예약 - DB에서 진행중 예약 리스트 데이터 불러오기
+//    public void loadIngBookingServiceDataToDB(){
+//
+//        Call<List<BookingServiceDTO>> call = retrofitApi.selectOwnerBookingServiceData(applicationClass.currentWalkerID);
+//        call.enqueue(new Callback<List<BookingServiceDTO>>() {
+//            @Override
+//            public void onResponse(Call<List<BookingServiceDTO>> call, Response<List<BookingServiceDTO>> response) {
+//                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "예약리스트 데이터 조회 성공");
+//                List<BookingServiceDTO> bookingServiceDTOList = response.body();    //List
+//
+//                ArrayList<BookingServiceDTO> bookingServiceDTOArrayList = new ArrayList<>();
+//                bookingServiceDTOArrayList.addAll(bookingServiceDTOList);
+//                bookingServiceOwnerAdapter.setBookingServiceDTOArrayList(bookingServiceDTOArrayList);
+//                bookingServiceOwnerAdapter.notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<BookingServiceDTO>> call, Throwable t) {
+//                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "예약리스트 데이터 조회 실패");
+//                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", t.toString());
+//
+//            }
+//        });
+//
+//    }
 
-        Call<List<BookingServiceDTO>> call = retrofitApi.selectOwnerBookingServiceData(applicationClass.currentWalkerID);
+    //진행중 예약 - DB에서 진행중 예약 리스트 데이터 불러오기
+    public void loadIngBookingServiceDataToDB(){
+
+        Call<List<BookingServiceDTO>> call = retrofitApi.selectOwnerIngBookingServiceData(applicationClass.currentWalkerID);
         call.enqueue(new Callback<List<BookingServiceDTO>>() {
             @Override
             public void onResponse(Call<List<BookingServiceDTO>> call, Response<List<BookingServiceDTO>> response) {
-                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "예약리스트 데이터 조회 성공");
-                List<BookingServiceDTO> bookingServiceDTOList = response.body();    //List
-                /**
-                 * 달력에 점 표시하기 위한 코드
-                 */
-                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "리스트 사이즈 : " + bookingServiceDTOList.size());
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "진행중 예약리스트 데이터 조회 성공");
+                ingBookingServiceDTOList = response.body();    //List
 
-                for(int i=0; i<bookingServiceDTOList.size(); i++){
-                    String bookingServiceDate = bookingServiceDTOList.get(i).getWalk_date();
-                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "DB에서 받아온 예약 날짜 : " + bookingServiceDate);
-                    bookingDatesList.add(bookingServiceDate);
+                //예약리스트 데이터 setText 해주기 (position 번째)
+                if(ingBookingServiceDTOList.size() > 0){
+
+                    //검색된 도그워커 데이터가 있을때
+                    recyclerViewIngBookingList.setVisibility(View.VISIBLE);
+                    tvIngBookingListNull.setVisibility(View.GONE);
+
+                    ArrayList<BookingServiceDTO> ingBookingServiceDTOArrayList = new ArrayList<>();
+                    ingBookingServiceDTOArrayList.addAll(ingBookingServiceDTOList);
+
+                    //TODO: 확인용
+                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "진행중 예약리스트 사이즈 ingBookingServiceDTOList : " + ingBookingServiceDTOList.size() );
+                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "진행중 예약리스트 사이즈 ingBookingServiceDTOArrayList : " + ingBookingServiceDTOArrayList.size() );
+
+                    for(int i=0; i<ingBookingServiceDTOList.size(); i++){
+                        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "진행중 예약리스트 ingBookingServiceDTOList : " + ingBookingServiceDTOList.get(i).getOwner_id());
+                        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "진행중 예약리스트 ingBookingServiceDTOArrayList : " + ingBookingServiceDTOArrayList.get(i).getOwner_id());
+                    }
+
+                    ingBookingServiceAdapter.setBookingServiceDTOArrayList(ingBookingServiceDTOArrayList);
+                    ingBookingServiceAdapter.notifyDataSetChanged();
+
+                }else{
+                    //검색된 도그워커 데이터가 없을때
+                    recyclerViewIngBookingList.setVisibility(View.GONE);
+                    tvIngBookingListNull.setVisibility(View.VISIBLE);
                 }
-                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "반복문 종료");
-
-                //DB 에서 조회해 온 결과 date 들을 담은 배열 처리 (List -> Array 변환)
-                String[] resultArray = bookingDatesList.toArray(new String[bookingDatesList.size()]);
-                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "배열 결과 array : "+resultArray.toString());
-
-                //위의 결과 배열에 해당하는 날짜들에 background 회색 처리
-                new ApiSimulator(resultArray).executeOnExecutor(Executors.newSingleThreadExecutor());
-
-                /**
-                 * 리사이클러뷰 관련 코드
-                 */
-                ArrayList<BookingServiceDTO> bookingServiceDTOArrayList = new ArrayList<>();
-                bookingServiceDTOArrayList.addAll(bookingServiceDTOList);
-                bookingServiceOwnerAdapter.setBookingServiceDTOArrayList(bookingServiceDTOArrayList);
-                bookingServiceOwnerAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onFailure(Call<List<BookingServiceDTO>> call, Throwable t) {
-                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "예약리스트 데이터 조회 실패");
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "진행중 예약리스트 데이터 조회 실패");
                 makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", t.toString());
 
             }
         });
-
     }
 
-        //예제
-//        String[] resultArray = {"2020-08-18","2020-09-18","2020-09-20","2020-09-24"};
-//        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "배열 결과 resultArray : "+resultArray.toString());
-//        new ApiSimulator(resultArray).executeOnExecutor(Executors.newSingleThreadExecutor());
+    //지난 예약 - DB에서 지난 예약 리스트 데이터 불러오기
+    public void loadEndBookingServiceDataToDB(){
 
-    //캘린더 클릭 이벤트 메소드
-    public void onClickCalendarView(){
-
-        materialCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
+        Call<List<BookingServiceDTO>> call = retrofitApi.selectOwnerEndBookingServiceData(applicationClass.currentWalkerID);
+        call.enqueue(new Callback<List<BookingServiceDTO>>() {
             @Override
-            public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+            public void onResponse(Call<List<BookingServiceDTO>> call, Response<List<BookingServiceDTO>> response) {
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "지난 예약리스트 데이터 조회 성공");
+                endBookingServiceDTOList = response.body();    //List
 
-                //선택(클릭)한 날짜 데이터
-                int Year = date.getYear();
-                int Month = date.getMonth() + 1;  //1월 = 0 부터 시작함으로 +1 해준다
-                int Day = date.getDay();
-                CalendarDay selectedDay = CalendarDay.from(Year, Month, Day);
-                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "클릭날짜 : " + selectedDay);
+                //예약리스트 데이터 setText 해주기 (position 번째)
+                if(endBookingServiceDTOList.size() > 0){
 
-                //DB에 저장해놓은 date 리스트
-                for(int i=0; i<bookingServiceCalendarDates.size(); i++){
+                    //검색된 도그워커 데이터가 있을때
+                    recyclerViewEndBookingList.setVisibility(View.VISIBLE);
+                    tvEndBookingListNull.setVisibility(View.GONE);
 
-                    int dbYear = bookingServiceCalendarDates.get(i).getYear();
-                    int dbMonth = bookingServiceCalendarDates.get(i).getMonth() + 1;
-                    int dbDay = bookingServiceCalendarDates.get(i).getDay();
-                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[1]디비 dbYear : " + dbYear);
-                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[1]디비 dbMonth : " + dbMonth);
-                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[1]디비 dbDay : " + dbDay);
-                    CalendarDay dbNoneServiceDay = CalendarDay.from(dbYear, dbMonth, dbDay);
-                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "디비날짜 : " + dbNoneServiceDay);
+                    ArrayList<BookingServiceDTO> endBookingServiceDTOArrayList = new ArrayList<>();
+                    endBookingServiceDTOArrayList.addAll(endBookingServiceDTOList);
 
+                    //TODO: 확인용
+                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "지난 예약리스트 사이즈 endBookingServiceDTOList : " + endBookingServiceDTOList.size() );
+                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "지난 예약리스트 사이즈 endBookingServiceDTOArrayList : " + endBookingServiceDTOArrayList.size() );
+
+                    for(int i=0; i<endBookingServiceDTOList.size(); i++){
+                        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "지난 예약리스트 endBookingServiceDTOList : " + endBookingServiceDTOList.get(i).getOwner_id());
+                        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "지난 예약리스트 endBookingServiceDTOArrayList : " + endBookingServiceDTOArrayList.get(i).getOwner_id());
+                    }
+
+                    endBookingServiceAdapter.setBookingServiceDTOArrayList(endBookingServiceDTOArrayList);
+                    endBookingServiceAdapter.notifyDataSetChanged();
+
+                }else{
+                    //검색된 도그워커 데이터가 없을때
+                    recyclerViewEndBookingList.setVisibility(View.GONE);
+                    tvEndBookingListNull.setVisibility(View.VISIBLE);
                 }
+            }
+
+            @Override
+            public void onFailure(Call<List<BookingServiceDTO>> call, Throwable t) {
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "지난 예약리스트 데이터 조회 실패");
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", t.toString());
 
             }
         });
-    }
-
-    private class ApiSimulator extends AsyncTask<Void, Void, List<CalendarDay>> {
-
-        String[] Time_Result;
-
-        ApiSimulator(String[] Time_Result){
-            this.Time_Result = Time_Result;
-        }
-
-        @Override
-        protected List<CalendarDay> doInBackground(@NonNull Void... voids) {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            Calendar calendar = Calendar.getInstance();
-            bookingServiceCalendarDates = new ArrayList<>();
-            makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[2]디비 bookingServiceCalendarDates : " + bookingServiceCalendarDates.toString());
-
-            /*특정날짜 달력에 점표시해주는곳*/
-            /*월은 0이 1월 년,일은 그대로*/
-            //string 문자열인 Time_Result 을 받아와서 ,를 기준으로짜르고 string을 int 로 변환
-
-            for(int i = 0 ; i < Time_Result.length ; i ++){
-
-//                CalendarDay day = CalendarDay.from(calendar);
-                String[] time = Time_Result[i].split("-");
-                int year = Integer.parseInt(time[0]);
-                int month = Integer.parseInt(time[1]);
-                int dayy = Integer.parseInt(time[2]);
-
-                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[2]디비 year : " + year);
-                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[2]디비 month : " + month);
-                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[2]디비 dayy : " + dayy);
-
-                CalendarDay day = CalendarDay.from(year, month-1, dayy);
-
-                bookingServiceCalendarDates.add(day);
-                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[2]디비 bookingServiceCalendarDates : " + bookingServiceCalendarDates.get(i).toString());
-//                calendar.set(year,month,dayy);
-            }
-
-            return bookingServiceCalendarDates;
-        }
-
-        @Override
-        protected void onPostExecute(@NonNull List<CalendarDay> calendarDays) {
-            super.onPostExecute(calendarDays);
-
-            if (isFinishing()) {
-                return;
-            }
-
-            materialCalendarView.addDecorator(new BookingDaysDecorator(Color.RED, calendarDays,OwnerBookingActivity.this));
-        }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
 
+            //버튼 - 예약하기 클릭시 -> 강아지 선택 프래그먼트 다이얼로그 띄우기
             case R.id.button_booking_page :
-                //도그워커 예약하기 버튼 클릭시 강아지 선택 프래그먼트 다이얼로그 띄우기
                 Bundle bundle = new Bundle();
                 FragmentSelectMyDogDialog selectMyDogDialog = new FragmentSelectMyDogDialog();
                 selectMyDogDialog.setArguments(bundle);
                 selectMyDogDialog.show(getSupportFragmentManager(), "fragmentSelectedMyDog");
+                break;
+            //버튼 - 달력 클릭시
+            case R.id.imageButton_calendar_month_view :
+                Intent intent = new Intent(this, OwnerBookingCalendarActivity.class);
+                startActivity(intent);
+                break;
+            //버튼 - 산책 예약 클릭시
+            case R.id.button_booking_ing_list_owner:
+                //버튼 색상 바꾸기 ContextCompat.getColor(getContext(), R.color.colorMain
+                btnIngBookingList.setTextColor(getColor(R.color.colorSub));
+                btnEndBookingList.setTextColor(getColor(R.color.colorBlack));
+                //컨텐츠 노출/비노출
+                linearIngBookingCnt.setVisibility(View.VISIBLE);
+                linearEndBookingCnt.setVisibility(View.GONE);
+                break;
+            //버튼 - 지난 예약 클릭시
+            case R.id.button_booking_end_list_owner:
+                //버튼 색상 바꾸기
+                btnIngBookingList.setTextColor(getColor(R.color.colorBlack));
+                btnEndBookingList.setTextColor(getColor(R.color.colorSub));
+                //컨텐츠 노출/비노출
+                linearIngBookingCnt.setVisibility(View.GONE);
+                linearEndBookingCnt.setVisibility(View.VISIBLE);
                 break;
         }
     }

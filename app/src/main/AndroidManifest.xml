@@ -22,7 +22,10 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning,UnusedAttribute">
-        <activity android:name=".walker.WalkerReplyActivity"
+        <activity android:name=".owner.OwnerBookingCalendarActivity"></activity>
+        <activity android:name=".walker.WalkerDogwalkingRecordActivity" />
+        <activity
+            android:name=".walker.WalkerReplyActivity"
             android:theme="@style/MyTheme.noTitle.Dialog" />
         <activity android:name=".walker.WalkerReviewManageActivity" />
         <activity android:name=".walker.WalkerCustomerListActivity" />

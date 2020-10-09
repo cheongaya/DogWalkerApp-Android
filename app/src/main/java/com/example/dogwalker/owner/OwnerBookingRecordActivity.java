@@ -1,7 +1,6 @@
 package com.example.dogwalker.owner;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -14,7 +13,6 @@ import com.example.dogwalker.BaseActivity;
 import com.example.dogwalker.R;
 import com.example.dogwalker.databinding.ActivityOwnerBookingRecordBinding;
 import com.example.dogwalker.retrofit2.response.BookingDoneRecordDTO;
-import com.example.dogwalker.walker.MultiAlbumAdapter;
 
 import java.util.List;
 
@@ -26,11 +24,10 @@ public class OwnerBookingRecordActivity extends BaseActivity {
 
     ActivityOwnerBookingRecordBinding binding;
 
-    RecordAlbumAdapter recordAlbumAdapter;
+    RecordAlbumAdapter recordAlbumAdapter;  //산책기록 조회 -> 첨부파일 어댑터
 
-    int booking_id;          //예약 번호
-    String booking_dog_name; //산책예약 강아지 이름
-    String walker_id, owner_id;
+    int booking_id;     //산책 예약 번호 (데이터 조회할 때 필수 필요 변수!!)
+    String booking_dog_name, walker_id, owner_id; //산책예약 강아지 이름, 도그워커 아이디, 반려인 아이디
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,22 +36,30 @@ public class OwnerBookingRecordActivity extends BaseActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_owner_booking_record);
         binding.setActivity(this);
 
-        //booking_id (예약번호) 데이터 불러오기
+        //데이터 받아오기
         Intent intent = getIntent();
+
+        //booking_id (예약번호) 데이터 불러오기
         booking_id = intent.getIntExtra("booking_id", 0);
         booking_dog_name = intent.getStringExtra("booking_dog_name");
         walker_id = intent.getStringExtra("walker_id");
         owner_id = intent.getStringExtra("owner_id");
 
-        //리사이클러뷰 초기화 셋팅
-        recyclerViewInitSetting();
+        //리사이클러뷰(조회) 초기화 셋팅
+        selectRecyclerViewInitSetting();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         //DB에서 해당 예약 기록 데이터 불러오기
         selectBookingDoneRecordToDB();
     }
 
-    //리사이클러뷰 초기화 셋팅
-    public void recyclerViewInitSetting(){
+    //첨부파일 조회 리사이클러뷰 초기화 셋팅
+    public void selectRecyclerViewInitSetting(){
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         binding.recyclerViewDogwalkingFileRecord.setLayoutManager(linearLayoutManager); //?? 주석??
         binding.recyclerViewDogwalkingFileRecord.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -62,6 +67,7 @@ public class OwnerBookingRecordActivity extends BaseActivity {
         recordAlbumAdapter = new RecordAlbumAdapter(this);
         binding.recyclerViewDogwalkingFileRecord.setAdapter(recordAlbumAdapter);
     }
+
 
     //DB에서 해당 예약 기록 데이터 불러오기
     public void selectBookingDoneRecordToDB(){
@@ -81,9 +87,11 @@ public class OwnerBookingRecordActivity extends BaseActivity {
                 binding.textViewWalkDoneMemo.setText(bookingDoneRecordDTOList.get(0).getDone_memo());
                 //TODO: 산책 이미지 setImage 해야함
                 if(bookingDoneRecordDTOList.get(0).getMultiFileArrayList().size() != 0){
+                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "이미지경로배열 : " + bookingDoneRecordDTOList.get(0).getMultiFileArrayList().toString());
+
+                    //첨부파일 이미지 조회 어댑터에 데이터 셋팅
                     recordAlbumAdapter.setImageUrlArraylist(bookingDoneRecordDTOList.get(0).getMultiFileArrayList());
                     recordAlbumAdapter.notifyDataSetChanged();
-                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "이미지경로배열 : " + bookingDoneRecordDTOList.get(0).getMultiFileArrayList().toString());
                 }
             }
 
@@ -97,12 +105,11 @@ public class OwnerBookingRecordActivity extends BaseActivity {
 
     }
 
-    //도그워커 후기 쓰기 버튼
+    //도그워커 후기 작성 버튼
     public void btnWriteWalkerReview(View view){
 
         //도그워커 후기 남길지 여부 물어보는 다이얼로그
         addWalkerReviewAlertDialog();
-
     }
 
     //도그워커 후기 남길지 여부 물어보는 다이얼로그
@@ -133,4 +140,5 @@ public class OwnerBookingRecordActivity extends BaseActivity {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
+
 }

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.dogwalker.ApplicationClass;
 import com.example.dogwalker.GoogleMapActivity;
 import com.example.dogwalker.R;
+import com.example.dogwalker.owner.OwnerBookingRecordActivity;
 import com.example.dogwalker.retrofit2.response.BookingServiceDTO;
 
 import java.util.ArrayList;
@@ -97,7 +98,7 @@ public class BookingServiceAdapter extends RecyclerView.Adapter<BookingServiceAd
                 }
             });
 
-            //버튼 클릭시 이벤트
+            //산책시작 버튼 클릭시 이벤트
             btnWalkStart.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -112,10 +113,16 @@ public class BookingServiceAdapter extends RecyclerView.Adapter<BookingServiceAd
                 }
             });
 
+            //산책완료 버튼 클릭시 -> 산책기록 조회 화면으로 전환
             btnWalkEnd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "완료된 산책입니다", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(context, "완료된 산책입니다", Toast.LENGTH_SHORT).show();
+                    int position = getAdapterPosition();
+                    Intent intent = new Intent(context, WalkerDogwalkingRecordActivity.class);
+                    intent.putExtra("booking_id", bookingServiceDTOArrayList.get(position).getIdx());
+                    intent.putExtra("booking_dog_name", bookingServiceDTOArrayList.get(position).getOwner_dog_name());
+                    context.startActivity(intent);
                 }
             });
         }

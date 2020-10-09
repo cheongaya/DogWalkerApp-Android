@@ -126,6 +126,38 @@ public class ApplicationClass extends Application {
 
     }
 
+    //앨범에서 불러온 이미지 데이터 -> file 형태로 변환
+    public File changeToFile(Uri photoUri){
+
+        File tempFile;
+
+        Cursor cursor = null;
+        try {
+            /*
+             *  Uri 스키마를
+             *  content:/// 에서 file:/// 로  변경한다.
+             */
+            String[] proj = { MediaStore.Images.Media.DATA};
+            assert photoUri != null;
+            cursor = getContentResolver().query(photoUri, proj, null, null, null);
+            assert cursor != null;
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            tempFile = new File(cursor.getString(column_index));
+            makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "tempFile : " + tempFile);
+            //_tempFile : /storage/emulated/0/Download/ST_20181108_BUZZ083DPE_4397649.jpg
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        //파일 생성 img_url은 이미지의 경로
+        File file = new File(String.valueOf(tempFile));
+
+        return file;
+    }
+
     //앨범에서 불러온 이미지 데이터를 서버에 저장하는 메소드
     public MultipartBody.Part updateAlbumImgToServer(Uri photoUri, String fileName){
         //_photoUri : content://com.google.android.apps.photos.contentprovider/-1/1/content%3A%2F%2Fmedia%2Fexternal%2Fimages%2Fmedia%2F36/ORIGINAL/NONE/929063286

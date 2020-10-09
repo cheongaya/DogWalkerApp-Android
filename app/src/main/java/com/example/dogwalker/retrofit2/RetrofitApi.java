@@ -154,12 +154,18 @@ public interface RetrofitApi {
     @FormUrlEncoded
     @POST("owner/insert_booking_service_data.php")
     Call<ResultDTO> insertBookingServiceData(@FieldMap HashMap<String, Object> parameters);
-    //예약 정보 조회 (도그워커)
-    @GET("walker/select_booking_service_data.php")
-    Call<List<BookingServiceDTO>> selectWalkerBookingServiceData(@Query("walker_id") String walker_id);
-    //예약 정보 조회 (반려인)
-    @GET("owner/select_booking_service_data.php")
-    Call<List<BookingServiceDTO>> selectOwnerBookingServiceData(@Query("owner_id") String owner_id);
+    //진행중 예약 정보 조회 (도그워커)
+    @GET("walker/select_ing_booking_service_data.php")
+    Call<List<BookingServiceDTO>> selectWalkerIngBookingServiceData(@Query("walker_id") String walker_id);
+    //지난 예약 정보 조회 (도그워커)
+    @GET("walker/select_end_booking_service_data.php")
+    Call<List<BookingServiceDTO>> selectWalkerEndBookingServiceData(@Query("walker_id") String walker_id);
+    //진행중 예약 정보 조회 (반려인)
+    @GET("owner/select_ing_booking_service_data.php")
+    Call<List<BookingServiceDTO>> selectOwnerIngBookingServiceData(@Query("owner_id") String owner_id);
+    //지난 예약 정보 조회 (반려인)
+    @GET("owner/select_end_booking_service_data.php")
+    Call<List<BookingServiceDTO>> selectOwnerEndBookingServiceData(@Query("owner_id") String owner_id);
     //북마크 생성
     @GET("owner/insert_owner_bookmark.php")
     Call<ResultDTO> insertOwnerBookmark(@Query("bmk_user_id") String bmk_user_id, @Query("bmk_walker_id") String bmk_walker_id);
@@ -175,6 +181,15 @@ public interface RetrofitApi {
     @POST("common/insert_walk_done_recode.php")
     Call<ResultDTO> insertWalkDoneRecodeData(@PartMap Map<String, RequestBody> recordData, @Part List<MultipartBody.Part> imgFiles);
 
+    //산책 기록 수정 (다중 이미지(파일) 업로드)
+    @Multipart
+    @POST("common/update_walk_done_recode.php")
+    Call<ResultDTO> updateWalkDoneRecodeData(@PartMap Map<String, RequestBody> updateRecordData, @Part List<MultipartBody.Part> updateImgFiles);
+
+    //산책 기록 첨부파일 이미지 삭제
+    @GET("common/delete_walk_done_record_image.php")
+    Call<ResultDTO> deleteWalkDoneRecordImage(@Query("file_path") String file_path);
+
     //산책 기록 데이터 불러오기
     @GET("owner/select_booking_done_record.php")
     Call<List<BookingDoneRecordDTO>> selectBookingDoneRecordData(@Query("booking_id") int booking_id);
@@ -184,15 +199,21 @@ public interface RetrofitApi {
     @POST("common/insert_booking_review.php")
     Call<ResultDTO> insertBookingReviewData(@PartMap Map<String, RequestBody> reviewData, @Part List<MultipartBody.Part> imgFiles);
 
-    //리뷰 데이터 불러오기
+    //리뷰 데이터 조회 (도그워커 프로필 카테고리)
     @GET("owner/select_walker_review_data.php")
     Call<List<WalkerReviewDTO>> selectWalkerReviewData(@Query("walker_id") String walker_id);
+    //리뷰 데이터 수정 (도그워커 프로필 카테고리)
+    @GET("owner/update_walker_review_data.php")
+    Call<ResultDTO> updateReviewData(@Query("review_idx") int review_idx, @Query("review_updated_memo") String review_updated_memo);
+    //리뷰 데이터 삭제 (도그워커 프로필 카테고리)
+    @GET("owner/delete_walker_review_data.php")
+    Call<ResultDTO> deleteReviewData(@Query("review_idx") int review_idx);
 
     //도그워커 단골 리스트 데이터 불러오기
     @GET("walker/select_walker_customer_data.php")
     Call<List<CustomerDTO>> selectWalkerCustomerData(@Query("walker_id") String walker_id);
 
-    //리뷰 + 답변 데이터 불러오기
+    //리뷰 데이터 조회 (도그워커 마이페이지)
     @GET("walker/select_walker_review_manage_data.php")
     Call<List<WalkerReviewManageDTO>> selectWalkerReviewManageData(@Query("walker_id") String walker_id);
 

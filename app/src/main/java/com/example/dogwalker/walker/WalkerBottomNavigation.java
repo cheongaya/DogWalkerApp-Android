@@ -1,18 +1,15 @@
 package com.example.dogwalker.walker;
 
-import android.app.AppComponentFactory;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -67,7 +64,7 @@ public abstract class WalkerBottomNavigation extends AppCompatActivity implement
                 finish();
                 return true;
             case R.id.bottomNavWorker02:
-                startActivity(new Intent(this, WalkerChatActivity.class));
+                startActivity(new Intent(this, WalkerChatListActivity.class));
                 finish();
                 return true;
             case R.id.bottomNavWorker03:

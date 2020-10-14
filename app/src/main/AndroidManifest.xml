@@ -22,7 +22,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning,UnusedAttribute">
-        <activity android:name=".owner.OwnerBookingCalendarActivity"></activity>
+        <activity android:name=".walker.WalkerChattingActivity"></activity>
+        <activity android:name=".owner.OwnerBookingCalendarActivity" />
         <activity android:name=".walker.WalkerDogwalkingRecordActivity" />
         <activity
             android:name=".walker.WalkerReplyActivity"
@@ -57,7 +58,7 @@
         <activity android:name=".owner.OwnerWalkerlistActivity" />
         <activity android:name=".owner.OwnerAddDogActivity" />
         <activity android:name=".owner.OwnerLiveActivity" />
-        <activity android:name=".owner.OwnerChatActivity" />
+        <activity android:name=".owner.OwnerChatListActivity" />
         <activity android:name=".owner.OwnerBookingActivity" />
         <activity android:name=".owner.OwnerMypageActivity" />
         <activity android:name=".owner.OwnerJoinActivity" />
@@ -91,7 +92,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".walker.WalkerChatActivity" />
+        <activity android:name=".walker.WalkerChatListActivity" />
         <activity android:name=".walker.WalkerJoinActivity" />
         <activity android:name=".walker.WalkerMypageActivity">
 

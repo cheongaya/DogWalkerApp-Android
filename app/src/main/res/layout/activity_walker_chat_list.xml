@@ -15,10 +15,10 @@
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="@android:color/black"
-            android:layout_below="@+id/toolbar_owner"/>
+            android:layout_below="@+id/toolbar_walker"/>
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_owner"
+            android:id="@+id/toolbar_walker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <ImageView
@@ -40,26 +40,18 @@
                 android:layout_weight="3"
                 android:orientation="vertical">
 
-                <TextView
+                <!-- 채팅 리스트 영역 -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView_walker_chat_list"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="dff"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="dff"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="dff"/>
-
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"/>
 
             </LinearLayout>
 
             <!--바텀네비-->
             <include
-                layout="@layout/bottom_nav_owner"
+                layout="@layout/bottom_nav_walker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -77,8 +69,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/navi_header_owner"
-        app:menu="@menu/navi_menu_owner" />
+        app:headerLayout="@layout/navi_header_walker"
+        app:menu="@menu/navi_menu_walker" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
 

@@ -21,11 +21,6 @@ import com.example.dogwalker.ApplicationClass;
 import com.example.dogwalker.R;
 import com.example.dogwalker.retrofit2.RetrofitApi;
 import com.example.dogwalker.retrofit2.RetrofitUtil;
-import com.example.dogwalker.walker.WalkerChatActivity;
-import com.example.dogwalker.walker.WalkerDogwalkingActivity;
-import com.example.dogwalker.walker.WalkerLoginActivity;
-import com.example.dogwalker.walker.WalkerMypageActivity;
-import com.example.dogwalker.walker.WalkerScheduleActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -69,7 +64,7 @@ public abstract class OwnerBottomNavigation extends AppCompatActivity implements
                 finish();
                 return true;
             case R.id.bottomNavOwner02:
-                startActivity(new Intent(this, OwnerChatActivity.class));
+                startActivity(new Intent(this, OwnerChatListActivity.class));
                 finish();
                 return true;
             case R.id.bottomNavOwner03:

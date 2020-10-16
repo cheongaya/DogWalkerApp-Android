@@ -98,7 +98,7 @@
                         android:id="@+id/button_booking_end_list_owner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="지난 예약"
+                        android:text="지난 산책"
                         android:textColor="@color/colorBlack"
                         android:background="@color/colorTransparent"
                         android:textSize="16sp"/>

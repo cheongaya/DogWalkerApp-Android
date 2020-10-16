@@ -1,4 +1,5 @@
 package com.example.dogwalker.walker;
+import android.util.Log;
 
 import android.content.Context;
 import android.content.Intent;
@@ -142,6 +143,8 @@ public class BookingServiceAdapter extends RecyclerView.Adapter<BookingServiceAd
                 btnWalkStart.setVisibility(View.GONE);
                 btnWalkEnd.setVisibility(View.VISIBLE);
             }
+
+            Log.d("DeveloperLog", "오류확인 - 예약 : " +bookingServiceDTO.getOwner_id()+" / "+bookingServiceDTO.getOwner_dog_name());
         }
     }
 

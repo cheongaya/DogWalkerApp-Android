@@ -147,8 +147,12 @@ public class OwnerBookingReviewActivity extends BaseActivity {
                         //content://com.google.android.apps.photos.contentprovider/-1/1/content%3A%2F%2Fmedia%2Fexternal%2Fimages%2Fmedia%2F35/ORIGINAL/NONE/61072326
                         makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "2. multi choice : " + String.valueOf(clipData.getItemAt(i).getUri()));
 
-                        //이미지 경롤 배열에 이미지 Uri 추가
-                        imageUrlArraylist.add(clipData.getItemAt(i).getUri().toString());
+//                        //이미지 경롤 배열에 이미지 Uri 추가
+//                        imageUrlArraylist.add(clipData.getItemAt(i).getUri().toString());
+
+                        //uri -> file 변환
+                        imageUrlArraylist.add(applicationClass.changeToFile(clipData.getItemAt(i).getUri()).toString());
+
 
                         //앨범에서 getData Uri 받아온 후
                         Uri photoUri = clipData.getItemAt(i).getUri();

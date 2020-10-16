@@ -108,5 +108,6 @@ public class WalkerChattingAdapter extends RecyclerView.Adapter<WalkerChattingAd
 
     public void addItem(ChattingDTO item){
         chattingDTOArrayList.add(item);
+        notifyDataSetChanged();
     }
 }

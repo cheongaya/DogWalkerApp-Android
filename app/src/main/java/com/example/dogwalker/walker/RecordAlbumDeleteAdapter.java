@@ -51,6 +51,8 @@ public class RecordAlbumDeleteAdapter extends RecyclerView.Adapter<RecordAlbumDe
 
     public RecordAlbumDeleteAdapter(Context context) {
         this.context = context;
+        //TODO: 이미지경로배열 초기화 코드 추가
+        imageUrlArraylist.clear();
     }
     @NonNull
     @Override

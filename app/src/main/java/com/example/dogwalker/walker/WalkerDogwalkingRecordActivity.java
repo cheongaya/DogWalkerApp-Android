@@ -252,7 +252,10 @@ public class WalkerDogwalkingRecordActivity extends BaseActivity {
                             makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "2. multi choice : " + String.valueOf(clipData.getItemAt(i).getUri()));
 
                             //이미지 경롤 배열에 이미지 Uri 추가
-                            addimageUrlArraylist.add(clipData.getItemAt(i).getUri().toString());
+//                            addimageUrlArraylist.add(clipData.getItemAt(i).getUri().toString());
+
+                            //uri -> file 변환
+                            addimageUrlArraylist.add(applicationClass.changeToFile(clipData.getItemAt(i).getUri()).toString());
 
                             //앨범에서 getData Uri 받아온 후
                             Uri photoUri = clipData.getItemAt(i).getUri();

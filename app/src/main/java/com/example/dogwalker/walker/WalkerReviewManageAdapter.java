@@ -58,6 +58,7 @@ public class WalkerReviewManageAdapter extends RecyclerView.Adapter<WalkerReview
 
     public WalkerReviewManageAdapter(Context context) {
         this.context = context;
+        walkerReviewManageDTOArrayList.clear();
     }
 
 

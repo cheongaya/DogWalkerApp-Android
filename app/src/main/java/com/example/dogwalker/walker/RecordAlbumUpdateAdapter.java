@@ -1,9 +1,11 @@
 package com.example.dogwalker.walker;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +15,11 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.load.resource.file.FileResource;
 import com.example.dogwalker.ApplicationClass;
 import com.example.dogwalker.R;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,6 +47,8 @@ public class RecordAlbumUpdateAdapter extends RecyclerView.Adapter<RecordAlbumUp
 
     public RecordAlbumUpdateAdapter(Context context) {
         this.context = context;
+        //TODO: 이미지경로배열 초기화 코드 추가
+        imageUrlArraylist.clear();
     }
     @NonNull
     @Override
@@ -107,23 +113,32 @@ public class RecordAlbumUpdateAdapter extends RecyclerView.Adapter<RecordAlbumUp
             // 앨범에서 선택한 이미지 셋팅
             // string -> uri 변환
 
-            Uri uri = Uri.parse(imageUrlArraylist.get(position));
+//            Uri uri = Uri.parse(imageUrlArraylist.get(position));
 
-            // 선택한 이미지에서 비트맵 생성
-            InputStream inputStream = null;
-            try {
-                inputStream = context.getContentResolver().openInputStream(uri);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-            try {
-                inputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            // 이미지 표시
-            imvMultiAlbum.setImageBitmap(bitmap);
+            //file 형태로 변환
+//            File file = changeToFile(uri);
+
+            File file = new File(String.valueOf(imageUrlArraylist.get(position)));
+
+            Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+
+            imvMultiAlbum.setImageBitmap(myBitmap);
+
+//            // 선택한 이미지에서 비트맵 생성
+//            InputStream inputStream = null;
+//            try {
+//                inputStream = context.getContentResolver().openInputStream(uri);
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            }
+//            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+//            try {
+//                inputStream.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            // 이미지 표시
+//            imvMultiAlbum.setImageBitmap(bitmap);
 
         }
     }
@@ -135,4 +150,5 @@ public class RecordAlbumUpdateAdapter extends RecyclerView.Adapter<RecordAlbumUp
     public void setImageUrlArraylist(ArrayList<String> imageUrlArraylist){
         this.imageUrlArraylist = imageUrlArraylist;
     }
+
 }

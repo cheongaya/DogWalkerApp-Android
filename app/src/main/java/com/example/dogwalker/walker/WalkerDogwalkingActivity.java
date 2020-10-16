@@ -8,10 +8,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.dogwalker.GoogleMapActivity;
 import com.example.dogwalker.R;
+import com.example.dogwalker.owner.BookingServiceOwnerAdapter;
 import com.example.dogwalker.owner.OwnerBookingCalendarActivity;
 import com.example.dogwalker.owner.fragment.FragmentSelectMyDogDialog;
 import com.example.dogwalker.retrofit2.response.BookingServiceDTO;
@@ -32,6 +35,7 @@ public class WalkerDogwalkingActivity extends WalkerBottomNavigation implements 
     LinearLayout linearIngBookingCnt, linearEndBookingCnt;
     TextView tvIngBookingListNull, tvEndBookingListNull;
     Button btnIngBookingList, btnEndBookingList;
+    ImageButton btnMapTest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,9 @@ public class WalkerDogwalkingActivity extends WalkerBottomNavigation implements 
         linearIngBookingCnt = (LinearLayout)findViewById(R.id.linearLayout_ing_booking_list_content);
         linearEndBookingCnt = (LinearLayout)findViewById(R.id.linearLayout_end_booking_list_content);
 
+        //TODO:구글맵 테스트 코드
+        btnMapTest = (ImageButton)findViewById(R.id.imageButton_walker_booking_calendar);
+
         //리사이클러뷰 (진행중 예약) 초기화 셋팅
         IngRecyclerViewInitSetting();
         //리사이클러뷰 (지난 예약) 초기화 셋팅
@@ -56,6 +63,8 @@ public class WalkerDogwalkingActivity extends WalkerBottomNavigation implements 
         //클릭 리스너 연결
         btnIngBookingList.setOnClickListener(this);
         btnEndBookingList.setOnClickListener(this);
+        //TODO:구글맵 테스트 코드
+        btnMapTest.setOnClickListener(this);
 
 //        //진행중 예약 아이템 클릭시
 //        ingBookingServiceAdapter.setOnItemClickListener(new BookingServiceAdapter.OnItemClickListener() {
@@ -75,8 +84,8 @@ public class WalkerDogwalkingActivity extends WalkerBottomNavigation implements 
 
         //DB에서 진행중 예약 리스트 데이터 불러오기
         loadIngBookingServiceDataToDB();
-        //DB에서 지난 예약 리스트 데이터 불러오기
-        loadEndBookingServiceDataToDB();
+//        //DB에서 지난 예약 리스트 데이터 불러오기
+//        loadEndBookingServiceDataToDB();
     }
 
     //진행중 예약 - 리사이클러뷰 초기화 셋팅
@@ -88,7 +97,7 @@ public class WalkerDogwalkingActivity extends WalkerBottomNavigation implements 
         recyclerViewIngBookingList.setAdapter(ingBookingServiceAdapter);
     }
 
-    //지난 예약 - 리사이클러뷰 초기화 셋팅
+    //지난 예약 -리사이클러뷰 초기화 셋팅
     public void EndRecyclerViewInitSetting(){
         recyclerViewEndBookingList = (RecyclerView)findViewById(R.id.recyclerView_end_bookinglist);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -216,6 +225,17 @@ public class WalkerDogwalkingActivity extends WalkerBottomNavigation implements 
                 //컨텐츠 노출/비노출
                 linearIngBookingCnt.setVisibility(View.GONE);
                 linearEndBookingCnt.setVisibility(View.VISIBLE);
+
+                //DB에서 지난 예약 리스트 데이터 불러오기
+                loadEndBookingServiceDataToDB();
+                break;
+
+            //TODO:구글맵 테스트 코드
+            case R.id.imageButton_walker_booking_calendar:
+                Intent intent = new Intent(WalkerDogwalkingActivity.this, GoogleMapActivity.class);
+                startActivity(intent);
+                break;
+            default:
                 break;
         }
     }

@@ -54,14 +54,6 @@ public class GoogleMapActivity extends BaseActivity implements OnMapReadyCallbac
 
     ActivityGoogleMapBinding binding;
 
-    private Animation fab_open, fab_close;
-    private Boolean isFabOpen = false;
-
-    //스탑워치 관련 변수
-    private long timeWhenStopped = 0;
-    private boolean stopClicked;
-    String timeWatch;
-
     //구글맵 관련 참조 변수
     private GoogleMap googleMap;
     private Marker currentMarker = null;
@@ -77,7 +69,7 @@ public class GoogleMapActivity extends BaseActivity implements OnMapReadyCallbac
     //GPS 관련
     boolean needRequest = false;
     private static final int UPDATE_INTERVAL_MS = 1000;  // 1초 = 위치가 Update 되는 주기
-    private static final int FASTEST_UPDATE_INTERVAL_MS = 1000 * 10; // 위치 획득후 업데이트되는 주기 -> (500 = 0.5초 단위로 화면 갱신됨) (1000 * 30)
+    private static final int FASTEST_UPDATE_INTERVAL_MS = 1000 * 5; // 위치 획득후 업데이트되는 주기 -> (500 = 0.5초 단위로 화면 갱신됨) (1000 * 30)
     private static final int GPS_ENABLE_REQUEST_CODE = 1008;
     private static final int PERMISSION_REQUEST_CODE = 1009; //권한 요청 코드 (onRequestPermissionsResult 에서)
     String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}; // 앱을 실행하기 위해 필요한 퍼미션을 정의
@@ -89,16 +81,6 @@ public class GoogleMapActivity extends BaseActivity implements OnMapReadyCallbac
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_google_map);
         binding.setActivity(this);
-
-        //플로팅 버튼 열고 / 닫는 애니메이션 연결
-        fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.floating_btn_open);
-        fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.floating_btn_close);
-
-        binding.onClickBtnFloatVideo.startAnimation(fab_close);
-        binding.onClickBtnFloatChat.startAnimation(fab_close);
-
-        //크로노미터(스탑워치) 셋팅
-        chronometerInitSetting();
 
         //구글맵 관련
         //구글맵 권한 허용 관련 start
@@ -186,118 +168,6 @@ public class GoogleMapActivity extends BaseActivity implements OnMapReadyCallbac
         finish();
     }
 
-    //+ 버튼 클릭시 배변횟수가 증가한다
-    public void onClickPlusPoo(View view){
-
-    }
-
-    //- 버튼 클릭시 배변횟수가 감소한다
-    public void onClickMinusPoo(View view){
-
-    }
-
-    //카메라 버튼 클릭시 필터가 적용된 사진을 찍을 수 있다
-    public void onClickBtnFloatCamera(View view){
-    }
-
-    //재생 버튼 클릭시 산책시간 스톱워치를 시작시킬 수 있다
-    public void onClickBtnFloatStart(View view){
-        //스탑워치 시작
-        binding.chronometerStopWatch.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
-        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[start] timeWhenStopped : " + timeWhenStopped);
-        binding.chronometerStopWatch.start();  //시간 갱신을 시작한다
-        binding.onClickBtnFloatPause.setVisibility(View.VISIBLE);
-        binding.onClickBtnFloatStart.setVisibility(View.INVISIBLE);
-        stopClicked = false;
-
-    }
-
-    //일시정지 버튼 클릭시 산책시간 스톱워치를 일시정지시킬 수 있다
-    public void onClickBtnFloatPause(View view){
-        //스탑워치 정지
-        if (!stopClicked) {
-            timeWhenStopped = binding.chronometerStopWatch.getBase() - SystemClock.elapsedRealtime();
-            makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[stop] timeWhenStopped : " + timeWhenStopped);
-            binding.chronometerStopWatch.stop();    //시간 갱신을 중지한다
-            binding.onClickBtnFloatStart.setVisibility(View.VISIBLE);
-            binding.onClickBtnFloatPause.setVisibility(View.INVISIBLE);
-            stopClicked = true;
-        }
-    }
-
-    //완료 버튼 클릭시 산책을 완료 시킬 수 있다
-    public void onClickBtnFloatDone(View view){
-        //스탑워치 기록 보여줌
-//        makeToast(timeWatch);
-        Intent dogwalkingDoneIntent = new Intent(GoogleMapActivity.this, WalkerDogwalkingDoneActivity.class);
-        dogwalkingDoneIntent.putExtra("walkingTime", timeWatch);
-        dogwalkingDoneIntent.putExtra("latLngArrayList", latLngArrayList);
-        startActivity(dogwalkingDoneIntent);
-    }
-
-    //리스트 버튼 클릭시 영상스트리밍 / 채팅 버튼이 위에 나온다
-    public void onClickBtnFloatList(View view){
-        anim();
-    }
-
-    //비디오 버튼 클릭시 산책하는 모습을 스트리밍을 할 수 있다
-    public void onClickBtnFloatVideo(View view){
-    }
-
-    //채팅 버튼 클릭시 반려인과 채팅할 수 있다
-    public void onClickBtnFloatChat(View view){
-    }
-
-    //플로팅 버튼 관련 에니메이션 메소드
-    public void anim() {
-
-        if (isFabOpen) {
-            binding.onClickBtnFloatVideo.startAnimation(fab_close); //애니메이션 실행
-            binding.onClickBtnFloatChat.startAnimation(fab_close);
-            binding.onClickBtnFloatVideo.setClickable(false);   //버튼 활성화 / 비활성화
-            binding.onClickBtnFloatChat.setClickable(false);
-            isFabOpen = false;
-        } else {
-            binding.onClickBtnFloatVideo.startAnimation(fab_open);
-            binding.onClickBtnFloatChat.startAnimation(fab_open);
-            binding.onClickBtnFloatVideo.setClickable(true);
-            binding.onClickBtnFloatChat.setClickable(true);
-            isFabOpen = true;
-        }
-    }
-
-    //크로노 미터 관련 초기 셋팅
-    public void chronometerInitSetting(){
-        //chronometer 가 바뀔 때 리스너가 작동한다
-        binding.chronometerStopWatch.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener(){
-            @Override
-            public void onChronometerTick(Chronometer chronometer) {
-                long time = SystemClock.elapsedRealtime() - chronometer.getBase();
-                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "time : " + time);
-                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "SystemClock.elapsedRealtime() : " + SystemClock.elapsedRealtime());
-                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "chronometer.getBase() : " + chronometer.getBase());
-                int h = (int)(time /3600000);
-                int m = (int)(time - h*3600000)/60000;
-                int s = (int)(time - h*3600000- m*60000)/1000 ;
-                timeWatch = (h < 10 ? "0"+h: h)+ ":" +(m < 10 ? "0"+m: m)+ ":" + (s < 10 ? "0"+s: s);
-                chronometer.setText(timeWatch);
-                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "timeWatch : " + timeWatch);
-            }
-        });
-
-        //처음 시간 셋팅
-        binding.chronometerStopWatch.setBase(SystemClock.elapsedRealtime());
-        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[set] SystemClock.elapsedRealtime() : " + SystemClock.elapsedRealtime());
-        binding.chronometerStopWatch.setText("00:00:00");
-
-        //스탑워치 시작
-//        binding.chronometerStopWatch.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
-        makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[start] timeWhenStopped : " + timeWhenStopped);
-        binding.chronometerStopWatch.start();  //시간 갱신을 시작한다
-        binding.onClickBtnFloatStart.setVisibility(View.INVISIBLE);
-        stopClicked = false;
-
-    }
 
     /**
      * 지도 api 관련 코드

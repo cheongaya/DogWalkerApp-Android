@@ -78,7 +78,8 @@ public class WalkerDogwalkingIngActivity extends BaseActivity {
         //GpsTracker 객체 생성
         gpsTracker = new GpsTracker(WalkerDogwalkingIngActivity.this);
 
-//        binding.textViewWalkDistance.setText((int) gpsTracker.distance+"");
+        //TODO: 이동거리 테스트 코드
+        binding.textViewWalkDistance.setText(gpsTracker.walkingMeter+" m");
 
     }
 

@@ -30,6 +30,8 @@ public class GpsTracker extends Service implements LocationListener {
     double latitude;
     double longitude;
 
+    public static double walkingMeter; //이동 거리 계산
+
     //이동 거리 계산 관련 변수
     Location lastKnownLocation;
     public double distance = 0;
@@ -164,7 +166,7 @@ public class GpsTracker extends Service implements LocationListener {
 //            Toast.makeText(this, distance+"", Toast.LENGTH_SHORT).show();
         }
         //소숫점 2자리 까지 표현
-        double walkingMeter = Double.parseDouble(String.format("%.2f", distance));
+        walkingMeter = Double.parseDouble(String.format("%.2f", distance));
         //이동 거리 계산해서 setText 화면에 표시해주기
 //        WalkerDogwalkingIngActivity.binding.textViewWalkDistance.setText(walkingMeter+"");
 

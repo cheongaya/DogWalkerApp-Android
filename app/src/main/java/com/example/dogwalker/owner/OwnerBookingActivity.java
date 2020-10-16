@@ -89,8 +89,8 @@ public class OwnerBookingActivity extends OwnerBottomNavigation implements View.
 
         //DB에서 진행중 예약 리스트 데이터 불러오기
         loadIngBookingServiceDataToDB();
-        //DB에서 지난 예약 리스트 데이터 불러오기
-        loadEndBookingServiceDataToDB();
+//        //DB에서 지난 예약 리스트 데이터 불러오기
+//        loadEndBookingServiceDataToDB();
     }
 
     //진행중 예약 - 리사이클러뷰 초기화 셋팅
@@ -255,8 +255,8 @@ public class OwnerBookingActivity extends OwnerBottomNavigation implements View.
                 btnIngBookingList.setTextColor(getColor(R.color.colorSub));
                 btnEndBookingList.setTextColor(getColor(R.color.colorBlack));
                 //컨텐츠 노출/비노출
-                linearIngBookingCnt.setVisibility(View.VISIBLE);
                 linearEndBookingCnt.setVisibility(View.GONE);
+                linearIngBookingCnt.setVisibility(View.VISIBLE);
                 break;
             //버튼 - 지난 예약 클릭시
             case R.id.button_booking_end_list_owner:
@@ -266,6 +266,9 @@ public class OwnerBookingActivity extends OwnerBottomNavigation implements View.
                 //컨텐츠 노출/비노출
                 linearIngBookingCnt.setVisibility(View.GONE);
                 linearEndBookingCnt.setVisibility(View.VISIBLE);
+
+                //DB에서 지난 예약 리스트 데이터 불러오기
+                loadEndBookingServiceDataToDB();
                 break;
         }
     }

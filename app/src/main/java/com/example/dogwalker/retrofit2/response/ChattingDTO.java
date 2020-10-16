@@ -7,18 +7,18 @@ public class ChattingDTO {
     String chatText;
     String chatDate;
 
-//    public ChattingDTO(String chatImg, String chatName, String chatText, String chatDate) {
+    public ChattingDTO(String chatName, String chatText, String chatDate) {
 //        this.chatImg = chatImg;
-//        this.chatName = chatName;
-//        this.chatText = chatText;
-//        this.chatDate = chatDate;
-//    }
-//
-
-
-    public ChattingDTO(String chatText) {
+        this.chatName = chatName;
         this.chatText = chatText;
+        this.chatDate = chatDate;
     }
+
+
+
+//    public ChattingDTO(String chatText) {
+//        this.chatText = chatText;
+//    }
 
     public String getChatImg() {
         return chatImg;

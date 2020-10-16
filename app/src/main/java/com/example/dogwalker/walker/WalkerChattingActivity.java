@@ -3,6 +3,7 @@ package com.example.dogwalker.walker;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -118,7 +119,7 @@ public class WalkerChattingActivity extends BaseActivity {
         } catch (IOException e) { }
     }
 
-    //서버 소켓에서 데이터 받기
+    //서버 소켓에서 데이터 받기 (스레드 안에서 계속 수신 대기중)
     public void receiveDataSocket() {
         //반복적으로 읽기 위해 무한 루프
         while (true) {
@@ -139,9 +140,9 @@ public class WalkerChattingActivity extends BaseActivity {
 
                 makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[받기 완료] : "+ data);
 
-                //리사이클러뷰 화면에 받은 텍스트 표시해주기
-                walkerChattingAdapter.addItem(new ChattingDTO(data));
-                walkerChattingAdapter.notifyDataSetChanged();
+//                //리사이클러뷰 화면에 받은 텍스트 표시해주기
+//                walkerChattingAdapter.addItem(new ChattingDTO("aa", data, "bb"));
+//                walkerChattingAdapter.notifyDataSetChanged();
 
             } catch (Exception e) {
                 makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[받기 - 서버 통신 안됨]");
@@ -153,6 +154,7 @@ public class WalkerChattingActivity extends BaseActivity {
 
     //서버 소켓에 데이터 보내기
     public void sendDataSocket(String data) {
+
         Thread thread = new Thread() {
             @Override
             public void run() {
@@ -165,14 +167,15 @@ public class WalkerChattingActivity extends BaseActivity {
                     outputStream.flush();
                     makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[보내기 완료] : "+ data);
 
-//                    //리사이클러뷰 화면에 보낸 텍스트 표시해주기
-//                    walkerChattingAdapter.addItem(new ChattingDTO(data));
-//                    walkerChattingAdapter.notifyDataSetChanged();
+                    //리사이클러뷰 화면에 보낸 텍스트 표시해주기
+                    walkerChattingAdapter.addItem(new ChattingDTO("aa", data, "bb"));
+                    walkerChattingAdapter.notifyDataSetChanged();
 
                 } catch (Exception e) {
                     makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[보내기 - 서버 통신 안됨]");
                     stopClientSocket();
                 }
+
             }
         };
         thread.start();

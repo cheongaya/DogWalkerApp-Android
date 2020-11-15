@@ -17,15 +17,22 @@ import com.example.dogwalker.ApplicationClass;
 import com.example.dogwalker.GoogleMapActivity;
 import com.example.dogwalker.R;
 import com.example.dogwalker.owner.OwnerBookingRecordActivity;
+import com.example.dogwalker.retrofit2.RetrofitApi;
+import com.example.dogwalker.retrofit2.RetrofitUtil;
 import com.example.dogwalker.retrofit2.response.BookingServiceDTO;
+import com.example.dogwalker.retrofit2.response.ResultDTO;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
 
 public class BookingServiceAdapter extends RecyclerView.Adapter<BookingServiceAdapter.ItemViewHolder> {
 
     Context context;
     //ApplicationClass 객체 생성
     ApplicationClass applicationClass;
+    //retrofit 객체 생성
+    public static RetrofitApi retrofitApi;
     //adapter에 들어갈 list
     public static ArrayList<BookingServiceDTO> bookingServiceDTOArrayList = new ArrayList<>();
     //클릭 리스너
@@ -50,6 +57,9 @@ public class BookingServiceAdapter extends RecyclerView.Adapter<BookingServiceAd
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         applicationClass = (ApplicationClass)context.getApplicationContext();
+
+        //객체와 인터페이스 연결
+        retrofitApi = new RetrofitUtil().getRetrofitApi();
 
         // return ViewHolder
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recyclerview_bookinglist_walker, parent, false);
@@ -111,6 +121,10 @@ public class BookingServiceAdapter extends RecyclerView.Adapter<BookingServiceAd
                     intent.putExtra("owner_dog_name", bookingServiceDTOArrayList.get(position).getOwner_dog_name());
                     intent.putExtra("walk_total_time", bookingServiceDTOArrayList.get(position).getWalk_total_time());
                     context.startActivity(intent);
+
+                    //산책시작 버튼 클릭시 => DB에 채팅방 생성됨
+//                    Call<ResultDTO> call = retrofitApi.
+
                 }
             });
 

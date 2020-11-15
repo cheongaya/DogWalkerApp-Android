@@ -228,6 +228,10 @@ public interface RetrofitApi {
     @GET("walker/delete_walker_reply_data.php")
     Call<ResultDTO> deleteReplyData(@Query("reply_id") int reply_id);
 
+    //채팅방 + 채팅방 참가자 생성
+    @GET("chatting/insert_chat_room.php")
+    Call<ResultDTO> insertChatRoom(@Query("booking_id") int booking_id);
+
 
 //    @Multipart
 //    @POST("common")

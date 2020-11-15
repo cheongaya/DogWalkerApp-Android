@@ -167,9 +167,9 @@ public class WalkerChattingActivity extends BaseActivity {
                     outputStream.flush();
                     makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[보내기 완료] : "+ data);
 
-                    //리사이클러뷰 화면에 보낸 텍스트 표시해주기
-                    walkerChattingAdapter.addItem(new ChattingDTO("aa", data, "bb"));
-                    walkerChattingAdapter.notifyDataSetChanged();
+//                    //리사이클러뷰 화면에 보낸 텍스트 표시해주기
+//                    walkerChattingAdapter.addItem(new ChattingDTO("aa", data, "bb"));
+//                    walkerChattingAdapter.notifyDataSetChanged();
 
                 } catch (Exception e) {
                     makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[보내기 - 서버 통신 안됨]");

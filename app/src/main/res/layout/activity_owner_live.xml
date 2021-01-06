@@ -34,28 +34,66 @@
             android:layout_below="@id/view_toolbar">
 
             <!--본문-->
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="3"
-                android:orientation="vertical">
-
-                <TextView
+                android:layout_weight="1"
+                android:gravity="center">
+                <LinearLayout
+                    android:visibility="gone"
+                    android:id="@+id/linearLayout_live_off"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="dff"/>
-
-                <TextView
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:src="@drawable/ic_baseline_mood_bad_24"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:layout_marginTop="10dp"
+                        android:textSize="16sp"
+                        android:text="현재 산책중인 방송이 없습니다."/>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/linearLayout_live_on"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="dff"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="dff"/>
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:src="@drawable/ic_baseline_live_tv_24"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:layout_marginTop="10dp"
+                        android:textSize="16sp"
+                        android:text="현재 산책 라이브 방송중 입니다."/>
+                    <Button
+                        android:id="@+id/button_see_live"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="산책 방송 보기"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:textColor="#fff"
+                        android:textStyle="bold"
+                        android:layout_marginTop="10dp"
+                        android:textSize="16sp"
+                        android:background="@drawable/circular_corner_stroke_red"/>
+                </LinearLayout>
 
-
-            </LinearLayout>
+            </RelativeLayout>
 
             <!--바텀네비-->
             <include

@@ -17,6 +17,7 @@ import android.widget.Chronometer;
 import com.example.dogwalker.BaseActivity;
 import com.example.dogwalker.GpsTracker;
 import com.example.dogwalker.R;
+import com.example.dogwalker.VlcBroadPlayerActivity;
 import com.example.dogwalker.databinding.ActivityWalkerDogwalkingIngBinding;
 import com.naver.maps.geometry.LatLng;
 
@@ -166,6 +167,11 @@ public class WalkerDogwalkingIngActivity extends BaseActivity {
 
     //비디오 버튼 클릭시 산책하는 모습을 스트리밍을 할 수 있다
     public void onClickBtnFloatVideo(View view){
+        //라이브 산책 방송 화면으로 전환
+        Intent intent = new Intent(WalkerDogwalkingIngActivity.this, VlcBroadPlayerActivity.class);
+        intent.putExtra("walker_id", applicationClass.currentWalkerID);
+        intent.putExtra("booking_id", booking_id);
+        startActivity(intent);
     }
 
     //채팅 버튼 클릭시 반려인과 채팅할 수 있다

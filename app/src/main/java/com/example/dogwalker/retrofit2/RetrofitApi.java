@@ -1,6 +1,8 @@
 package com.example.dogwalker.retrofit2;
 
 import com.example.dogwalker.ApplicationClass;
+import com.example.dogwalker.retrofit2.response.ChatDTO;
+import com.example.dogwalker.retrofit2.response.ChatListDTO;
 import com.example.dogwalker.retrofit2.response.CustomerDTO;
 import com.example.dogwalker.retrofit2.response.DogDTO;
 import com.example.dogwalker.retrofit2.response.WalkerDTO;
@@ -231,6 +233,33 @@ public interface RetrofitApi {
     //채팅방 + 채팅방 참가자 생성
     @GET("chatting/insert_chat_room.php")
     Call<ResultDTO> insertChatRoom(@Query("booking_id") int booking_id);
+
+    //TODO: 채팅 관련 API
+    //채팅방 리스트 조회
+    @GET("test_chat/select_chat_roomList.php")
+    Call<List<ChatListDTO>> selectChatRoomList(@Query("chatUser") String chatUser);
+
+    //채팅방 메세지 조회
+    @GET("test_chat/select_chat_message.php")
+    Call<List<ChatDTO>> selectChatMessage(@Query("chatRoom") int chatRoom, @Query("chatUser") String chatUser);
+
+    //채팅방 이미지 저장
+    @Multipart
+    @POST("common/insert_chat_image.php")
+    Call<ResultDTO> insertChatImageData(@Part MultipartBody.Part file);
+
+    //채팅방 리스트 -> 해당 유저가 채팅방의 읽지 않은 메세지 숫자 조회
+    @GET("test_chat/select_chat_roomList_readNum.php")
+    Call<ResultDTO> selectChatRoomListReadNum(@Query("chatRoom") int chatRoom, @Query("chatUser") String chatUser);
+
+    //TODO: 스트리밍 관련 API
+    //스트리밍 URL 조회
+    @GET("owner/select_dog_walk_live_data.php")
+    Call<ResultDTO> selectDogWalkLiveData(@Query("owner_id") String owner_id);
+
+    //스트리밍 URL 업데이트
+    @GET("walker/update_dog_walk_live_data.php")
+    Call<ResultDTO> updateBookingLiveStatus(@Query("booking_id") int booking_id, @Query("live_url") String live_url);
 
 
 //    @Multipart

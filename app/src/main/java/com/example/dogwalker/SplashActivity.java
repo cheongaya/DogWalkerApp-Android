@@ -9,14 +9,25 @@ import android.os.Handler;
 import com.example.dogwalker.owner.OwnerBookingActivity;
 import com.example.dogwalker.owner.OwnerLoginActivity;
 import com.example.dogwalker.owner.OwnerMypageActivity;
+import com.example.dogwalker.retrofit2.response.ChatListDTO;
+import com.example.dogwalker.walker.WalkerChatListActivity;
 import com.example.dogwalker.walker.WalkerDogwalkingActivity;
 import com.example.dogwalker.walker.WalkerLoginActivity;
 import com.example.dogwalker.walker.WalkerScheduleActivity;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SplashActivity extends BaseActivity {
 
     String autoLoginIDStr, autoLoginPWStr, autoLoginTypeStr;
     Boolean autoLoginCheckBol;
+
+//    Intent serviceIntent; //채팅 Msg 서비스
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +67,8 @@ public class SplashActivity extends BaseActivity {
                     Intent intent = new Intent(SplashActivity.this, WalkerDogwalkingActivity.class);
                     startActivity(intent);
                     finish();
+                    //채팅 서비스 시작
+                    startChatService(autoLoginIDStr);
 
                     makeToast("walker 자동로그인 성공");
 
@@ -65,11 +78,13 @@ public class SplashActivity extends BaseActivity {
                     Intent intent = new Intent(SplashActivity.this, OwnerBookingActivity.class);
                     startActivity(intent);
                     finish();
+                    //채팅 서비스 시작
+                    startChatService(autoLoginIDStr);
 
                     makeToast("owner 자동로그인 성공");
                 }else{
                     //자동로그인 X -> 로그인 화면으로 전환
-                    Intent intent = new Intent(SplashActivity.this, WalkerLoginActivity.class);
+                    Intent intent = new Intent(SplashActivity.this, OwnerLoginActivity.class);
                     startActivity(intent);
                     finish();
                 }
@@ -77,4 +92,57 @@ public class SplashActivity extends BaseActivity {
             }
         }, 1000);
     }
+
+    //채팅 서비스 시작
+    //로그인한 유저의 채팅방 리스트 데이터 조회
+    public void startChatService(String chatUser){
+
+        Call<List<ChatListDTO>> call = retrofitApi.selectChatRoomList(chatUser);
+        call.enqueue(new Callback<List<ChatListDTO>>() {
+            @Override
+            public void onResponse(Call<List<ChatListDTO>> call, Response<List<ChatListDTO>> response) {
+
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[자동로그인] 채팅방 리스트 데이터 조회 = 성공");
+                List<ChatListDTO> chatListDTOList = response.body();    //List
+
+                //도그워커 데이터 setText 해주기 (position 번째)
+                if(chatListDTOList.size() > 0){
+
+                    String roomArr = "";
+                    for(int i=0; chatListDTOList.size() > i ; i++){
+                        roomArr += chatListDTOList.get(i).getRoomNum()+"/";
+                    }
+
+                    //서비스를 시작시킨다 -> 소켓을 연결하고 조회한 방 번호들을 모두 보낸다
+                    ApplicationClass.serviceIntent = new Intent(SplashActivity.this, MsgService.class);
+//                    serviceIntent.putExtra("command", "socket");
+                    ApplicationClass.serviceIntent.putExtra("status", "connect");
+                    ApplicationClass.serviceIntent.putExtra("chatUser", chatUser);
+                    ApplicationClass.serviceIntent.putExtra("roomArr", roomArr);
+                    startService(ApplicationClass.serviceIntent); //서비스를 실행하는 함수
+
+                }else{
+                    //검색된 도그워커 데이터가 없을때
+                    makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[자동로그인] 채팅방 리스트 데이터 조회 == null");
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<ChatListDTO>> call, Throwable t) {
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[자동로그인] 채팅방 리스트 데이터 조회 = 실패");
+                makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[자동로그인] t.toString() : " + t.toString());
+
+            }
+        });
+
+    }
+
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        //서비스 종료
+//        stopService(serviceIntent); //서비스를 중단시키는 함수
+//    }
 }

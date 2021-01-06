@@ -1,6 +1,7 @@
 package com.example.dogwalker;
 
 import android.app.Application;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -42,6 +43,9 @@ public class ApplicationClass extends Application {
 
     //이미지 로딩 라이브러리 Glide 관련 객체
     public static RequestOptions requestOptions;
+
+    //채팅 Msg 서비스
+    public static Intent serviceIntent;
 
     @Override
     public void onCreate() {

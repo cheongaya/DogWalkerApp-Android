@@ -215,6 +215,9 @@ public abstract class OwnerBottomNavigation extends AppCompatActivity implements
         builder.setPositiveButton("네", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                //채팅 서비스 종료
+                stopService(ApplicationClass.serviceIntent); //서비스를 중단시키는 함수
+                //액티비티 종료
                 finish();
             }
         }).setNegativeButton("아니요", new DialogInterface.OnClickListener() {

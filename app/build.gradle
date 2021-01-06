@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 29
@@ -71,4 +72,12 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:17.0.0'
     //부트페이 결제
     implementation 'com.github.bootpay:client_android_java:3.2.47'
+    //파이어베이스 관련 (fcm)
+    implementation platform('com.google.firebase:firebase-bom:26.2.0')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.google.android.gms:play-services-basement:17.4.0'
+    //스트리밍 관련 추가
+    implementation 'com.github.pedroSG94.rtmp-rtsp-stream-client-java:rtplibrary:1.9.5'
+    implementation 'com.github.pedroSG94.vlc-example-streamplayer:libvlc:2.5.14v3'
 }

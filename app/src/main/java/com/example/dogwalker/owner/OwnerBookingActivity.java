@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -26,6 +27,9 @@ import com.example.dogwalker.retrofit2.response.BookingServiceDTO;
 import com.example.dogwalker.retrofit2.response.NonServiceDateDTO;
 import com.example.dogwalker.walker.BookingServiceAdapter;
 import com.example.dogwalker.walker.WalkerScheduleActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -56,6 +60,22 @@ public class OwnerBookingActivity extends OwnerBottomNavigation implements View.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_owner_booking);
+
+        //FCM 새로운 토큰 발행
+//        FirebaseMessaging.getInstance().getToken()
+//                .addOnCompleteListener(new OnCompleteListener<String>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<String> task) {
+//                        if (!task.isSuccessful()) {
+//                            Log.d("FCM 태그//", "Fetching FCM registration token failed", task.getException());
+//                            return;
+//                        }
+//                        // Get new FCM registration token
+//                        String token = task.getResult();
+//                        // Log and toast
+//                        Log.d("FCM 태그/token/", token);
+//                    }
+//                });
 
         btnBookingPage = (Button)findViewById(R.id.button_booking_page);
         btnCalendarMonthView = (ImageButton)findViewById(R.id.imageButton_calendar_month_view);

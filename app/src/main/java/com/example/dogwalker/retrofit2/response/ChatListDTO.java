@@ -2,40 +2,52 @@ package com.example.dogwalker.retrofit2.response;
 
 public class ChatListDTO {
 
-    String chatImg;  //채팅 프로필 이미지
-    String chatName; //채팅 이름
-    String chatText; //채팅 텍스트
-    String chatDate; //채팅 날짜
+    String roomNum;
+    String chatUser;    //채팅 유저 (본인)
+    String chatPartner; //채팅 상대방
+    String chatLastMsg; //채팅 마지막 메세지
+    String chatDate;
+    int chatReadNum; //채팅 안읽은 메세지 숫자
 
-    public ChatListDTO(String chatImg, String chatName, String chatText, String chatDate) {
-        this.chatImg = chatImg;
-        this.chatName = chatName;
-        this.chatText = chatText;
+    public ChatListDTO(String roomNum, String chatUser, String chatPartner, String chatLastMsg, String chatDate, int chatReadNum) {
+        this.roomNum = roomNum;
+        this.chatUser = chatUser;
+        this.chatPartner = chatPartner;
+        this.chatLastMsg = chatLastMsg;
         this.chatDate = chatDate;
+        this.chatReadNum = chatReadNum;
     }
 
-    public String getChatImg() {
-        return chatImg;
+    public String getRoomNum() {
+        return roomNum;
     }
 
-    public void setChatImg(String chatImg) {
-        this.chatImg = chatImg;
+    public void setRoomNum(String roomNum) {
+        this.roomNum = roomNum;
     }
 
-    public String getChatName() {
-        return chatName;
+    public String getChatUser() {
+        return chatUser;
     }
 
-    public void setChatName(String chatName) {
-        this.chatName = chatName;
+    public void setChatUser(String chatUser) {
+        this.chatUser = chatUser;
     }
 
-    public String getChatText() {
-        return chatText;
+    public String getChatPartner() {
+        return chatPartner;
     }
 
-    public void setChatText(String chatText) {
-        this.chatText = chatText;
+    public void setChatPartner(String chatPartner) {
+        this.chatPartner = chatPartner;
+    }
+
+    public String getChatLastMsg() {
+        return chatLastMsg;
+    }
+
+    public void setChatLastMsg(String chatLastMsg) {
+        this.chatLastMsg = chatLastMsg;
     }
 
     public String getChatDate() {
@@ -44,5 +56,13 @@ public class ChatListDTO {
 
     public void setChatDate(String chatDate) {
         this.chatDate = chatDate;
+    }
+
+    public int getChatReadNum() {
+        return chatReadNum;
+    }
+
+    public void setChatReadNum(int chatReadNum) {
+        this.chatReadNum = chatReadNum;
     }
 }

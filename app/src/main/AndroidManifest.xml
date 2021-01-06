@@ -10,7 +10,14 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- (gps) current location -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-    <uses-permission android:name="com.google.android.apps.photos.permission.GOOGLE_PHOTOS"/>
+    <uses-permission android:name="com.google.android.apps.photos.permission.GOOGLE_PHOTOS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- 스트리밍 관련 추가 -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
 
     <application
         android:name=".ApplicationClass"
@@ -23,7 +30,25 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning,UnusedAttribute">
-        <activity android:name=".walker.WalkerChattingActivity"></activity>
+        <service
+            android:name=".MsgService"
+            android:enabled="true"
+            android:exported="true"></service>
+
+        <activity
+            android:name=".VlcBroadPlayerActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".VlcSeePlayerActivity"
+            android:screenOrientation="landscape" />
+
+        <service
+            android:name=".ChatService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity android:name=".walker.ChatTestActivity" />
+        <activity android:name=".walker.WalkerChattingActivity" />
         <activity android:name=".owner.OwnerBookingCalendarActivity" />
         <activity android:name=".walker.WalkerDogwalkingRecordActivity" />
         <activity
@@ -95,15 +120,21 @@
         </activity>
         <activity android:name=".walker.WalkerChatListActivity" />
         <activity android:name=".walker.WalkerJoinActivity" />
-        <activity android:name=".walker.WalkerMypageActivity">
+        <activity android:name=".walker.WalkerMypageActivity" /> <!-- fcm 관련 -->
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/icon_poo01" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent" />
     </application>
 
 </manifest>

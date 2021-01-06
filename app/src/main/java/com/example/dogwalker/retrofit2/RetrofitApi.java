@@ -19,6 +19,7 @@ import com.example.dogwalker.retrofit2.response.UserOwnerDTO;
 import com.example.dogwalker.retrofit2.response.WalkPriceDTO;
 import com.example.dogwalker.retrofit2.response.WalkableTypeDTO;
 import com.example.dogwalker.retrofit2.response.WalkerLocationDTO;
+import com.example.dogwalker.walker.MsgDTO;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -242,6 +243,10 @@ public interface RetrofitApi {
     //채팅방 메세지 조회
     @GET("test_chat/select_chat_message.php")
     Call<List<ChatDTO>> selectChatMessage(@Query("chatRoom") int chatRoom, @Query("chatUser") String chatUser);
+
+    //채팅방 메세지 조회
+    @GET("test_chat/select_chat_msg.php")
+    Call<ArrayList<MsgDTO>> selectChatMsg(@Query("chatRoom") int chatRoom, @Query("chatUser") String chatUser);
 
     //채팅방 이미지 저장
     @Multipart

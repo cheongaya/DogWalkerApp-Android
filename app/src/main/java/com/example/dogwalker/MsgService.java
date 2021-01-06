@@ -7,6 +7,7 @@ import android.os.Message;
 import android.util.Log;
 
 import com.example.dogwalker.owner.OwnerChatListActivity;
+import com.example.dogwalker.walker.MsgActivity;
 import com.example.dogwalker.walker.WalkerChatListActivity;
 import com.example.dogwalker.walker.WalkerChattingActivity;
 
@@ -42,7 +43,7 @@ public class MsgService extends Service {
     public void onCreate() {
         super.onCreate();
         //서비스가 최초 생성될 때 한번 호출된다
-        makeLog("[서비스] onCreate()");
+        makeLog("onCreate()");
 
     }
 
@@ -50,18 +51,18 @@ public class MsgService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         //앱의 다른 구성요소에서 서비스를 실행하면 이 함수가 호출된다
         //이 함수가 호출되면 서비스가 시작된 것이며, 백그라운드에서 작업을 수행한다
-        makeLog("[서비스] onStartCommand()");
+        makeLog("onStartCommand()");
 
         if(intent == null){
 //            return Service.START_NOT_STICKY;    //서비스가 종료 시 자동으로 재시작 옵션
-            makeLog("[서비스] 스플래시 액티비로부터 받은 인텐트 == null");
+            makeLog("스플래시 액티비로부터 받은 인텐트 == null");
         }else{
             //액티비티에서 데이터를 받음
-            makeLog("[서비스] 스플래시 액티비로부터 받은 인텐트 != null");
+            makeLog("스플래시 액티비로부터 받은 인텐트 != null");
             String status = intent.getStringExtra("status");
             chatUser = intent.getStringExtra("chatUser");
             roomArr = intent.getStringExtra("roomArr");
-            makeLog("[서비스] 스플래시 액티비티로부터 받은 메세지 : "+status + "@#@#"+chatUser + "@#@#"+roomArr);
+            makeLog("스플래시 액티비티로부터 받은 메세지 : "+status + "@#@#"+chatUser + "@#@#"+roomArr);
 
             //소켓 연결 시킴 - Client 연결부
             chatClient = new ChatClient(serverIP, serverPort, roomArr);
@@ -100,7 +101,7 @@ public class MsgService extends Service {
 
                 //접속 버튼 클릭시 -> 서버로 방번호 고유키 전송 //@1번방 접속
                 dataOutputStream.writeUTF(roomNumArr+"@#@#"+chatUser); // 58/59/@#@#user3
-                makeLog("[서비스] "+chatUser+"("+roomNumArr+") 소켓 연결 성공");
+                makeLog(chatUser+"("+roomNumArr+") 소켓 연결 성공");
 
                 //메세지 받기 쓰레드 실행
                 receiveThread = new ReceiveThread(socket);
@@ -136,10 +137,10 @@ public class MsgService extends Service {
                     receiveMsg = dataInputStream.readUTF(); //TODO: 이부분에서 반복문이 계속 돈다 이것도 한번 봐야한다
                     //방번호, 유저아이디, 메세지, 메세지타입, 읽은유저, 메세지시간
                     //방번호, 유저아이디, 메세지타입, 읽은유저, 메세지, 메세지시간
-                    makeLog("[서비스] 받은 메세지 : "+receiveMsg); //58@#@#user3@#@#456@#@#TEXT@#@#walker2/user2@#@#PM 5:54
+                    makeLog("받은 메세지 : "+receiveMsg); //58@#@#user3@#@#456@#@#TEXT@#@#walker2/user2@#@#PM 5:54
 
                     if (receiveMsg != null) {
-                        makeLog("[서비스] 서버로부터 메세지를 받았습니다");
+                        makeLog("서버로부터 메세지를 받았습니다");
 
 //                        if(receiveMsg.equals("exit") || receiveMsg.equals("wrong password")){
 //                            makeLog("연결 끊김 - exit 나가기 !!");
@@ -147,41 +148,43 @@ public class MsgService extends Service {
 //                        }
 
                         //받은 메세지를 액티비티로 넘겨준다
-                        // 1111 = 도그워커 채팅 리스트 / 2222 = 채팅방 / 3333 = 반려인 채팅 리스트
-                        //[1] 도그워커 채팅리스트 액티비티로 받은 데이터를 보냄
+                        // 1111 = 채팅방 / 2222 = 도그워커 채팅 리스트 / 3333 = 반려인 채팅 리스트
+
+                        //[1] 채팅 액티비티로 받은 데이터를 보냄
+                        if(MsgActivity.msghandler != null){
+                            makeLog("채팅방 핸들러 != null");
+                            Message message = MsgActivity.msghandler.obtainMessage();
+                            message.what = 1111;
+                            message.obj = receiveMsg;
+                            MsgActivity.msghandler.sendMessage(message);
+                        }else{
+                            makeLog("채팅방 핸들러 == null");
+                        }
+
+                        //[2] 도그워커 채팅리스트 액티비티로 받은 데이터를 보냄
                         if(WalkerChatListActivity.msghandler != null){
-                            makeLog("[서비스] 도그워커 리스트 핸들러 != null");
+                            makeLog("도그워커 리스트 핸들러 != null");
                             Message message1 = WalkerChatListActivity.msghandler.obtainMessage();
                             message1.what = 2222;
                             message1.obj = receiveMsg;
                             WalkerChatListActivity.msghandler.sendMessage(message1);
                         }else{
-                            makeLog("[서비스] 도그워커 리스트 핸들러 == null");
+                            makeLog("도그워커 리스트 핸들러 == null");
                         }
 
-                        //[2] 채팅 액티비티로 받은 데이터를 보냄
-                        if(WalkerChattingActivity.msghandler != null){
-                            makeLog("[서비스] 채팅방 핸들러 != null");
-                            Message message = WalkerChattingActivity.msghandler.obtainMessage();
-                            message.what = 1111;
-                            message.obj = receiveMsg;
-                            WalkerChattingActivity.msghandler.sendMessage(message);
-                        }else{
-                            makeLog("[서비스] 채팅방 핸들러 == null");
-                        }
                         //[3] 반려인 채팅리스트 액티비티로 받은 데이터를 보냄
                         if(OwnerChatListActivity.msghandler != null){
-                            makeLog("[서비스] 반려인 리스트 핸들러 != null");
+                            makeLog("반려인 리스트 핸들러 != null");
                             Message message3 = OwnerChatListActivity.msghandler.obtainMessage();
                             message3.what = 3333;
                             message3.obj = receiveMsg;
                             OwnerChatListActivity.msghandler.sendMessage(message3);
                         }else{
-                            makeLog("[서비스] 반려인 리스트 핸들러 == null");
+                            makeLog("반려인 리스트 핸들러 == null");
                         }
 
                     }else {
-                        makeLog("[서비스] 서버로부터 받은 메세지가 없습니다");
+                        makeLog("서버로부터 받은 메세지가 없습니다");
                         break;
                     }
 
@@ -263,7 +266,7 @@ public class MsgService extends Service {
     public void onDestroy() {
         super.onDestroy();
         //서비스가 소멸될 때 호출된다
-        makeLog("[서비스] onDestroy()");
+        makeLog("onDestroy()");
         //소켓 종료
         stopClientSocket();
     }
@@ -292,7 +295,7 @@ public class MsgService extends Service {
 
     //로그 : 액티비티명 + 함수명 + 원하는 데이터를 한번에 보기위한 로그
     public void makeLog(String strData) {
-        Log.d(TAG, className + "_" + strData);
+        Log.d(TAG, className + "_[서비스] " + strData);
     }
 
 

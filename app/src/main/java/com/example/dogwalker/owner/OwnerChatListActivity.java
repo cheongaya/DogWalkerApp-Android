@@ -16,6 +16,7 @@ import com.example.dogwalker.retrofit2.response.ChatListDTO;
 import com.example.dogwalker.retrofit2.response.ResultDTO;
 import com.example.dogwalker.walker.ChatTestActivity;
 import com.example.dogwalker.walker.ChatListAdapter;
+import com.example.dogwalker.walker.MsgActivity;
 import com.example.dogwalker.walker.WalkerChatListActivity;
 import com.example.dogwalker.walker.WalkerChattingActivity;
 
@@ -48,7 +49,8 @@ public class OwnerChatListActivity extends OwnerBottomNavigation {
         chatListAdapter.setOnItemClickListener(new ChatListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-                Intent intent = new Intent(OwnerChatListActivity.this, WalkerChattingActivity.class);
+//                Intent intent = new Intent(OwnerChatListActivity.this, WalkerChattingActivity.class);
+                Intent intent = new Intent(OwnerChatListActivity.this, MsgActivity.class);
                 intent.putExtra("roomNum", chatListAdapter.chatListDTOArrayList.get(position).getRoomNum());    //채팅방번호
                 intent.putExtra("chatUser", chatListAdapter.chatListDTOArrayList.get(position).getChatUser());  //채팅유저 (본인)
                 intent.putExtra("chatPartner", chatListAdapter.chatListDTOArrayList.get(position).getChatPartner());  //채팅상대방

@@ -14,6 +14,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Chronometer;
 
+import com.example.dogwalker.ApplicationClass;
 import com.example.dogwalker.BaseActivity;
 import com.example.dogwalker.GpsTracker;
 import com.example.dogwalker.R;
@@ -63,12 +64,12 @@ public class WalkerDogwalkingIngActivity extends BaseActivity {
         makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[산책 데이터] booking_id : " + booking_id);
         makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[산책 데이터] owner_dog_name : " + owner_dog_name);
         makeLog(new Object() {}.getClass().getEnclosingMethod().getName() + "()", "[산책 데이터] walk_total_time : " + walk_total_time);
-        //플로팅 버튼 열고 / 닫는 애니메이션 연결
-        fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.floating_btn_open);
-        fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.floating_btn_close);
-
-        binding.onClickBtnFloatVideo.startAnimation(fab_close);
-        binding.onClickBtnFloatChat.startAnimation(fab_close);
+//        //플로팅 버튼 열고 / 닫는 애니메이션 연결
+//        fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.floating_btn_open);
+//        fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.floating_btn_close);
+//
+//        binding.onClickBtnFloatVideo.startAnimation(fab_close);
+//        binding.onClickBtnFloatChat.startAnimation(fab_close);
 
         //배변횟수 화면에 표시
         binding.textViewWalkIngPooCount.setText(pooCount+"");
@@ -169,7 +170,7 @@ public class WalkerDogwalkingIngActivity extends BaseActivity {
     public void onClickBtnFloatVideo(View view){
         //라이브 산책 방송 화면으로 전환
         Intent intent = new Intent(WalkerDogwalkingIngActivity.this, VlcBroadPlayerActivity.class);
-        intent.putExtra("walker_id", applicationClass.currentWalkerID);
+        intent.putExtra("walker_id", ApplicationClass.currentWalkerID);
         intent.putExtra("booking_id", booking_id);
         startActivity(intent);
     }

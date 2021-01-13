@@ -115,7 +115,8 @@ public class BookingServiceOwnerAdapter extends RecyclerView.Adapter<BookingServ
 
         public void onBind(BookingServiceDTO bookingServiceDTO) {
 
-            tvBookingWalkTime.setText(bookingServiceDTO.getOwner_id());
+            tvBookingWalkerName.setText(bookingServiceDTO.getWalker_id());
+//            tvBookingWalkTime.setText(bookingServiceDTO.getOwner_id());
             tvBookingOwnerDogName.setText(bookingServiceDTO.getOwner_dog_name());
             tvBookingWalkTotalTime.setText(bookingServiceDTO.getWalk_total_time()+"분");
             tvBookingWalkTime.setText(bookingServiceDTO.getWalk_date()+" "+bookingServiceDTO.getWalk_time());

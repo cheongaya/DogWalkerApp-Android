@@ -5,22 +5,24 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:layout_margin="5dp"
-    android:padding="5dp">
+    android:padding="10dp"
+    android:background="@drawable/border_bottom">
 
     <ImageView
-        android:id="@+id/imageView_item_chatlist_img"
+        android:id="@+id/imageView_item_chatlist"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:background="@drawable/icon_poo01"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"/>
+        android:background="@drawable/circular_corner_stroke_mydog2"
+        android:scaleType="centerCrop"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="10dp" />
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingTop="10dp">
+        android:paddingTop="5dp">
         <TextView
             android:id="@+id/textView_room_num"
             android:layout_width="match_parent"
@@ -41,7 +43,7 @@
         android:layout_width="100dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:gravity="right"
         android:paddingRight="15dp">
         <TextView

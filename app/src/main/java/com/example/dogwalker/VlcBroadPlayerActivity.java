@@ -76,7 +76,7 @@ public class VlcBroadPlayerActivity extends BaseActivity implements ConnectCheck
 
         //Intent 로 받은 도그워커 아이디
         Intent intent = getIntent();
-        walker_id = intent.getStringExtra("walkerId");
+        walker_id = intent.getStringExtra("walker_id");
         booking_id = intent.getIntExtra("booking_id", 0);
         makeLog("도그워커 ID : "+walker_id);
         makeLog("산책예약 ID : "+booking_id);
@@ -148,6 +148,9 @@ public class VlcBroadPlayerActivity extends BaseActivity implements ConnectCheck
 
                 //DB로 해당 예약 ID에 스트리밍 URL값 전송
                 updateBookingLiveStatus(booking_id, RTMP_SERVER_URL+walker_id);
+
+                //스트리밍 시작 알림 보내기
+                MyFirebaseSendNotification.sendNotification(MyFirebaseSendNotification.user3Key, "산책 방송 라이브중", "산책중인 모습을 봐주세요");
 
             } else {
                 Toast.makeText(this, "라이브 방송이 불가합니다", Toast.LENGTH_SHORT).show();

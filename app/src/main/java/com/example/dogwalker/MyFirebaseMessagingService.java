@@ -16,6 +16,8 @@ import androidx.core.app.NotificationCompat;
 
 import com.example.dogwalker.owner.OwnerBookingActivity;
 import com.example.dogwalker.owner.OwnerBookingRecordActivity;
+import com.example.dogwalker.owner.OwnerChatListActivity;
+import com.example.dogwalker.owner.OwnerLiveActivity;
 import com.example.dogwalker.walker.WalkerChatListActivity;
 import com.example.dogwalker.walker.WalkerDogwalkingActivity;
 import com.example.dogwalker.walker.WalkerDogwalkingRecordActivity;
@@ -119,10 +121,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         //하지만 PendingIntent는 지정된 상황이 될때까지 보관하고 있게 된다
         Intent intent;
         //팬딩인텐트로 알림 클릭시 내가 지정한 액티비티로 보내는건 포그라운드일때
-        if(messageTitle.contentEquals("잼잼오더")){ //OwnerBookingActivity
-            intent = new Intent(this, WalkerDogwalkingActivity.class);
-        }else{
-            intent = new Intent(this, OwnerBookingActivity.class);
+//        if(messageTitle.contentEquals("산책 방송 라이브중")){ //OwnerBookingActivity
+//            intent = new Intent(this, WalkerChatListActivity.class);
+//        }else{
+//            intent = new Intent(this, OwnerChatListActivity.class);
+//        }
+
+        if(messageTitle.contentEquals("산책 방송 라이브중")){
+            intent = new Intent(this, VlcSeePlayerActivity.class);
+            intent.putExtra("liveStreamUrl", "rtmp://15.164.216.186:1935/myapp/walker2");
+        }else {
+            intent = new Intent(this, OwnerLiveActivity.class);
         }
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

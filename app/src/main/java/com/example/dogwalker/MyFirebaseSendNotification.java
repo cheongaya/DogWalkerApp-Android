@@ -19,8 +19,8 @@ public class MyFirebaseSendNotification {
 
     private static String TAG = "FCM 태그";
     private static MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    public static String walker2Key = "d9hChiYGTLOu_esoEEO8wd:APA91bF5bVZknxmPQL8GVZCDPM-kzErTQT0P9eWdpRJ_NpHdMjzMp-X2t05SHAsDM00Xwx4_5A-hHC4scG644M3l7C3YBd9ra079JCdqJYUM7lcBH9MkRAoXTEeIcbAL0mMGEz0Iagr9";
-    public static String user3Key = "fGOxTCYsT8ev1dBsOZS8tb:APA91bE0Dv0S8CHCzuClrT3l2nxixiCArlkytluGCR_4AvqUs6q1FbVM5xoExSfm2tNzowSNCfivXoTkMIqOkv05aqGojCo3mfCObTh3qmpioYgGLs1e-ECI03X1rTgFe2RVdThm7IVF";
+    public static String walker2Key = "eHFTKHnISVSpcXsr-LGbI8:APA91bEU8AdmJdCoAW3gfQDZvYPi4LX_C2vJqO_T-dsc8c6gE7SIM-XrX9021Hf6Y74R8PCG74z7pNjuX9rdiJKruNRjC8ubMpCQwC0mZJ6V6Va9r5bXPTBqHTnvq78LaXDZazNqPhsc";
+    public static String user3Key = "df8qso0OQLGxoXZ3hD5Ccp:APA91bFisvVTSUZBR5__7WaVdYyryC8zaK9pAbGU2VM4tsyjweWiudEHkeKVzvF0-kB6JBSeQYe51H6xIevrCbGNnN7bJ3G-L26w-VwNdqL68ndUrXwe4m5sElWr448qzl7cZbkCD-vM";
     private static String serverKey = "AAAAPbTaB7A:APA91bEs-r_O09JsmM52qAkuOOQYtpeI5u7pgTXkaVRTerOKIOBv9u1_iqE5ZSka67Hyx37BAoa9htk5iiQ3Kkq8PvVRWQE71sRgq_qZPr-jOxNGxsljOTBL2BKS7xPKQufbDIvuraOw";
 //    private static String adminToken = "eF2efY8nR2O_2IjSxyRqDm:APA91bGeZYStey21ViPG5MjtwxdNdWYswzwLLHUsRInF2uEbdqyc9KZJmpUZ3msKUFB22w9CO7DeZABp46qH45Tm3u_nv_mxdPaT_Fa4t28bevWsnPOBaAu5hO68JWEhT4y5KGm9GLGc";
 
@@ -49,9 +49,9 @@ public class MyFirebaseSendNotification {
                     json.put("to", regToken);   //내가 메세지를 보낼 기기의 토큰
 
                     // click_action 추가! //fcm이 백그라운드일때 내가 지정한 액티비티로 보내기
-                    if(regToken.contentEquals(walker2Key)){ //알림을 보내려는 토근이 = 관리자 토큰일때
+                    if(regToken.contentEquals(walker2Key)){ //알림을 보내려는 토근이 = 도그워커 (관리자) 토큰일때
                         notificationJson.put("click_action", "OPEN_ADMIN_ORDER_ACTIVITY");
-                    }else{                                  //알림을 보내려는 토큰이 = 사용자 토큰일때
+                    }else{                                  //알림을 보내려는 토큰이 = 반려인 (사용자) 토큰일때
                         notificationJson.put("click_action", "OPEN_USER_ORDER_ACTIVITY");
                     }
 

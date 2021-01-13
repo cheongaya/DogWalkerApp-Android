@@ -24,11 +24,19 @@
             android:padding="10dp">
 
             <TextView
+                android:id="@+id/my_read"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:text="99"
+                android:textColor="#F40519"/>
+
+            <TextView
                 android:id="@+id/my_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_marginLeft="30dp"
+                android:layout_marginLeft="20dp"
                 android:layout_marginRight="10dp"
                 android:layout_weight="0"
                 tools:text="11:30pm" />
@@ -41,6 +49,14 @@
                 android:background="@drawable/chat_right"
                 android:paddingHorizontal="15dp"
                 android:paddingVertical="10dp" />
+
+            <ImageView
+                android:id="@+id/my_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:visibility="gone"/>
 
 
         </LinearLayout>

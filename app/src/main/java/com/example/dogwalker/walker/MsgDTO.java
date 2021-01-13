@@ -12,20 +12,16 @@ public class MsgDTO {
     String msgType;     //메세지 타입
     String msg;         //메시지 내용
     String reader;      //메세지 읽은 사람
+    String msgTime;     //메세지 시간
 
-//    String content; //메세지
-//    String sender;  //메세지 보낸 사람
-//    String type;    //메세지 타입
-//    String read;    //읽음
-//    boolean sendByMyself;
-
-    //구분, 보낸사람, 메세지타입, 메세지내용, 읽은사람
-    public MsgDTO(int viewType, String sender, String msgType, String msg, String reader) {
+    //구분, 보낸사람, 메세지타입, 메세지내용, 읽은사람, 메세지시간
+    public MsgDTO(int viewType, String sender, String msgType, String msg, String reader, String msgTime) {
         this.viewType = viewType;
         this.sender = sender;
         this.msgType = msgType;
         this.msg = msg;
         this.reader = reader;
+        this.msgTime = msgTime;
     }
 
     public int getViewType() {
@@ -66,5 +62,13 @@ public class MsgDTO {
 
     public void setReader(String reader) {
         this.reader = reader;
+    }
+
+    public String getMsgTime() {
+        return msgTime;
+    }
+
+    public void setMsgTime(String msgTime) {
+        this.msgTime = msgTime;
     }
 }

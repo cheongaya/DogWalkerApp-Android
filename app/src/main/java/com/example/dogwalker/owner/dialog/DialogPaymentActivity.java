@@ -231,6 +231,7 @@ public class DialogPaymentActivity extends BaseActivity {
                     paymentDoneIntent.putExtra("walk_total_price", walk_total_price);
                     paymentDoneIntent.putExtra("payment_method", payment_method);
                     paymentDoneIntent.putExtra("payment_time", currentTime);
+//                    paymentDoneIntent.putExtra("booking_id", resultData);
                     startActivity(paymentDoneIntent);
                     finish();
                 }

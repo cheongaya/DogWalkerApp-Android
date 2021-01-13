@@ -8,14 +8,16 @@ public class ChatListDTO {
     String chatLastMsg; //채팅 마지막 메세지
     String chatDate;
     int chatReadNum; //채팅 안읽은 메세지 숫자
+    String progileImg;
 
-    public ChatListDTO(String roomNum, String chatUser, String chatPartner, String chatLastMsg, String chatDate, int chatReadNum) {
+    public ChatListDTO(String roomNum, String chatUser, String chatPartner, String chatLastMsg, String chatDate, int chatReadNum, String progileImg) {
         this.roomNum = roomNum;
         this.chatUser = chatUser;
         this.chatPartner = chatPartner;
         this.chatLastMsg = chatLastMsg;
         this.chatDate = chatDate;
         this.chatReadNum = chatReadNum;
+        this.progileImg = progileImg;
     }
 
     public String getRoomNum() {
@@ -64,5 +66,13 @@ public class ChatListDTO {
 
     public void setChatReadNum(int chatReadNum) {
         this.chatReadNum = chatReadNum;
+    }
+
+    public String getProgileImg() {
+        return progileImg;
+    }
+
+    public void setProgileImg(String progileImg) {
+        this.progileImg = progileImg;
     }
 }

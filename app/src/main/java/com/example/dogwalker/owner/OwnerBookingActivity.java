@@ -62,20 +62,20 @@ public class OwnerBookingActivity extends OwnerBottomNavigation implements View.
 //        setContentView(R.layout.activity_owner_booking);
 
         //FCM 새로운 토큰 발행
-//        FirebaseMessaging.getInstance().getToken()
-//                .addOnCompleteListener(new OnCompleteListener<String>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<String> task) {
-//                        if (!task.isSuccessful()) {
-//                            Log.d("FCM 태그//", "Fetching FCM registration token failed", task.getException());
-//                            return;
-//                        }
-//                        // Get new FCM registration token
-//                        String token = task.getResult();
-//                        // Log and toast
-//                        Log.d("FCM 태그/token/", token);
-//                    }
-//                });
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.d("FCM 태그//", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+                        // Get new FCM registration token
+                        String token = task.getResult();
+                        // Log and toast
+                        Log.d("FCM 태그/token/", token);
+                    }
+                });
 
         btnBookingPage = (Button)findViewById(R.id.button_booking_page);
         btnCalendarMonthView = (ImageButton)findViewById(R.id.imageButton_calendar_month_view);

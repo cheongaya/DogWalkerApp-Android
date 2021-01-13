@@ -25,7 +25,7 @@
         android:id="@+id/textView_item_booking_walker_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="권은진"
+        android:text="김청아"
         android:layout_marginLeft="10dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/textView_item_booking_walker_name_text"/>

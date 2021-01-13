@@ -84,7 +84,7 @@ public class SplashActivity extends BaseActivity {
                     makeToast("owner 자동로그인 성공");
                 }else{
                     //자동로그인 X -> 로그인 화면으로 전환
-                    Intent intent = new Intent(SplashActivity.this, OwnerLoginActivity.class);
+                    Intent intent = new Intent(SplashActivity.this, WalkerLoginActivity.class);
                     startActivity(intent);
                     finish();
                 }

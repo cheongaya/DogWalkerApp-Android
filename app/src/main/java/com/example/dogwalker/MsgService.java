@@ -147,6 +147,35 @@ public class MsgService extends Service {
 //                            return;
 //                        }
 
+                        //TODO : 채팅알림 테스트 중 시작
+                        String[] receivedMsgArr = receiveMsg.split("@#@#"); //58@#@#user1@#@#hi@#@#오전1시
+                        String roomNum = receivedMsgArr[0];    //방번호
+                        String senderID = receivedMsgArr[1];   //메세지 보낸 유저
+                        String MsgType = receivedMsgArr[2];    //메세지 타입 ex) TEXT, IMAGE
+
+                        if(MsgType.equals("TEXT") || MsgType.equals("IMAGE")){
+                            String ReadID = receivedMsgArr[3];     //메세지 읽은 유저 ex) walker2/user3/
+                            String Msg = receivedMsgArr[4];        //메세지 내용
+                            String sendTime = receivedMsgArr[5];   //메세지 보낸 시간
+
+                            String[] readIdArr = ReadID.split("/");
+//                            if(readIdArr.length == 1){
+//                                for(int i=0; i<readIdArr.length; i++){
+//                                    if(readIdArr[i].contains("walker")){ //읽은사람 : 도그워커일때
+//                                        //반려인은 채팅 안보고있다는 의미니까
+//                                        //반려인한테 채팅메세지 알림
+//                                        MyFirebaseSendNotification.sendNotification(MyFirebaseSendNotification.user3Key, "owner", Msg);
+//                                        break;
+//                                    }else{
+//                                        //도그워커한테 채팅메세지 알림
+//                                        MyFirebaseSendNotification.sendNotification(MyFirebaseSendNotification.walker2Key, "walker", Msg);
+//                                        break;
+//                                    }
+//                                }
+//                            }
+                        }
+                        //TODO : 채팅알림 테스트 중 끝
+
                         //받은 메세지를 액티비티로 넘겨준다
                         // 1111 = 채팅방 / 2222 = 도그워커 채팅 리스트 / 3333 = 반려인 채팅 리스트
 

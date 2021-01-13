@@ -6,11 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.dogwalker.ApplicationClass;
 import com.example.dogwalker.R;
 import com.example.dogwalker.retrofit2.response.ChatListDTO;
@@ -68,6 +70,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ItemVi
         private TextView tvChatUsers;
         private TextView tvChatDate;
         private TextView tvChatReadNum;
+        private ImageView imvChatImg;
 //        private Button btnChatStart;
 
         public ItemViewHolder(@NonNull View itemView) {
@@ -83,6 +86,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ItemVi
             tvChatDate = itemView.findViewById(R.id.textview_chat_date);
 //            btnChatStart = itemView.findViewById(R.id.button_chat_start);
             tvChatReadNum = itemView.findViewById(R.id.textVew_chat_list_read);
+            imvChatImg = itemView.findViewById(R.id.imageView_item_chatlist);
 
             //onClick 선언
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -120,10 +124,21 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ItemVi
 //            tvChatListText.setText(chatListDTO.getChatText());
 //            tvChatListDate.setText(chatListDTO.getChatDate());
 
-            tvChatRoomNum.setText(chatListDTO.getRoomNum()+"번방 : "+chatListDTO.getChatUser()+ "/" + chatListDTO.getChatPartner());
+            tvChatRoomNum.setText(chatListDTO.getChatPartner()); //채팅 상대방 이름
             tvChatUsers.setText(chatListDTO.getChatLastMsg());
             tvChatDate.setText(chatListDTO.getChatDate());
-            tvChatReadNum.setText(chatListDTO.getChatReadNum()+"");
+            if(chatListDTO.getChatReadNum()==0){
+                tvChatReadNum.setVisibility(View.GONE);
+            }else{
+                tvChatReadNum.setVisibility(View.VISIBLE);
+                tvChatReadNum.setText(chatListDTO.getChatReadNum()+"");
+            }
+
+            Glide.with(context)
+            .load(ApplicationClass.BASE_URL+chatListDTO.getProgileImg())
+            .override(200,200)
+            .apply(applicationClass.requestOptions.fitCenter().circleCrop())
+            .into(imvChatImg);
 
         }
     }

@@ -6,13 +6,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.example.dogwalker.BaseActivity;
 import com.example.dogwalker.R;
 import com.example.dogwalker.databinding.ActivityPaymentDoneBinding;
+import com.example.dogwalker.retrofit2.response.ResultDTO;
 
-public class PaymentDoneActivity extends AppCompatActivity {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class PaymentDoneActivity extends BaseActivity {
 
     ActivityPaymentDoneBinding binding;
 
+//    String booking_id;
     String walker_id, owner_dog_name, walk_date, walk_time, payment_method, payment_time;
     int walk_total_time, walk_total_price;
 
@@ -34,6 +41,10 @@ public class PaymentDoneActivity extends AppCompatActivity {
         walk_total_price = intent.getIntExtra("walk_total_price", 0);
         payment_method = intent.getStringExtra("payment_method");
         payment_time = intent.getStringExtra("payment_time");
+//        booking_id = intent.getStringExtra("booking_id");
+
+        //DB에 채팅방 생성
+//        insertChatRoom(booking_id);
 
         //화면에 데이터 표시
         binding.textViewPaymentWalkerId.setText(walker_id);
@@ -48,6 +59,29 @@ public class PaymentDoneActivity extends AppCompatActivity {
             binding.textViewPaymentMethod.setText("카드 결제");
         }
         binding.textViewPaymentTime.setText(payment_time);
+    }
+
+    //DB에 채팅방 생성
+    public void insertChatRoom(String booking_id){
+
+        int bookingID = Integer.valueOf(booking_id);
+
+        Call<ResultDTO> call = retrofitApi.insertChatRoom(bookingID);
+        call.enqueue(new Callback<ResultDTO>() {
+            @Override
+            public void onResponse(Call<ResultDTO> call, Response<ResultDTO> response) {
+                ResultDTO resultDTO = response.body();
+                String str = resultDTO.getResponceResult();
+                makeLog(new Object() {
+                }.getClass().getEnclosingMethod().getName() + "()", "채팅방 생성 성공 : "+str);
+            }
+
+            @Override
+            public void onFailure(Call<ResultDTO> call, Throwable t) {
+                makeLog(new Object() {
+                }.getClass().getEnclosingMethod().getName() + "()", "채팅방 생성 실패 : " + t.toString());
+            }
+        });
     }
 
     //확인 버튼 클릭시 메인으로 화면 전환

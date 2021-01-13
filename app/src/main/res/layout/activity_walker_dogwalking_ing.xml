@@ -177,10 +177,21 @@
             android:src="@drawable/ic_baseline_done_outline_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/onClickBtnFloatPause"
-            app:layout_constraintRight_toLeftOf="@+id/onClickBtnFloatList"
+            app:layout_constraintRight_toLeftOf="@+id/onClickBtnFloatVideo"
             android:layout_marginBottom="35dp"
             android:backgroundTint="@color/colorMain"
             app:borderWidth="0dp"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/onClickBtnFloatVideo"
+            android:onClick="@{activity::onClickBtnFloatVideo}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_videocam_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/onClickBtnFloatDone"
+            android:layout_marginBottom="35dp"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/onClickBtnFloatList"
@@ -191,18 +202,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/onClickBtnFloatDone"
+            android:visibility="gone"
             android:layout_marginBottom="35dp"/>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/onClickBtnFloatVideo"
-            android:onClick="@{activity::onClickBtnFloatVideo}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_videocam_24"
-            app:layout_constraintBottom_toTopOf="@id/onClickBtnFloatChat"
-            app:layout_constraintEnd_toEndOf="@id/onClickBtnFloatChat"
-            android:backgroundTint="@color/colorBlack"
-            app:borderWidth="0dp"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/onClickBtnFloatChat"
@@ -214,6 +215,7 @@
             app:layout_constraintEnd_toEndOf="@id/onClickBtnFloatList"
             android:backgroundTint="@color/colorBlack"
             app:borderWidth="0dp"
+            android:visibility="gone"
             android:layout_marginBottom="5dp"/>
 
 

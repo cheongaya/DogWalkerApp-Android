@@ -51,20 +51,20 @@ public class WalkerDogwalkingActivity extends WalkerBottomNavigation implements 
 //        setContentView(R.layout.activity_walker_dogwalking);
 
         //FCM 새로운 토큰 발행
-//        FirebaseMessaging.getInstance().getToken()
-//                .addOnCompleteListener(new OnCompleteListener<String>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<String> task) {
-//                        if (!task.isSuccessful()) {
-//                            Log.d("FCM 태그//", "Fetching FCM registration token failed", task.getException());
-//                            return;
-//                        }
-//                        // Get new FCM registration token
-//                        String token = task.getResult();
-//                        // Log and toast
-//                        Log.d("FCM 태그/token/", token);
-//                    }
-//                });
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.d("FCM 태그//", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+                        // Get new FCM registration token
+                        String token = task.getResult();
+                        // Log and toast
+                        Log.d("FCM 태그/token/", token);
+                    }
+                });
 
         //예약 리스트가 없을때의 텍스트 표시
         tvIngBookingListNull = (TextView)findViewById(R.id.textView_ing_booking_list_null);

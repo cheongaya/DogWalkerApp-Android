@@ -57,6 +57,7 @@ public class WalkerChatListActivity extends WalkerBottomNavigation {
                 intent.putExtra("roomNum", chatListAdapter.chatListDTOArrayList.get(position).getRoomNum());    //채팅방번호
                 intent.putExtra("chatUser", chatListAdapter.chatListDTOArrayList.get(position).getChatUser());  //채팅유저 (본인)
                 intent.putExtra("chatPartner", chatListAdapter.chatListDTOArrayList.get(position).getChatPartner());  //채팅상대방
+                intent.putExtra("chatPartnerProfile", chatListAdapter.chatListDTOArrayList.get(position).getProgileImg());  //채팅상대방프로필 이미지
                 startActivity(intent);
             }
         });
@@ -98,7 +99,7 @@ public class WalkerChatListActivity extends WalkerBottomNavigation {
                     }else if(MsgType.equals("ENTER") && !senderID.equals(ApplicationClass.currentWalkerID)){
                         //상대방이 채팅방 입장했을 때
                         //TODO : 이때도 메세지 리스트 안읽은 숫자 갱신이 필요한데.. 어떻게 구현해야할지 더 생각해보자
-                        makeToast(senderID+" 채팅방 입장");
+//                        makeToast(senderID+" 채팅방 입장");
                     }
 
                     //메세지 타입 TEXT 또는 IMAGE 일때
@@ -112,8 +113,13 @@ public class WalkerChatListActivity extends WalkerBottomNavigation {
                         for(int i=0; chatListAdapter.chatListDTOArrayList.size() > i ; i++){
                             String roomN = chatListAdapter.getChatListDTOArrayList().get(i).getRoomNum();
                             if(roomN.equals(roomNum)){
-                                chatListAdapter.getChatListDTOArrayList().get(i).setChatLastMsg(Msg);   //마지막 보낸 메세지 갱신
                                 chatListAdapter.getChatListDTOArrayList().get(i).setChatDate(sendTime); //마지막 메세지 보낸 시간 갱신
+                                //마지막 메세지 이미지 또는 텍스트일때 처리
+                                if(MsgType.equals("IMAGE")){
+                                    chatListAdapter.getChatListDTOArrayList().get(i).setChatLastMsg("사진을 보냈습니다");   //마지막 보낸 메세지 갱신
+                                }else{
+                                    chatListAdapter.getChatListDTOArrayList().get(i).setChatLastMsg(Msg);   //마지막 보낸 메세지 갱신
+                                }
                                 //안읽은 메세지 처리
                                 String[] readNotID = ReadID.split("/"); // ex) walker2/user3
                                 //경우 1. 내가 채팅메세지 보내고 있고, 상대방은 안보고있을 때 -> walker2/
@@ -125,10 +131,10 @@ public class WalkerChatListActivity extends WalkerBottomNavigation {
                                 }else{
                                     //나 혹은 상대방이 안보고 있었을 때
                                     if(readNotID[0].equals(ApplicationClass.currentWalkerID)){
-                                        makeToast("나는 현재 채팅방 안에 있습니다");
+//                                        makeToast("나는 현재 채팅방 안에 있습니다");
                                     }else {
                                         //상대방이 채팅메세지 안보고 있을 경우
-                                        makeToast("나는 현재 채팅방 밖에 있습니다");
+//                                        makeToast("나는 현재 채팅방 밖에 있습니다");
 //                                        makeToast("채팅 상대방이 메세지를 보내고 있습니다");
                                         //내가 채팅메세지 안보고 있을 경우 (안읽은 메세지 숫자 +1 씩 해줌)
                                         int nowReadNotNum = chatListAdapter.getChatListDTOArrayList().get(i).getChatReadNum();

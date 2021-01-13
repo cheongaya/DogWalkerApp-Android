@@ -17,11 +17,23 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="55dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:id="@+id/btn_img"
+            android:layout_width="50dp"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_baseline_add_photo_alternate_24"
+            android:scaleType="centerInside"
+            android:padding="10dp"
+            android:background="#A5A2A2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <EditText
             android:id="@+id/et_chat"
@@ -31,9 +43,10 @@
             android:ems="10"
             android:inputType="textPersonName"
             android:paddingLeft="15dp"
+            android:textColor="@color/colorBlack"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btn_send"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btn_img"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
@@ -42,6 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:text="보내기"
+            android:textSize="17sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -61,6 +75,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="채팅방"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorWhite"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
